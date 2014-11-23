@@ -10,7 +10,6 @@ data open class Map(val regions: List<Region>) {
 
     fun attackSourceRegionsFor(player: Player): Collection<Region> {
         return regions.filter {
-            println("filter region: ${it} for player: ${player}")
             it.owner == player &&
                     it.armies > 1 &&
                     it.adjacent.any { it.owner != player }
@@ -50,11 +49,11 @@ class Simple4RegionsMap(val r1: Region = Region(label = "r1"),
     }
 }
 
-data class Region(private var _owner: Player? = null, var armies: Int = 0, var label: String = "?") {
+data class Region(public var owner: Player? = null, var armies: Int = 0, var label: String = "?") {
 
-    public var owner: Player? = _owner
-        public get() = $owner
-        private set(value) { $owner = value}
+//    public var owner: Player? = _owner
+//        public get() = $owner
+//        private set(value) { $owner = value}
 
     class object {
         private val LOG: Logger = LoggerFactory.getLogger(javaClass)
@@ -83,7 +82,7 @@ data class Region(private var _owner: Player? = null, var armies: Int = 0, var l
     }
 
     fun adjacentAttackables(): Collection<Region> {
-        return adjacent.filter { it.owner != this.owner }
+        return adjacent.filter { it.owner != owner }
     }
 
 }

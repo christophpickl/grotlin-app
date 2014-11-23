@@ -48,17 +48,27 @@ public class RegionView(context: Context, public val region: Region, private val
     private val paint = Paint()
     private val centerX: Float
     private val centerY: Float
-
     {
         centerX = point.x + RADIUS
         centerY = point.y + RADIUS
     }
 
+    public var selectedAsSource:Boolean = false
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        paint.setColor(if (region.owner == null) Color.WHITE else region.owner!!.color)
+        val color: Int
+        if (region.owner == null) {
+            color = Color.WHITE
+        } else if (selectedAsSource) {
+            color = Color.YELLOW // MINOR derive brighter version of player's chosen color
+        } else {
+            color = region.owner!!.color
+        }
+        paint.setColor(color)
 
         canvas.drawCircle(centerX, centerY, RADIUS, paint)
+
 
         if (region.owner != null) {
             val text = region.armies.toString()
@@ -72,6 +82,10 @@ public class RegionView(context: Context, public val region: Region, private val
                search.y >= point.y && search.y <= point.y + SIZE
     }
 
+    override public fun toString(): String {
+        return "RegionView[region=${region}]"
+    }
+
     class object {
         public val RADIUS: Float = 50.0.toFloat()
         public val SIZE: Float = RADIUS * 2
@@ -81,95 +95,16 @@ public class RegionView(context: Context, public val region: Region, private val
 
 
 public class MiniMap {
-    public val region1: Region = Region()
-    public val region2: Region = Region()
-    public val region3: Region = Region()
-    public val region4: Region = Region()
+    public val region1: Region = Region(label = "r1")
+    public val region2: Region = Region(label = "r2")
+    public val region3: Region = Region(label = "r3")
+    public val region4: Region = Region(label = "r4")
     public val map: Map
 
     {
         map = Map(listOf(region1, region2, region3, region4))
         region1.addBidirectional(region2, region3)
         region4.addBidirectional(region2, region3)
-    }
-
-}
-
-public class GameView(context: Context, private val game: Game, private val map: MiniMap) : LinearLayout(context) {
-    {
-        LINE_PAINT.setColor(Color.GREEN)
-        LINE_PAINT.setStrokeWidth(8.0.toFloat())
-    }
-
-    private val regionViews: Collection<RegionView>
-
-    {
-        this.regionViews = initRegionViews(context, map)
-        setBackgroundColor(Color.LTGRAY)
-        setMinimumWidth(640)
-        setMinimumHeight(480)
-
-        setOnTouchListener(object : View.OnTouchListener {
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                if (event.getAction() != MotionEvent.ACTION_DOWN) {
-                    return false
-                }
-                Log.i("RegionView", "onTouchEvent(event.x=" + event.getX() + ", event.y=" + event.getY() + ")")
-                val selectedView = findRegionView(FloatPoint(event.getX(), event.getY()))
-                if (selectedView == null) {
-                    return false
-                }
-                selectedView.region.ownedBy(game.players.iterator().next(), 3)
-                invalidate()
-                return false
-            }
-
-        })
-    }
-
-    private fun findRegionView(point: FloatPoint): RegionView? {
-        for (view in regionViews) {
-            if (view.isWithinArea(point)) {
-                Log.d("GameView", "Found region " + view.region + " by point: " + point)
-                return view
-            }
-        }
-        return null
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        //        canvas.drawLine(line1x + RegionView.RADIUS, line2y + RegionView.RADIUS,
-        //                line2x + RegionView.RADIUS, line1y + RegionView.RADIUS,
-        //                LINE_PAINT);
-        for (view in regionViews) {
-            view.draw(canvas)
-        }
-    }
-
-    class object {
-
-        private val LINE_PAINT = Paint()
-
-        private fun initRegionViews(context: Context, map: MiniMap): Collection<RegionView> {
-            val padding = 30.0.toFloat()
-            val marginY = 50.0.toFloat()
-            val marginX = 150.0.toFloat()
-            val line1y = padding
-            val line2y = line1y + RegionView.SIZE + marginY
-            val line3y = line2y + RegionView.SIZE + marginY
-            val line1x = padding
-            val line2x = line1x + RegionView.SIZE + marginX
-            val line3x = line2x + RegionView.SIZE + marginY
-
-            return Arrays.asList<RegionView>(newRegionView(context, map.region1, line1x, line2y), newRegionView(context, map.region2, line2x, line1y), newRegionView(context, map.region3, line2x, line3y), newRegionView(context, map.region4, line3x, line2y))
-        }
-
-
-        private fun newRegionView(context: Context, region: Region, x: Float, y: Float): RegionView {
-            return RegionView(context, region, FloatPoint(x, y))
-        }
     }
 
 }

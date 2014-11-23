@@ -14,8 +14,13 @@ import android.util.Log
 
 public class MainActivity : Activity() {
 
+    class object {
+        private val LOG: Logg = Logg("MainActivity")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LOG.info("onCreate(savedInstanceState)")
         //        setContentView(R.layout.activity_main);
 
         val player1 = Player("Player 1", Color.RED)
@@ -37,7 +42,7 @@ public class MainActivity : Activity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d("main", "onOptionsItemSelected(item=" + item + ")")
+        LOG.info("onOptionsItemSelected(item=${item})")
         val id = item.getItemId()
 
         if (id == R.id.action_settings) {
