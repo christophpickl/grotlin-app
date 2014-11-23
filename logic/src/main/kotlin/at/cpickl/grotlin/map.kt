@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 import java.util.Arrays
 
 
-data open class Map(val regions: Set<Region>) {
+data open class Map(val regions: List<Region>) {
 
     fun attackSourceRegionsFor(player: Player): Collection<Region> {
         return regions.filter {
@@ -25,7 +25,7 @@ class Simple4RegionsMap(val r1: Region = Region(label = "r1"),
                         val r2: Region = Region(label = "r2"),
                         val r3: Region = Region(label = "r3"),
                         val r4: Region = Region(label = "r4")) :
-        Map(hashSetOf(r1, r2, r3, r4)) {
+        Map(listOf(r1, r2, r3, r4)) {
     {
         r1.addBidirectional(r2, r3)
         r4.addBidirectional(r2, r3)

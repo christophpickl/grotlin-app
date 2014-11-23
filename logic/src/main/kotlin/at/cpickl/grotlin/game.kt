@@ -8,18 +8,16 @@ class Game(val map: Map, val players: List<Player>, val dice: Dice = RealDice())
 
     private val playersIterator = PlayerIterator(players)
 
-
-    //    class object {
-    //        fun create() = C()
-    //    }
-    private val log: Logger = LoggerFactory.getLogger(javaClass)
+    class object {
+        val LOG: Logger = LoggerFactory.getLogger(javaClass)
+    }
 
     public var currentPlayer: Player = playersIterator.currentPlayer
         get() = playersIterator.currentPlayer
         private set
 
     public fun attack(source: Region, target: Region): BattleResult {
-        log.info("attack(source: {}, target: {})", source, target)
+        LOG.info("attack(source: {}, target: {})", source, target)
         println("source: ${source}")
         verifyAttackable(source, target)
         if (!target.isOwned()) {
@@ -40,7 +38,7 @@ class Game(val map: Map, val players: List<Player>, val dice: Dice = RealDice())
 
     public fun nextPlayer() {
         currentPlayer = playersIterator.next()
-        log.info("nextPlayer() is: {}", currentPlayer)
+        LOG.info("nextPlayer() is: {}", currentPlayer)
     }
 
     public fun sourceRegionsForCurrentPlayer(): Collection<Region> {
@@ -114,7 +112,7 @@ trait GameListener {
 }
 
 
-data class Player(val name: String) {
+data class Player(val name: String, public val color: Int = 0) {
 
     var isAlive: Boolean = true // dirty design
         get() = $isAlive

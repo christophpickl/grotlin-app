@@ -2,21 +2,21 @@ package at.cpickl.agrotlin
 
 import android.graphics.Paint
 import android.content.Context
-import at.cpickl.agrotlin.Region
+import at.cpickl.grotlin.Region
 import android.view.View
 import android.graphics.Color
 import android.graphics.Canvas
-import at.cpickl.agrotlin.Map
+import at.cpickl.grotlin.Map
 import java.util.Arrays
 import android.widget.LinearLayout
-import at.cpickl.agrotlin.Game
+import at.cpickl.grotlin.Game
 import android.view.MotionEvent
 import android.util.Log
 import android.app.Activity
 import android.view.WindowManager
 import android.view.Window
 import android.os.Bundle
-import at.cpickl.agrotlin.Player
+import at.cpickl.grotlin.Player
 import android.widget.RelativeLayout
 import android.view.Menu
 import at.cpickl.agrotlin.R
@@ -89,8 +89,8 @@ public class MiniMap {
 
     {
         map = Map(listOf(region1, region2, region3, region4))
-        region1.addOuts(region2, region3)
-        region4.addOuts(region2, region3)
+        region1.addBidirectional(region2, region3)
+        region4.addBidirectional(region2, region3)
     }
 
 }

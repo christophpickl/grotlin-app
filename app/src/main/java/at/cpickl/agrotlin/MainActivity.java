@@ -8,6 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import at.cpickl.grotlin.Game;
+import at.cpickl.grotlin.Map;
+import at.cpickl.grotlin.Player;
+import at.cpickl.grotlin.RealDice;
 
 public class MainActivity extends Activity {
 
@@ -23,15 +30,18 @@ public class MainActivity extends Activity {
         map.getRegion1().ownedBy(player1, 2);
         map.getRegion4().ownedBy(player2, 2);
 
-        Game game = new Game(Arrays.asList(player1), map.getMap());
+        Game game = newGame(map.getMap(), player1, player2);
         GameView gameView = new GameView(this, game, map);
         ViewContainer container = new ViewContainer(this, gameView);
         setContentView(container);
     }
 
+    private static Game newGame(Map map, Player... players) {
+        return new Game(map, Arrays.asList(players), new RealDice());
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
