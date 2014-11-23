@@ -1,14 +1,11 @@
 package at.cpickl.agrotlin;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.RelativeLayout;
 
 import java.util.Arrays;
 
@@ -31,18 +28,6 @@ public class MainActivity extends Activity {
         ViewContainer container = new ViewContainer(this, gameView);
         setContentView(container);
     }
-
-    public static class ViewContainer extends RelativeLayout {
-
-        public ViewContainer(Context context, View child) {
-            super(context);
-            RelativeLayout.LayoutParams centerLayout = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-            centerLayout.addRule(RelativeLayout.CENTER_IN_PARENT);
-            setBackgroundColor(Color.BLACK);
-            addView(child, centerLayout);
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

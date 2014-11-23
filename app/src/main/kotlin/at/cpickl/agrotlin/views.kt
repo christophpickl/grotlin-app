@@ -22,7 +22,7 @@ import android.view.Menu
 import at.cpickl.agrotlin.R
 import android.view.MenuItem
 import at.cpickl.agrotlin.AndroidUtil
-
+import android.widget.RelativeLayout.LayoutParams
 
 public class ViewContainer(context: Context, child: View) : RelativeLayout(context) {
     {
