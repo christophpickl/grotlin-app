@@ -26,13 +26,9 @@ class Game(val map: Map, val players: List<Player>, val dice: Dice = RealDice())
         }
         val battleResult = Battle(source, target, dice).fight()
         if (battleResult.winner == source.owner) {
-            target.owner = source.owner
-            target.armies = source.armies - 1
-            source.armies = 1
-        } else {
-            // attack lost
-            source.armies = 1
+            target.ownedBy(source.owner!!, source.armies - 1)
         }
+        source.armies = 1 // in any case it's reduced to 1 ;)
         return battleResult
     }
 
@@ -52,7 +48,7 @@ class Game(val map: Map, val players: List<Player>, val dice: Dice = RealDice())
             throw IllegalArgumentException("source.owner is not set")
         }
         if (source.armies < 2) {
-            throw IllegalArgumentException("source.armies is < 2 (${source.armies})")
+            throw IllegalArgumentException("source.armies is < 2 (${source.armies}): ${source}")
         }
         // TODO check if target is reachable from source
     }

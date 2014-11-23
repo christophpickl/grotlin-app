@@ -31,7 +31,7 @@ class GameTest : GameableTest() {
         val sourceArmies = 3
         val sourceRegion = map.r1
         val targetRegion = map.r2
-        map.r1.ownedBy(p1, sourceArmies)
+        sourceRegion.ownedBy(p1, sourceArmies)
 
         game(p1).attack(sourceRegion, targetRegion)
 

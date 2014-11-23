@@ -26,7 +26,7 @@ class MapTest {
 
     test fun sourceRegions_oneNeutralRegion() {
         log.info("sourceRegions_oneNeutralRegion()")
-        r1.owner = p1
+        r1.ownedBy(p1, 2)
         r1.addBidirectional(r2)
 
         val actual = attackSourceRegionsForMap(p1, r1, r2)
@@ -37,9 +37,9 @@ class MapTest {
 
     test fun sourceRegions_oneSelfAndAnEnemy() {
         log.info("sourceRegions_oneSelfAndAnEnemy()")
-        r1.owner = p1
-        r2.owner = p1
-        r3.owner = p2
+        r1.ownedBy(p1, 2)
+        r2.ownedBy(p1, 2)
+        r3.ownedBy(p2, 1)
         r1.addBidirectional(r2)
         r1.addBidirectional(r3)
 
@@ -50,7 +50,7 @@ class MapTest {
     }
 
     private fun attackSourceRegionsForMap(player: Player, vararg regions: Region): Collection<Region> {
-        return Map(regions.toHashSet()).attackSourceRegionsFor(player)
+        return Map(regions.toList()).attackSourceRegionsFor(player)
     }
 
 }
