@@ -1,0 +1,34 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'http://repository.jetbrains.com/all'
+        }
+    }
+    dependencies {
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:0.9.66'
+    }
+}
+
+// http://kotlinlang.org/docs/reference/using-gradle.html
+apply plugin: "kotlin"
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://repository.jetbrains.com/all'
+    }
+}
+
+ext {
+    versionLogback = '1.1.2'
+}
+
+dependencies {
+    compile 'org.jetbrains.kotlin:kotlin-stdlib:0.9.66'
+    runtime 'ch.qos.logback:logback-core:' + versionLogback
+    runtime 'ch.qos.logback:logback-classic:' + versionLogback
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    testCompile 'org.testng:testng:6.8.8'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+}
