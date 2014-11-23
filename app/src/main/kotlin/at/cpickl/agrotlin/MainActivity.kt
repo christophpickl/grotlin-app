@@ -11,6 +11,8 @@ import at.cpickl.grotlin.RealDice
 import android.view.Menu
 import android.view.MenuItem
 import android.util.Log
+import android.widget.RelativeLayout
+import android.view.ViewGroup
 
 public class MainActivity : Activity() {
 
@@ -21,7 +23,6 @@ public class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LOG.info("onCreate(savedInstanceState)")
-        //        setContentView(R.layout.activity_main);
 
         val player1 = Player("Player 1", Color.RED)
         val player2 = Player("Player 2", Color.BLUE)
@@ -30,10 +31,14 @@ public class MainActivity : Activity() {
         map.region1.ownedBy(player1, 2)
         map.region4.ownedBy(player2, 2)
 
+        setContentView(R.layout.activity_main)
+
         val game = Game(map.map, listOf(player1, player2))
         val gameView = GameView(this, game, map)
-        val container = ViewContainer(this, gameView)
-        setContentView(container)
+        //        val container = ViewContainer(this, gameView)
+        val container = findViewById(R.id.gameContainer) as ViewGroup
+//        container.setBackgroundColor(Color.BLACK)
+//        container.addView(gameView, AndroidUtil.centered())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

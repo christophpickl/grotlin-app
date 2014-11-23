@@ -25,14 +25,6 @@ import at.cpickl.agrotlin.AndroidUtil
 import android.widget.RelativeLayout.LayoutParams
 import at.cpickl.grotlin.Battle
 
-public class ViewContainer(context: Context, child: View) : RelativeLayout(context) {
-    {
-        setBackgroundColor(Color.BLACK)
-        addView(child, AndroidUtil.centered())
-    }
-}
-
-
 public class FloatPoint(public val x: Float, public val y: Float) {
     override fun toString(): String {
         return "FloatPoint[" + x + "/" + y + "]"
