@@ -2,9 +2,7 @@ package at.cpickl.agrotlin
 
 import android.util.Log
 
-public class Logg(_tag: String) {
-
-    private val tag: String = "grotlin.${_tag}"
+public class Logg(val tag: String) {
 
     public fun trace(message: String) {
         if (Log.isLoggable(tag, Log.VERBOSE)) {

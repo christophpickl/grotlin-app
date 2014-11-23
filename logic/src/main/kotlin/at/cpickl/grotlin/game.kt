@@ -65,6 +65,7 @@ class Game(val map: Map, val players: List<Player>, val dice: Dice = RealDice())
 class GameEngine(private val game: Game, private val listener: GameListener) {
     fun start() {
         while (true) {
+            listener.onPlayersTurn(game.currentPlayer)
             attackPhase()
             if (game.isGameOver()) {
                 break;
@@ -75,7 +76,6 @@ class GameEngine(private val game: Game, private val listener: GameListener) {
     }
 
     private fun attackPhase() {
-        listener.onPlayersTurn(game.currentPlayer)
         while (!game.sourceRegionsForCurrentPlayer().empty &&
                 listener.continueAttacking(game.currentPlayer)) {
             val result = attackPhaseStep()

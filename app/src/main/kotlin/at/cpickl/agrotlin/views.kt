@@ -84,19 +84,3 @@ public class RegionView(context: Context, public val region: Region, private val
         private val ARMY_TEXT_PAINT = Paint()
     }
 }
-
-
-public class MiniMap {
-    public val region1: Region = Region(label = "r1")
-    public val region2: Region = Region(label = "r2")
-    public val region3: Region = Region(label = "r3")
-    public val region4: Region = Region(label = "r4")
-    public val map: Map
-
-    {
-        map = Map(listOf(region1, region2, region3, region4))
-        region1.addBidirectional(region2, region3)
-        region4.addBidirectional(region2, region3)
-    }
-
-}
