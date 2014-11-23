@@ -4,21 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.LayoutParams;
 import android.widget.RelativeLayout;
 
 import java.util.Arrays;
-
-import at.cpickl.agrotlin.classes.Game;
-import at.cpickl.agrotlin.classes.Player;
-
 
 public class MainActivity extends Activity {
 
@@ -31,10 +23,10 @@ public class MainActivity extends Activity {
         Player player2 = new Player("Player 2", Color.BLUE);
 
         MiniMap map = new MiniMap();
-        map.region1.ownedBy(player1, 2);
-        map.region4.ownedBy(player2, 2);
+        map.getRegion1().ownedBy(player1, 2);
+        map.getRegion4().ownedBy(player2, 2);
 
-        Game game = new Game(Arrays.asList(player1), map.map);
+        Game game = new Game(Arrays.asList(player1), map.getMap());
         GameView gameView = new GameView(this, game, map);
         ViewContainer container = new ViewContainer(this, gameView);
         setContentView(container);
