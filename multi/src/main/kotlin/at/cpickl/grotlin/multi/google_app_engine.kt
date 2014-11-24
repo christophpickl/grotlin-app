@@ -1,24 +1,22 @@
 package at.cpickl.grotlin.multi
 
-import javax.servlet.http.HttpServlet
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 import java.util.logging.Logger
 import java.util.logging.Level
+import javax.ws.rs.GET
+import javax.ws.rs.Path
+import javax.ws.rs.core.Response
+import javax.ws.rs.Produces
+import javax.ws.rs.core.MediaType
+import org.glassfish.jersey.server.ResourceConfig
 
-fun main(args: Array<String>) {
-    println("app engine ahoi")
-}
-
-public class VersionServlet : HttpServlet() {
+Path("/version") public class VersionResource {
 
     class object {
         private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
     }
 
-    override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
-        LOG.log(Level.FINER, "doGet()")
-        response.getWriter().write("version=foobar")
+    GET Produces(MediaType.TEXT_PLAIN) public fun getVersion(): Response {
+        LOG.log(Level.FINER, "getVersion()")
+        return Response.status(200).entity("version=jersey").build();
     }
-
 }
