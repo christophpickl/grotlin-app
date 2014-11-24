@@ -36,14 +36,24 @@ dependencies {
     appengineSdk "com.google.appengine:appengine-java-sdk:${versionAppEngine}"
     compile "com.google.appengine:appengine-api-1.0-sdk:${versionAppEngine}"
 
-    compile "org.glassfish.jersey.containers:jersey-container-servlet-core:${versionJersey}"
-    compile "org.glassfish.jersey.core:jersey-server:${versionJersey}"
+//    compile "javax.servlet:servlet-api:2.5"
+
+    // http://repository.jboss.org/nexus/content/groups/public
+    // https://github.com/szymex/Embedded-Jetty-RESTEasy-Guice-Example
+    // https://github.com/resteasy/Resteasy/tree/master/jaxrs/examples/guice-hello
+    compile 'org.jboss.resteasy:resteasy-guice:3.0.10.Final'
+    compile 'com.google.inject:guice:3.0'
+
+//    compile "org.glassfish.jersey.containers:jersey-container-servlet-core:${versionJersey}"
+//    compile "org.glassfish.jersey.core:jersey-server:${versionJersey}"
 //    compile "org.glassfish.jersey.core:jersey-client:${versionJersey}"
+
 //    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'
 
-//    compile 'javax.servlet:servlet-api:2.5'
-//    compile 'com.sun.jersey:jersey-server:1.18.2'
-//    compile 'com.sun.jersey.contribs:jersey-spring:1.18.2'
+    // easy access persistence service for GAE's datastore
+    compile 'com.googlecode.objectify:objectify:5.1.1'
+
+    compile 'javax.inject:javax.inject:1'
 
 //    testCompile "com.google.appengine:appengine-testing:${versionAppEngine}"
 //    testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
