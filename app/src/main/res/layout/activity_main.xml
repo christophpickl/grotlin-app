@@ -14,17 +14,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
+        android:textSize="14pt"
         />
-
+    <TextView
+        android:id="@+id/txtInfoMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        />
     <RelativeLayout
         android:id="@+id/gameContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="10px" />
     <Button
         android:id="@+id/btnEndTurn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="fuer stella"/>
+        android:text="End Turn"
+        android:background="#C3C3C3"/>
 
 </LinearLayout>

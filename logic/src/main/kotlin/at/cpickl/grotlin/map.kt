@@ -85,4 +85,15 @@ data class Region(public var owner: Player? = null, var armies: Int = 0, var lab
         return adjacent.filter { it.owner != owner }
     }
 
+    fun isPotentialAttackSource(): Boolean {
+        if (owner == null) {
+            return false
+        }
+        if (armies < 2) {
+            return false
+        }
+        return !adjacentAttackables().isEmpty()
+    }
+
+
 }

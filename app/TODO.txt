@@ -1,0 +1,5 @@
+
+* bugfix on orientation (saveInstance, ..)
+
+* zoom map
+* reset game

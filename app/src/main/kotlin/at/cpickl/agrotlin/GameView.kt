@@ -25,15 +25,10 @@ public class GameView(
 ) : LinearLayout(context) {
     class object {
         private val LOG: Logg = Logg("MainActivity")
-        private val LINE_PAINT = Paint()
-    }
-    {
-        LINE_PAINT.setColor(Color.GREEN)
-        LINE_PAINT.setStrokeWidth(8.0.toFloat())
     }
     public var listener: GameViewListener? = null
     {
-        setBackgroundColor(Color.LTGRAY)
+        setBackgroundColor(Color.parseColor("#3E3E3E"))
         setMinimumWidth(640)
         setMinimumHeight(480)
 

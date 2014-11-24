@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import android.content.Context
 import android.view.View
+import at.cpickl.grotlin.BattleResult
 
 public class MainActivity : Activity() {
 
@@ -35,11 +36,20 @@ public class MainActivity : Activity() {
 
         val pseudo = GamePseudoActivity(this,
                 findViewById(R.id.btnEndTurn) as Button,
-                findViewById(R.id.txtCurrentPlayer) as TextView)
+                findViewById(R.id.txtCurrentPlayer) as TextView,
+                findViewById(R.id.txtInfoMessage) as TextView)
 
         //        container.removeAll???
         //        container.setBackgroundColor(Color.BLACK)
         container.addView(pseudo.gameView, AndroidUtil.centered())
+    }
+    override fun onPause() {
+        super.onPause()
+        LOG.info("onPause()")
+    }
+    override fun onResume() {
+        super.onResume()
+        LOG.info("onResume()")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -51,8 +61,10 @@ public class MainActivity : Activity() {
         LOG.info("onOptionsItemSelected(item=${item})")
         val id = item.getItemId()
 
-        if (id == R.id.action_settings) {
-            return true
+        when (id) {
+            R.id.menu_settings -> { LOG.info("Settings menu clicked"); return true }
+            R.id.menu_restart -> { LOG.info("Restart menu clicked"); return true }
+            else -> throw IllegalArgumentException("Unhandled menu item ID: ${id} for menu item: ${item}")
         }
 
         return super.onOptionsItemSelected(item)
@@ -62,7 +74,8 @@ public class MainActivity : Activity() {
 
 class GamePseudoActivity(private val context: Context,
                          private val btnEndTurn: Button,
-                         private val txtCurrentPlayer:TextView) {
+                         private val txtCurrentPlayer:TextView,
+                         private val txtInfoMessage:TextView) {
 
     class object {
         private val LOG: Logg = Logg("GamePseudoActivity")
@@ -72,8 +85,8 @@ class GamePseudoActivity(private val context: Context,
     private val mapView: MapView
     private val attackPhase: AttackPhase
     {
-        val player1 = Player("Chrisi Bisi", Color.RED)
-        val player2 = Player("Liebe Stelli", Color.BLUE)
+        val player1 = Player("Player 1", Color.RED)
+        val player2 = Player("Player 2", Color.BLUE)
 
         val map = MiniMap()
         map.region1.ownedBy(player1, 2)
@@ -81,7 +94,9 @@ class GamePseudoActivity(private val context: Context,
         game = Game(map.map, listOf(player1, player2))
         mapView = MiniMapView(context, map)
         gameView = GameView(context, game, mapView)
-        attackPhase = AttackPhase(context, game, gameView).setOnEndGameListener({ onEndGame() })
+        attackPhase = AttackPhase(context, game, gameView, txtInfoMessage)
+                .setOnEndGameListener({ onEndGame() })
+                .setOnAttackedListener { onAttacked(it) }
     }
 
     {
@@ -89,11 +104,18 @@ class GamePseudoActivity(private val context: Context,
         initPlayer()
     }
 
+    private fun onAttacked(battle: BattleResult) {
+        LOG.info("onAttacked(${battle})")
+        if (!mapView.isAnyAttackSourceLeft(game.currentPlayer)) {
+            txtInfoMessage.setText("No more attack sources left, END TURN.")
+        }
+    }
+
     private fun onEndTurn() {
         LOG.info("onEndTurn()")
         btnEndTurn.setEnabled(false)
         var dphase: DistributionPhase = DistributionPhase(context, game, gameView, {
-            txtCurrentPlayer.setText("Distribute ${it} Unit(s)")
+            txtInfoMessage.setText("Distribute ${it} Unit(s)")
         }, {
             LOG.info("onEndTurn().distribute done. next player.")
             btnEndTurn.setEnabled(true)
@@ -101,7 +123,7 @@ class GamePseudoActivity(private val context: Context,
             initPlayer()
         })
 
-//        Toast.makeText(context, "Distribute Unit(s).", 5000)
+        Toast.makeText(context, "Distribute Unit(s).", 5000).show()
         mapView.deselectAllRegions() // should actually call gameView, instead of mapView
         gameView.listener = dphase
     }
@@ -109,11 +131,14 @@ class GamePseudoActivity(private val context: Context,
     private fun onEndGame() {
         LOG.info("onEndGame()")
         gameView.listener = EndGamePhase()
-        txtCurrentPlayer.setText("Player '${game.currentPlayer.name}' won!!!")
+        txtInfoMessage.setText("Player '${game.currentPlayer.name}' won!!!")
     }
 
     private fun initPlayer() {
         gameView.listener = attackPhase
         txtCurrentPlayer.setText("${game.currentPlayer.name}'s turn!")
+//        if (is source region available) {
+           txtInfoMessage.setText("Choose source region..")
+//        }
     }
 }

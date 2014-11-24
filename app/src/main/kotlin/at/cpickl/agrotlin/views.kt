@@ -31,18 +31,23 @@ public class FloatPoint(public val x: Float, public val y: Float) {
     }
 }
 
-public class RegionView(context: Context, public val region: Region, private val point: FloatPoint) : View(context) {
-    {
-        ARMY_TEXT_PAINT.setColor(Color.BLACK)
-        ARMY_TEXT_PAINT.setTextSize(25.0.toFloat())
-        ARMY_TEXT_PAINT.setFakeBoldText(true)
+public class RegionView(context: Context, public val region: Region, private val upperLeft: FloatPoint) : View(context) {
+    class object {
+        public val RADIUS: Float = 50.0F
+        public val SIZE: Float = RADIUS * 2
+        private val ARMY_TEXT_PAINT = Paint()
+        private val ARMY_BG_PAINT = Paint()
     }
-    private val paint = Paint()
-    private val centerX: Float
-    private val centerY: Float
     {
-        centerX = point.x + RADIUS
-        centerY = point.y + RADIUS
+        ARMY_TEXT_PAINT.setColor(Color.WHITE)
+        ARMY_TEXT_PAINT.setTextSize(40.0F)
+        ARMY_TEXT_PAINT.setFakeBoldText(true)
+
+        ARMY_BG_PAINT.setColor(Color.BLACK)
+    }
+    public val center: FloatPoint
+    {
+        center = FloatPoint(upperLeft.x + RADIUS, upperLeft.y + RADIUS)
     }
 
     public var selectedAsSource:Boolean = false
@@ -57,30 +62,27 @@ public class RegionView(context: Context, public val region: Region, private val
         } else {
             color = region.owner!!.color
         }
+        val paint = Paint()
         paint.setColor(color)
 
-        canvas.drawCircle(centerX, centerY, RADIUS, paint)
+        canvas.drawCircle(center.x, center.y, RADIUS, paint)
+        canvas.drawCircle(center.x, center.y, RADIUS - 10.0F, ARMY_BG_PAINT)
 
 
         if (region.owner != null) {
             val text = region.armies.toString()
             val textWidth = ARMY_TEXT_PAINT.measureText(text)
-            canvas.drawText(text, centerX - textWidth / 2, centerY + 10.0.toFloat(), ARMY_TEXT_PAINT)
+            canvas.drawText(text, center.x - textWidth / 2, center.y + 10.0.toFloat(), ARMY_TEXT_PAINT)
         }
     }
 
     public fun isWithinArea(search: FloatPoint): Boolean {
-        return search.x >= point.x && search.x <= point.x + SIZE &&
-               search.y >= point.y && search.y <= point.y + SIZE
+        return search.x >= upperLeft.x && search.x <= upperLeft.x + SIZE &&
+               search.y >= upperLeft.y && search.y <= upperLeft.y + SIZE
     }
 
     override public fun toString(): String {
         return "RegionView[region=${region}]"
     }
 
-    class object {
-        public val RADIUS: Float = 50.0.toFloat()
-        public val SIZE: Float = RADIUS * 2
-        private val ARMY_TEXT_PAINT = Paint()
-    }
 }
