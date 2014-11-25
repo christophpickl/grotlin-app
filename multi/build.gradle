@@ -16,11 +16,25 @@ apply plugin: 'war'
 apply plugin: 'appengine'
 apply plugin: 'kotlin'
 
-
 sourceCompatibility = 1.7
 version = '1.0-SNAPSHOT'
 
+def buildDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
+
+// http://java.dzone.com/articles/resource-filtering-gradle
+import org.apache.tools.ant.filters.*
+
+import java.text.SimpleDateFormat
+
+processResources {
+    filter ReplaceTokens, tokens: [
+            "artifact.version": project.property("version"),
+            "build.date": buildDate
+    ]
+}
+
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -36,6 +50,7 @@ dependencies {
     appengineSdk "com.google.appengine:appengine-java-sdk:${versionAppEngine}"
     compile "com.google.appengine:appengine-api-1.0-sdk:${versionAppEngine}"
 
+    compile 'joda-time:joda-time:2.5'
 //    compile "javax.servlet:servlet-api:2.5"
 
     // http://repository.jboss.org/nexus/content/groups/public

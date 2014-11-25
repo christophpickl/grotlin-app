@@ -7,10 +7,10 @@ import javax.ws.rs.GET
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 import java.util.logging.Level
-import javax.inject.Inject
 import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlAccessType
 import javax.xml.bind.annotation.XmlRootElement
+import javax.inject.Inject
 
 public class ResourceModule : AbstractModule() {
     override fun configure() {
@@ -24,17 +24,18 @@ Path("/version") public class VersionResource [Inject] (private val repo: Repo) 
         private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
     }
 
-    GET Produces(MediaType.APPLICATION_JSON, "application/vnd.swirl.version+json") public fun getVersion(): Version {
+    GET Produces(MediaType.APPLICATION_JSON, "application/vnd.swirl.version+json") public fun getVersion(): VersionRto {
         LOG.log(Level.FINER, "getVersion()")
-        return Version.build("1.0-SNAPSHOT", "2042-12-12")
+        val version = repo.loadVersion()
+        return VersionRto.build(version.artifactVersion, version.buildDate)
         //        return Response.status(200).entity("version=${repo.save("guice")}").build();
     }
 }
 
-XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class Version {
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class VersionRto {
     class object {
-        public fun build(artifactVersion: String, buildDate: String): Version {
-            val version = Version()
+        public fun build(artifactVersion: String, buildDate: String): VersionRto {
+            val version = VersionRto()
             version.artifactVersion = artifactVersion
             version.buildDate = buildDate
             return version
