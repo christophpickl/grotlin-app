@@ -14,12 +14,16 @@ import javax.inject.Inject
 import at.cpickl.grotlin.multi.service.ServiceModule
 import at.cpickl.grotlin.multi.service.UserService
 import at.cpickl.grotlin.multi.service.User
+import at.cpickl.grotlin.multi.Fault
+import at.cpickl.grotlin.multi.FaultCode
+import at.cpickl.grotlin.multi.FaultException
+import javax.ws.rs.core.Response.Status
 
 public class ResourceModule : AbstractModule() {
     override fun configure() {
-        install(ServiceModule())
         bind(javaClass<VersionResource>())
         bind(javaClass<AdminResource>())
+        bind(javaClass<FaultExceptionMapper>())
     }
 }
 
@@ -28,14 +32,15 @@ Path("/admin") public class AdminResource [Inject] (private val userService: Use
         private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
     }
 
-    Path("/resetDB") GET Produces(MediaType.TEXT_PLAIN) public fun resetDatabase(QueryParam("secret") secret: String?): String {
+    Path("/resetDB") GET Produces(MediaType.APPLICATION_JSON) public fun resetDatabase(QueryParam("secret") secret: String?): String {
         if (secret != "hans") {
-            throw AdminException("Invalid secret '${secret}'!")
+            throw AdminException("Invalid secret '${secret}'!", Fault("You shall not pass!", FaultCode.NOT_ALLOWED))
         }
         userService.saveOrUpdate(User("user1"))
         userService.saveOrUpdate(User("user2"))
-        return "DONE"
+        return """{ "success": true}"""
     }
+
     Path("/users") GET Produces(MediaType.APPLICATION_JSON) public fun getUsers(): Collection<UserRto> {
         return userService.loadAll().map {
             val rto = UserRto()
@@ -44,7 +49,7 @@ Path("/admin") public class AdminResource [Inject] (private val userService: Use
         }
     }
 }
-class AdminException(message: String) : RuntimeException(message) {
+class AdminException(message: String, fault: Fault) : FaultException(message, Status.FORBIDDEN, fault) {
 }
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class UserRto {

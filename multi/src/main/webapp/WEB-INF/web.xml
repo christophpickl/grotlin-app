@@ -8,7 +8,7 @@
 
     <context-param>
         <param-name>resteasy.guice.modules</param-name>
-        <param-value>at.cpickl.grotlin.multi.resource.ResourceModule</param-value>
+        <param-value>at.cpickl.grotlin.multi.AppModule</param-value>
     </context-param>
     <listener>
         <listener-class>org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener</listener-class>
@@ -29,7 +29,7 @@
         <servlet-name>resteasyServlet</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
-
+    
     <!-- ****************************** OBJECTIFY ****************************** -->
     <!-- see: https://code.google.com/p/objectify-appengine/wiki/Setup#Enable_ObjectifyFilter_for_your_requests -->
     <filter>

@@ -12,7 +12,6 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 import java.util.logging.Level
 
-
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class VersionRto {
     class object {
         public fun build(artifactVersion: String, buildDate: String): VersionRto {
