@@ -43,6 +43,8 @@ dependencies {
     // https://github.com/resteasy/Resteasy/tree/master/jaxrs/examples/guice-hello
     compile 'org.jboss.resteasy:resteasy-guice:3.0.10.Final'
     compile 'com.google.inject:guice:3.0'
+    // http://howtodoinjava.com/2013/05/10/resteasy-jackson-json-example/
+    compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.4.Final'
 
 //    compile "org.glassfish.jersey.containers:jersey-container-servlet-core:${versionJersey}"
 //    compile "org.glassfish.jersey.core:jersey-server:${versionJersey}"
