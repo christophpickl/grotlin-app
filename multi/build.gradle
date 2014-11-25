@@ -22,14 +22,14 @@ version = '1.0-SNAPSHOT'
 def buildDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
 
 // http://java.dzone.com/articles/resource-filtering-gradle
-import org.apache.tools.ant.filters.*
+import org.apache.tools.ant.filters.ReplaceTokens
 
 import java.text.SimpleDateFormat
 
 processResources {
     filter ReplaceTokens, tokens: [
             "artifact.version": project.property("version"),
-            "build.date": buildDate
+            "build.date"      : buildDate
     ]
 }
 
@@ -57,20 +57,16 @@ dependencies {
     // https://github.com/szymex/Embedded-Jetty-RESTEasy-Guice-Example
     // https://github.com/resteasy/Resteasy/tree/master/jaxrs/examples/guice-hello
     compile 'org.jboss.resteasy:resteasy-guice:3.0.10.Final'
+    compile 'javax.inject:javax.inject:1'
     compile 'com.google.inject:guice:3.0'
+
     // http://howtodoinjava.com/2013/05/10/resteasy-jackson-json-example/
     compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.4.Final'
-
-//    compile "org.glassfish.jersey.containers:jersey-container-servlet-core:${versionJersey}"
-//    compile "org.glassfish.jersey.core:jersey-server:${versionJersey}"
-//    compile "org.glassfish.jersey.core:jersey-client:${versionJersey}"
-
 //    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'
 
     // easy access persistence service for GAE's datastore
     compile 'com.googlecode.objectify:objectify:5.1.1'
 
-    compile 'javax.inject:javax.inject:1'
 
     testCompile 'org.testng:testng:6.8.8'
     testCompile 'org.hamcrest:hamcrest-library:1.3'

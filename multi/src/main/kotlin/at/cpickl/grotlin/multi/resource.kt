@@ -43,4 +43,7 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class VersionRto {
     }
     public var artifactVersion: String? = null
     public var buildDate: String? = null
+
+    override public fun toString() = "VersionRto[artifactVersion='${artifactVersion}', buildDate='${buildDate}']"
+
 }
