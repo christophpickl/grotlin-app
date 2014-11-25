@@ -5,6 +5,7 @@ import org.hamcrest.Matchers
 import org.jboss.resteasy.client.ClientRequest
 import org.jboss.resteasy.client.ClientResponse
 import java.util.logging.Logger
+import at.cpickl.grotlin.multi.resource.VersionRto
 
 abstract class Client {
     class object {

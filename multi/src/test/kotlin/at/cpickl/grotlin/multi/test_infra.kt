@@ -20,10 +20,10 @@ Test public class EnableLogNonTest {
     }
 }
 
-fun <T> assertThat(actual: T, matcher: Matcher<T>) {
+public fun <T> assertThat(actual: T, matcher: Matcher<T>) {
     MatcherAssert.assertThat(actual, matcher)
 }
 
-fun <T> equalTo(operand: T): Matcher<T> {
+public fun <T> equalTo(operand: T): Matcher<T> {
     return Matchers.equalTo(operand)
 }

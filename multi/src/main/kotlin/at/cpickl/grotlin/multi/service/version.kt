@@ -1,13 +1,11 @@
-package at.cpickl.grotlin.multi
+package at.cpickl.grotlin.multi.service
 
-import com.google.inject.AbstractModule
 import java.util.Properties
 
+data class Version(public val artifactVersion: String, public val buildDate: String)
 
-public class ServiceModule : AbstractModule() {
-    override fun configure() {
-        bind(javaClass<VersionService>()).toInstance(PropertiesVersionService("/swirl.config.properties"))
-    }
+trait VersionService {
+    fun load(): Version
 }
 
 class PropertiesVersionService(private val propertiesClasspath: String) : VersionService {
@@ -19,9 +17,3 @@ class PropertiesVersionService(private val propertiesClasspath: String) : Versio
         return Version(artifactVersion, buildDate)
     }
 }
-
-trait VersionService {
-    fun load(): Version
-}
-
-data class Version(public val artifactVersion: String, public val buildDate: String)
