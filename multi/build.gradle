@@ -72,6 +72,9 @@ dependencies {
 
     compile 'javax.inject:javax.inject:1'
 
+    testCompile 'org.testng:testng:6.8.8'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+    testCompile 'org.mockito:mockito-core:1.10.8'
 //    testCompile "com.google.appengine:appengine-testing:${versionAppEngine}"
 //    testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
 }
@@ -85,4 +88,25 @@ appengine {
         noCookies = true
         oauth2 = true
     }
+}
+
+test {
+    useTestNG({
+        excludeGroups 'WebTest'
+    })
+}
+
+// http://stackoverflow.com/questions/21009125/including-not-excluding-groups-in-testng-and-gradle
+task testWeb(type: Test) {
+    testLogging {
+        events "started", "passed", "skipped", "failed", "standardOut", "standardError"
+        exceptionFormat "full"
+    }
+    useTestNG() {
+//        excludeGroups 'WebTest'
+        parallel 'classes'
+        threadCount 4
+    }
+    reports.junitXml.destination = file("${reporting.baseDir}/webtest")
+    reports.html.destination = file("${reporting.baseDir}/webtest")
 }

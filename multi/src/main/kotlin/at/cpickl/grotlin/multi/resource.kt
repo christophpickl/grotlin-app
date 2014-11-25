@@ -19,14 +19,14 @@ public class ResourceModule : AbstractModule() {
     }
 }
 
-Path("/version") public class VersionResource [Inject] (private val repo: Repo) {
+Path("/version") public class VersionResource [Inject] (private val versionService: VersionService) {
     class object {
         private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
     }
 
     GET Produces(MediaType.APPLICATION_JSON, "application/vnd.swirl.version+json") public fun getVersion(): VersionRto {
         LOG.log(Level.FINER, "getVersion()")
-        val version = repo.loadVersion()
+        val version = versionService.load()
         return VersionRto.build(version.artifactVersion, version.buildDate)
         //        return Response.status(200).entity("version=${repo.save("guice")}").build();
     }
