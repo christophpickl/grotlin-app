@@ -1,12 +1,14 @@
 def versionAppEngine = "1.9.17"
+def versionKotlin = "0.9.206"
+def buildDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
 
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:0.9.66'
         classpath "com.google.appengine:gradle-appengine-plugin:1.9.17"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:0.9.206" // why not global working?!
     }
 }
 // https://github.com/GoogleCloudPlatform/gradle-appengine-plugin
@@ -18,7 +20,6 @@ apply plugin: 'kotlin'
 sourceCompatibility = 1.7
 version = '1.0-SNAPSHOT'
 
-def buildDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
 
 // http://java.dzone.com/articles/resource-filtering-gradle
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -42,10 +43,11 @@ configurations {
 }
 sourceSets {
     main { compileClasspath += configurations.provided }
+    main.java.srcDirs += 'src/main/kotlin'
 }
 
 dependencies {
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:0.9.66'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin"
     appengineSdk "com.google.appengine:appengine-java-sdk:${versionAppEngine}"
     compile "com.google.appengine:appengine-api-1.0-sdk:${versionAppEngine}"
 
@@ -72,6 +74,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.8'
     testCompile "com.google.appengine:appengine-testing:${versionAppEngine}"
     testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin"
 }
 
 appengine {
