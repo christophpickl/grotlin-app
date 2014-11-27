@@ -1,4 +1,4 @@
-package at.cpickl.agrotlin
+package at.cpickl.agrotlin.activity
 
 import android.app.Activity
 import android.os.Bundle
@@ -29,17 +29,28 @@ import org.apache.http.HttpStatus
 import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.util.EntityUtils
 import android.content.Intent
+import at.cpickl.agrotlin.Logg
+import at.cpickl.agrotlin.BuildConfig
+import at.cpickl.agrotlin.AndroidUtil
+import at.cpickl.agrotlin.R
+import at.cpickl.agrotlin.view.GameView
+import at.cpickl.agrotlin.view.MiniMapView
+import at.cpickl.agrotlin.service.AttackPhase
+import at.cpickl.agrotlin.MiniMap
+import at.cpickl.agrotlin.view.MapView
+import at.cpickl.agrotlin.service.EndGamePhase
+import at.cpickl.agrotlin.service.DistributionPhase
 
 public class MainActivity : Activity() {
     class object {
         private val LOG: Logg = Logg("MainActivity");
         {
-//            public val DEBUG: Boolean = java.lang.Boolean.parseBoolean("true")
-//            public val APPLICATION_ID: String = "at.cpickl.agrotlin"
-//            public val BUILD_TYPE: String = "debug"
-//            public val FLAVOR: String = ""
-//            public val VERSION_CODE: Int = 1
-//            public val VERSION_NAME: String = "1.0"
+            //            public val DEBUG: Boolean = java.lang.Boolean.parseBoolean("true")
+            //            public val APPLICATION_ID: String = "at.cpickl.agrotlin"
+            //            public val BUILD_TYPE: String = "debug"
+            //            public val FLAVOR: String = ""
+            //            public val VERSION_CODE: Int = 1
+            //            public val VERSION_NAME: String = "1.0"
             LOG.info("Starting version ${BuildConfig.VERSION_NAME} (debug=${BuildConfig.DEBUG}, build type=${BuildConfig.BUILD_TYPE})")
         }
     }
@@ -133,7 +144,7 @@ public class MainActivity : Activity() {
         LOG.info("onMenuRestart()");
 
         val intent = Intent(this, javaClass<LoginActivity>())
-//        intent.putExtra()
+        //        intent.putExtra()
         startActivity(intent)
     }
 
@@ -160,7 +171,7 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
     private val swirlEngineUrl = "http://10.0.1.12:8888"
     private var thrown: Exception? = null
 
-        // http://stackoverflow.com/questions/3505930/make-an-http-request-with-android
+    // http://stackoverflow.com/questions/3505930/make-an-http-request-with-android
     override fun doInBackground(vararg params: Void?): VersionRto? {
         LOG.debug("doInBackground()")
         try {
@@ -178,7 +189,7 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
                 // httpPost.setEntity(new StringEntity(jsonAsString));
                 val mapper = ObjectMapper()
                 val entityOut = null // OutputStream
-//                    response.getEntity().writeTo(entityOut)
+                //                    response.getEntity().writeTo(entityOut)
                 val jsonAsString = EntityUtils.toString(response.getEntity())
                 LOG.trace("Server call responded with body: '${jsonAsString}'")
                 return mapper.readValue(jsonAsString, javaClass<VersionRto>())
@@ -274,9 +285,9 @@ class GamePseudoActivity(private val context: Context,
     private fun initPlayer() {
         gameView.listener = attackPhase
         txtCurrentPlayer.setText("${game.currentPlayer.name}'s turn!")
-//        if (is source region available) {
-           txtInfoMessage.setText("Choose source region..")
-//        }
+        //        if (is source region available) {
+        txtInfoMessage.setText("Choose source region..")
+        //        }
     }
     override public fun toString() = "GamePseudoActivity[game=${game}]"
 }

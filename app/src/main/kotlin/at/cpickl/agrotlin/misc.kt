@@ -35,3 +35,9 @@ public class Logg(val tag: String) {
     }
 }
 
+
+public class FloatPoint(public val x: Float, public val y: Float) {
+    override fun toString(): String {
+        return "FloatPoint[" + x + "/" + y + "]"
+    }
+}

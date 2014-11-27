@@ -11,8 +11,11 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <meta-data android:name="roboguice.modules"
+                   android:value="at.cpickl.agrotlin.SwirlModule" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
             <intent-filter>
@@ -23,9 +26,9 @@
         </activity>
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:label="Login Label"
-            android:parentActivityName="at.cpickl.agrotlin.MainActivity" >
+            android:parentActivityName=".activity.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="at.cpickl.agrotlin.MainActivity" />

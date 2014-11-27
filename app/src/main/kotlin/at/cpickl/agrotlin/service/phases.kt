@@ -1,10 +1,14 @@
-package at.cpickl.agrotlin
+package at.cpickl.agrotlin.service
 
 import android.content.Context
 import at.cpickl.grotlin.Game
 import android.widget.Toast
 import at.cpickl.grotlin.BattleResult
 import android.widget.TextView
+import at.cpickl.agrotlin.view.GameView
+import at.cpickl.agrotlin.view.GameViewListener
+import at.cpickl.agrotlin.view.RegionView
+import at.cpickl.agrotlin.Logg
 
 
 trait GamePhase : GameViewListener {
@@ -90,7 +94,7 @@ class AttackPhase(val context: Context,
 }
 
 class DistributionPhase(private val context: Context,
-                        private val game:Game,
+                        private val game: Game,
                         val view: GameView,
                         val onArmiesToSpan: (armies: Int) -> Unit,
                         val onFinished: () -> Unit) : GamePhase {

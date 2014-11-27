@@ -1,4 +1,4 @@
-package at.cpickl.agrotlin
+package at.cpickl.agrotlin.view
 
 import android.content.Context
 import at.cpickl.grotlin.Game
@@ -12,6 +12,8 @@ import java.util.Arrays
 import at.cpickl.grotlin.Region
 import at.cpickl.grotlin.Battle
 import android.widget.Toast
+import at.cpickl.agrotlin.Logg
+import at.cpickl.agrotlin.FloatPoint
 
 public trait GameViewListener {
     fun onSelectedView(regionView: RegionView)

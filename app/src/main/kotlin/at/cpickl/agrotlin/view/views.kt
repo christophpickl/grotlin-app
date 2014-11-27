@@ -1,35 +1,13 @@
-package at.cpickl.agrotlin
+package at.cpickl.agrotlin.view
 
-import android.graphics.Paint
 import android.content.Context
 import at.cpickl.grotlin.Region
+import at.cpickl.agrotlin.FloatPoint
 import android.view.View
+import android.graphics.Paint
 import android.graphics.Color
 import android.graphics.Canvas
-import at.cpickl.grotlin.Map
-import java.util.Arrays
-import android.widget.LinearLayout
-import at.cpickl.grotlin.Game
-import android.view.MotionEvent
-import android.util.Log
-import android.app.Activity
-import android.view.WindowManager
-import android.view.Window
-import android.os.Bundle
-import at.cpickl.grotlin.Player
-import android.widget.RelativeLayout
-import android.view.Menu
-import at.cpickl.agrotlin.R
-import android.view.MenuItem
-import at.cpickl.agrotlin.AndroidUtil
-import android.widget.RelativeLayout.LayoutParams
-import at.cpickl.grotlin.Battle
 
-public class FloatPoint(public val x: Float, public val y: Float) {
-    override fun toString(): String {
-        return "FloatPoint[" + x + "/" + y + "]"
-    }
-}
 
 public class RegionView(context: Context, public val region: Region, private val upperLeft: FloatPoint) : View(context) {
     class object {
@@ -78,7 +56,7 @@ public class RegionView(context: Context, public val region: Region, private val
 
     public fun isWithinArea(search: FloatPoint): Boolean {
         return search.x >= upperLeft.x && search.x <= upperLeft.x + SIZE &&
-               search.y >= upperLeft.y && search.y <= upperLeft.y + SIZE
+                search.y >= upperLeft.y && search.y <= upperLeft.y + SIZE
     }
 
     override public fun toString(): String {
