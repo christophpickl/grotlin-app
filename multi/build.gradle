@@ -31,6 +31,10 @@ version = '1.0-SNAPSHOT'
 
 
 // http://java.dzone.com/articles/resource-filtering-gradle
+
+// TODO:
+// WARNING [Project: :app] variant.getProcessResources() is deprecated.
+// Call it on one of variant.getOutputs() instead.
 processResources {
     filter ReplaceTokens, tokens: [
             "artifact.version": project.property("version"),
@@ -50,6 +54,11 @@ sourceSets {
     main { compileClasspath += configurations.provided }
     main.java.srcDirs += 'src/main/kotlin'
 }
+//android {
+//    sourceSets {
+//        main.java.srcDirs += 'src/main/kotlin'
+//    }
+//}
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin"
@@ -90,10 +99,11 @@ dependencies {
 }
 
 appengine {
-    httpPort = 8888
     downloadSdk = true
+    // via this it's possible to access it via its LAN IP address (rather localhost)
     httpAddress = "0.0.0.0"
-//    host = "0.0.0.0"
+    httpPort = 8888
+
 //    jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000']
 
     appcfg {
@@ -123,8 +133,3 @@ task testWeb(type: Test) {
     reports.junitXml.destination = file("${reporting.baseDir}/webtest")
     reports.html.destination = file("${reporting.baseDir}/webtest")
 }
-//android {
-//    sourceSets {
-//        main.java.srcDirs += 'src/main/kotlin'
-//    }
-//}

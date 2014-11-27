@@ -24,9 +24,10 @@ import org.apache.http.client.HttpClient
 import org.apache.http.impl.conn.DefaultClientConnection
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
+import android.os.AsyncTask
+import org.apache.http.HttpStatus
 
 public class MainActivity : Activity() {
-
     class object {
         private val LOG: Logg = Logg("MainActivity")
     }
@@ -40,8 +41,6 @@ public class MainActivity : Activity() {
          */
     }
 
-    // TODO inject that thing!
-    private val swirlEngineUrl = "http://10.0.1.12:8888"
 
     private var pseudo: GamePseudoActivity? = null
 
@@ -120,12 +119,60 @@ public class MainActivity : Activity() {
 
     private fun onMenuRestart() {
         LOG.info("onMenuRestart()");
-        val client = DefaultHttpClient()
-        val get = HttpGet("${swirlEngineUrl}/version")
-        println("requesting url")
-        val response = client.execute(get)
-        println("response.getStatusLine().getStatusCode()=" + response.getStatusLine().getStatusCode())
+
+        VersionHttpRequest({
+            Toast.makeText(this, "Exception: ${it.getMessage()}", 5000).show()
+        }).execute()
+        // class RetrieveFeedTask extends AsyncTask<String, Void, RSSFeed> {
+
     }
+}
+// class Params, class Progress, class Result
+class VersionHttpRequest(private val exceptionHandler: (Exception) -> Unit)
+: AsyncTask<Void, Void, VersionRto>() {
+    class object {
+        private val LOG: Logg = Logg(javaClass.getSimpleName())
+    }
+    // TODO inject that thing! make it configurable
+    private val swirlEngineUrl = "http://10.0.1.12:8888"
+    private var thrown: Exception? = null
+
+        // http://stackoverflow.com/questions/3505930/make-an-http-request-with-android
+    override fun doInBackground(vararg params: Void?): VersionRto? {
+        LOG.debug("doInBackground()")
+        try {
+
+            val client = DefaultHttpClient()
+            val get = HttpGet("${swirlEngineUrl}/version")
+            get.setHeader("Accept", "application/json")
+
+            val response = client.execute(get)
+            LOG.debug("response.getStatusLine().getStatusCode()=" + response.getStatusLine().getStatusCode())
+            val statusCode = response.getStatusLine().getStatusCode()
+
+            // http://stackoverflow.com/questions/6218143/how-to-send-post-request-in-json-using-httpclient
+            if (statusCode == HttpStatus.SC_OK) {
+
+                return VersionRto()
+            } else {
+                thrown = RuntimeException("GET ${get.getURI().toURL()} failed with status code: ${statusCode}")
+                return null
+            }
+        } catch(e: Exception) {
+            thrown = e
+            return null
+        }
+    }
+    override fun onPostExecute(result: VersionRto?) {
+        if (thrown != null) {
+            exceptionHandler(thrown!!)
+        }
+    }
+
+}
+
+class VersionRto {
+
 }
 
 
