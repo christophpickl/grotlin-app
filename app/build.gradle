@@ -2,13 +2,26 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
-dependencies {
-    compile(project(":logic"))
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+def versionRoboguice = "3.0.1"
 
-    compile "org.codehaus.jackson:jackson-mapper-asl:1.9.13"
+dependencies {
+    compile project(':logic')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    compile 'com.google.code.findbugs:jsr305:1.3.9' // for the optional Nullable annotation
+
+    compile "org.roboguice:roboguice:${versionRoboguice}"
+    compile "org.roboguice:roboblender:${versionRoboguice}" // should be provided ... :-/
+    // test 'org.robolectric:robolectric:3.0.1'
+
 }
+
+//configurations {
+//    provided
+//}
+//sourceSets {
+//    main { compileClasspath += configurations.provided }
+//}
 
 android {
     compileSdkVersion 19
@@ -20,6 +33,10 @@ android {
         exclude 'META-INF/ASL2.0'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
+        // for roboguice as well...
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
     }
 
     defaultConfig {

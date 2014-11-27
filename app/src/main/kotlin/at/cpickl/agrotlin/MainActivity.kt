@@ -28,10 +28,20 @@ import android.os.AsyncTask
 import org.apache.http.HttpStatus
 import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.util.EntityUtils
+import android.content.Intent
 
 public class MainActivity : Activity() {
     class object {
-        private val LOG: Logg = Logg("MainActivity")
+        private val LOG: Logg = Logg("MainActivity");
+        {
+//            public val DEBUG: Boolean = java.lang.Boolean.parseBoolean("true")
+//            public val APPLICATION_ID: String = "at.cpickl.agrotlin"
+//            public val BUILD_TYPE: String = "debug"
+//            public val FLAVOR: String = ""
+//            public val VERSION_CODE: Int = 1
+//            public val VERSION_NAME: String = "1.0"
+            LOG.info("Starting version ${BuildConfig.VERSION_NAME} (debug=${BuildConfig.DEBUG}, build type=${BuildConfig.BUILD_TYPE})")
+        }
     }
     {
         // http://stackoverflow.com/questions/582185/android-disable-landscape-mode
@@ -122,17 +132,21 @@ public class MainActivity : Activity() {
     private fun onMenuRestart() {
         LOG.info("onMenuRestart()");
 
-        VersionHttpRequest(
-            {
-                Toast.makeText(this, "Server built date: ${it.buildDate}", 5000).show()
-            },
-            {
-                it.printStackTrace()
-                Toast.makeText(this, "Exception: ${it.getMessage()}", 5000).show()
-            }
-        ).execute()
-        // class RetrieveFeedTask extends AsyncTask<String, Void, RSSFeed> {
+        val intent = Intent(this, javaClass<LoginActivity>())
+//        intent.putExtra()
+        startActivity(intent)
+    }
 
+    private fun UNUSED_requestVersion() {
+        VersionHttpRequest(
+                {
+                    Toast.makeText(this, "Server built date: ${it.buildDate}", 5000).show()
+                },
+                {
+                    it.printStackTrace()
+                    Toast.makeText(this, "Exception: ${it.getMessage()}", 5000).show()
+                }
+        ).execute()
     }
 }
 // class Params, class Progress, class Result
