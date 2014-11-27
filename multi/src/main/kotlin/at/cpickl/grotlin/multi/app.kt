@@ -6,12 +6,10 @@ import at.cpickl.grotlin.multi.resource.ResourceModule
 import javax.ws.rs.core.Response.Status
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
-import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 import javax.ws.rs.ext.Provider;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterContext
-import org.jboss.resteasy.spi.HttpRequest
-import org.jboss.resteasy.core.ResourceMethodInvoker
-import org.jboss.resteasy.core.ServerResponse
+import java.util.logging.Logger
+import java.util.logging.Level
 
 
 public class AppModule : AbstractModule() {
@@ -22,6 +20,8 @@ public class AppModule : AbstractModule() {
         bind(javaClass<CorsInterceptor>())
     }
 }
+// http://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/html/ch30.html
+// ... You must allocate this and register it as a singleton provider from your Application class. See the javadoc or its various settings.
 
 // https://code.google.com/r/sergiobossa-terrastore-kryo/source/browse/src/main/java/terrastore/server/impl/cors/CorsInterceptor.java
 Provider ServerInterceptor public class CorsInterceptor: MessageBodyWriterInterceptor {
@@ -39,8 +39,21 @@ Provider ServerInterceptor public class CorsInterceptor: MessageBodyWriterInterc
 
 data class Fault(public val message: String, public val code: FaultCode)
 
-enum class FaultCode(val label: String) {
+enum class FaultCode(public val label: String) {
     NOT_ALLOWED: FaultCode("NOT_ALLOWED")
+    INVALID_PAYLOAD: FaultCode("INVALID_PAYLOAD")
+    INVALID_LOGOUT: FaultCode("INVALID_LOGOUT")
+    INVALID_CREDENTIALS: FaultCode("INVALID_CREDENTIALS")
+    INTERNAL_ERROR: FaultCode("INTERNAL_ERROR")
 }
 
-abstract class FaultException(message: String, public val status: Status, public val fault: Fault) : RuntimeException(message)
+open class FaultException(message: String, public val status: Status, public val fault: Fault) : RuntimeException(message) {
+    override public fun toString(): String {
+        return "FaultException[message='${getMessage()}', status='$status', fault=${fault}]"
+    }
+}
+
+
+public fun Logger.exception(message: String, throwable: Throwable) {
+    log(Level.SEVERE, message, throwable)
+}

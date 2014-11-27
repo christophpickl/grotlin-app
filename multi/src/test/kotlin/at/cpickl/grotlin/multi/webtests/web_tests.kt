@@ -1,4 +1,4 @@
-package at.cpickl.grotlin.multi
+package at.cpickl.grotlin.multi.webtests
 
 import org.testng.annotations.Test
 import org.hamcrest.Matchers
@@ -6,6 +6,15 @@ import org.jboss.resteasy.client.ClientRequest
 import org.jboss.resteasy.client.ClientResponse
 import java.util.logging.Logger
 import at.cpickl.grotlin.multi.resource.VersionRto
+import javax.ws.rs.core.Response
+import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.Response.Status
+import at.cpickl.grotlin.multi.assertThat
+import at.cpickl.grotlin.multi.equalTo
+
+fun Response.assertStatusCode(expected: Status) {
+    assertThat(getStatus(), equalTo(expected.getStatusCode()))
+}
 
 abstract class Client {
     class object {
@@ -30,29 +39,39 @@ abstract class Client {
         val url = "${baseUrl}${endpointUrl}"
         LOG.finer("GET ${url}")
         val request = ClientRequest(url)
-        request.accept("application/json")
+        request.accept(MediaType.APPLICATION_JSON)
         val response = request.get(entityType)
         assertThat(response.getStatus(), equalTo(expectedStatus))
         return response
     }
-}
 
-class VersionClient : Client() {
-    fun get(): VersionRto {
-        return get("/version", javaClass<VersionRto>()).getEntity()
+    fun getAny(endpointUrl: String): ClientResponse<out Any?> {
+        val url = "${baseUrl}${endpointUrl}"
+        LOG.finer("GET ${url}")
+        val request = ClientRequest(url)
+        request.accept(MediaType.APPLICATION_JSON)
+        return request.get()
+    }
+
+    fun post(endpointUrl: String, body: Any): ClientResponse<out Any?> {
+        val url = "${baseUrl}${endpointUrl}"
+        LOG.finer("POST ${url}")
+        val request = ClientRequest(url)
+        request.accept(MediaType.APPLICATION_JSON)
+        request.body(MediaType.APPLICATION_JSON, body)
+        val response = request.post()
+        return response
     }
 }
 
-Test(groups = array("WebTest")) public class VersionWebTest {
-    class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+class TestClient : Client() {
+    fun get(url: String): Response {
+        return getAny(url)
     }
+}
 
-    public fun getVersion() {
-        val version = VersionClient().get()
-        LOG.fine("Returned version: ${version}")
-        assertThat(version.artifactVersion, Matchers.notNullValue())
-        assertThat(version.buildDate, Matchers.notNullValue())
+Test(groups = array("WebTest")) public class MiscWebTest {
+    public fun invalidUrlShouldReturn404NotFound() {
+        assertThat(TestClient().getAny("/not_existing").getStatus(), equalTo(Response.Status.NOT_FOUND.getStatusCode()))
     }
-
 }

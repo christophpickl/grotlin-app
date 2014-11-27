@@ -1,10 +1,10 @@
 package at.cpickl.grotlin.multi.service
 
 import com.google.inject.AbstractModule
-import java.util.Properties
-import com.googlecode.objectify.annotation.Entity
-import com.googlecode.objectify.annotation.Id
-import com.googlecode.objectify.ObjectifyService
+import at.cpickl.grotlin.multi.Fault
+import at.cpickl.grotlin.multi.FaultException
+import javax.ws.rs.core.Response.Status
+import at.cpickl.grotlin.multi.FaultCode
 
 public class ServiceModule : AbstractModule() {
     override fun configure() {
@@ -12,3 +12,5 @@ public class ServiceModule : AbstractModule() {
         bind(javaClass<UserService>()).toInstance(ObjectifyUserService())
     }
 }
+
+class TechException(message: String, faultMessage: String) : FaultException(message, Status.INTERNAL_SERVER_ERROR, Fault(faultMessage, FaultCode.INTERNAL_ERROR))

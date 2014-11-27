@@ -29,6 +29,8 @@ public class ResourceModule : AbstractModule() {
         bind(javaClass<AdminResource>())
 
         bind(javaClass<FaultExceptionMapper>())
+        bind(javaClass<UnrecognizedPropertyExceptionMapper>())
+//        bind(javaClass<GeneralExceptionMapper>())
     }
 }
 
@@ -37,7 +39,8 @@ Path("/admin") public class AdminResource [Inject] (private val userService: Use
         private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
     }
 
-    Path("/resetDB") GET Produces(MediaType.APPLICATION_JSON) public fun resetDatabase(QueryParam("secret") secret: String?): String {
+    Path("/resetDB") GET Produces(MediaType.APPLICATION_JSON)
+    public fun resetDatabase(QueryParam("secret") secret: String?): String {
         if (secret != "hans") {
             throw AdminException("Invalid secret '${secret}'!", Fault("You shall not pass!", FaultCode.NOT_ALLOWED))
         }
@@ -49,5 +52,4 @@ Path("/admin") public class AdminResource [Inject] (private val userService: Use
 
 }
 
-class AdminException(message: String, fault: Fault) : FaultException(message, Status.FORBIDDEN, fault) {
-}
+class AdminException(message: String, fault: Fault) : FaultException(message, Status.FORBIDDEN, fault)

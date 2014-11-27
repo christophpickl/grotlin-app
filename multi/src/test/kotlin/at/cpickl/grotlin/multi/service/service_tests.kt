@@ -43,7 +43,7 @@ Test public class ObjectifyUserServiceTest {
     Test(dependsOnMethods = array("loadAll")) public fun saveOrUpdate() {
         ObjectifyService.run({
             assertThat(testee.loadAll().size, equalTo(0))
-            val user = User("cpi")
+            val user = User("cpi", "email", "password")
             testee.saveOrUpdate(user)
             val actual = testee.loadAll()
             assertThat(actual.size, equalTo(1))
