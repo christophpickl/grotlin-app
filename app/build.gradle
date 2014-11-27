@@ -6,11 +6,21 @@ dependencies {
     compile(project(":logic"))
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    compile "org.codehaus.jackson:jackson-mapper-asl:1.9.13"
 }
 
 android {
     compileSdkVersion 19
     buildToolsVersion "19.1.0"
+
+    packagingOptions {
+        // this file is packaged in jackson-mapper and jackson-core (trans. dep.)
+        // we have to explicitly ignore this classpath file clash for APK generation...
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
 
     defaultConfig {
         applicationId "at.cpickl.agrotlin"

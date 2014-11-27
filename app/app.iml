@@ -83,6 +83,8 @@
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="slf4j-api-1.7.7" level="project" />
+    <orderEntry type="library" exported="" name="jackson-core-asl-1.9.13" level="project" />
+    <orderEntry type="library" exported="" name="jackson-mapper-asl-1.9.13" level="project" />
     <orderEntry type="library" exported="" name="logback-classic-1.1.2" level="project" />
     <orderEntry type="library" exported="" name="kotlin-runtime-0.9.206" level="project" />
     <orderEntry type="library" exported="" name="kotlin-stdlib-0.9.206" level="project" />

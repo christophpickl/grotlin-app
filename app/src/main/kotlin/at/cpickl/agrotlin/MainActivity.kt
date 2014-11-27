@@ -26,6 +26,8 @@ import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
 import android.os.AsyncTask
 import org.apache.http.HttpStatus
+import org.codehaus.jackson.map.ObjectMapper
+import org.apache.http.util.EntityUtils
 
 public class MainActivity : Activity() {
     class object {
@@ -120,15 +122,22 @@ public class MainActivity : Activity() {
     private fun onMenuRestart() {
         LOG.info("onMenuRestart()");
 
-        VersionHttpRequest({
-            Toast.makeText(this, "Exception: ${it.getMessage()}", 5000).show()
-        }).execute()
+        VersionHttpRequest(
+            {
+                Toast.makeText(this, "Server built date: ${it.buildDate}", 5000).show()
+            },
+            {
+                it.printStackTrace()
+                Toast.makeText(this, "Exception: ${it.getMessage()}", 5000).show()
+            }
+        ).execute()
         // class RetrieveFeedTask extends AsyncTask<String, Void, RSSFeed> {
 
     }
 }
 // class Params, class Progress, class Result
-class VersionHttpRequest(private val exceptionHandler: (Exception) -> Unit)
+class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
+                         private val exceptionHandler: (Exception) -> Unit)
 : AsyncTask<Void, Void, VersionRto>() {
     class object {
         private val LOG: Logg = Logg(javaClass.getSimpleName())
@@ -152,9 +161,15 @@ class VersionHttpRequest(private val exceptionHandler: (Exception) -> Unit)
 
             // http://stackoverflow.com/questions/6218143/how-to-send-post-request-in-json-using-httpclient
             if (statusCode == HttpStatus.SC_OK) {
-
-                return VersionRto()
+                // httpPost.setEntity(new StringEntity(jsonAsString));
+                val mapper = ObjectMapper()
+                val entityOut = null // OutputStream
+//                    response.getEntity().writeTo(entityOut)
+                val jsonAsString = EntityUtils.toString(response.getEntity())
+                LOG.trace("Server call responded with body: '${jsonAsString}'")
+                return mapper.readValue(jsonAsString, javaClass<VersionRto>())
             } else {
+                // haha, nice hack ;)
                 thrown = RuntimeException("GET ${get.getURI().toURL()} failed with status code: ${statusCode}")
                 return null
             }
@@ -166,13 +181,17 @@ class VersionHttpRequest(private val exceptionHandler: (Exception) -> Unit)
     override fun onPostExecute(result: VersionRto?) {
         if (thrown != null) {
             exceptionHandler(thrown!!)
+        } else {
+            resultHandler(result!!)
         }
     }
 
 }
 
 class VersionRto {
-
+    // TODO use common module just containing Rto classes! avoid copy'n'paste
+    public var artifactVersion: String? = null
+    public var buildDate: String? = null
 }
 
 
