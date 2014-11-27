@@ -40,8 +40,14 @@ import at.cpickl.agrotlin.MiniMap
 import at.cpickl.agrotlin.view.MapView
 import at.cpickl.agrotlin.service.EndGamePhase
 import at.cpickl.agrotlin.service.DistributionPhase
+import roboguice.inject.ContentView
+import roboguice.activity.RoboActivity
+import roboguice.inject.InjectView
+import android.widget.EditText
+import at.cpickl.agrotlin.service.VersionHttpRequest
 
-public class MainActivity : Activity() {
+ContentView(R.layout.activity_main)
+public class MainActivity : RoboActivity() {
     class object {
         private val LOG: Logg = Logg("MainActivity");
         {
@@ -54,31 +60,24 @@ public class MainActivity : Activity() {
             LOG.info("Starting version ${BuildConfig.VERSION_NAME} (debug=${BuildConfig.DEBUG}, build type=${BuildConfig.BUILD_TYPE})")
         }
     }
-    {
-        // http://stackoverflow.com/questions/582185/android-disable-landscape-mode
-        /*
-        This does not absolve you of having to think about activity lifecycle events or properly
-        saving/restoring state. There are plenty of things besides app rotation that can trigger
-        an activity destruction/recreation, including unavoidable things like multitasking.
-        There are no shortcuts; learn to use bundles and retainInstance fragments.
-         */
-    }
-
 
     private var pseudo: GamePseudoActivity? = null
 
+    [InjectView(R.id.gameContainer)] private var container: ViewGroup? = null
+    [InjectView(R.id.btnEndTurn)] private var btnEndTurn: Button? = null
+    [InjectView(R.id.txtCurrentPlayer)] private var txtCurrentPlayer: TextView? = null
+    [InjectView(R.id.txtInfoMessage)] private var txtInfoMessage: TextView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         LOG.info("onCreate(savedInstanceState)")
-        super<Activity>.onCreate(savedInstanceState)
+        super<RoboActivity>.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
 
         if (pseudo == null) {
             LOG.debug("Create new pseudo activity instance.")
             pseudo = createPseudo()
         }
-        val container = findViewById(R.id.gameContainer) as ViewGroup
-        container.addView(pseudo!!.gameView, AndroidUtil.centered())
+        container!!.addView(pseudo!!.gameView, AndroidUtil.centered())
     }
     override fun onDestroy() {
         LOG.info("onDestroy()")
@@ -108,10 +107,7 @@ public class MainActivity : Activity() {
         super.onStop()
     }
 
-    private fun createPseudo() = GamePseudoActivity(this,
-            findViewById(R.id.btnEndTurn) as Button,
-            findViewById(R.id.txtCurrentPlayer) as TextView,
-            findViewById(R.id.txtInfoMessage) as TextView)
+    private fun createPseudo() = GamePseudoActivity(this, btnEndTurn!!, txtCurrentPlayer!!, txtInfoMessage!!)
 
     override fun onPause() {
         super.onPause()
@@ -160,65 +156,6 @@ public class MainActivity : Activity() {
         ).execute()
     }
 }
-// class Params, class Progress, class Result
-class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
-                         private val exceptionHandler: (Exception) -> Unit)
-: AsyncTask<Void, Void, VersionRto>() {
-    class object {
-        private val LOG: Logg = Logg(javaClass.getSimpleName())
-    }
-    // TODO inject that thing! make it configurable
-    private val swirlEngineUrl = "http://10.0.1.12:8888"
-    private var thrown: Exception? = null
-
-    // http://stackoverflow.com/questions/3505930/make-an-http-request-with-android
-    override fun doInBackground(vararg params: Void?): VersionRto? {
-        LOG.debug("doInBackground()")
-        try {
-
-            val client = DefaultHttpClient()
-            val get = HttpGet("${swirlEngineUrl}/version")
-            get.setHeader("Accept", "application/json")
-
-            val response = client.execute(get)
-            LOG.debug("response.getStatusLine().getStatusCode()=" + response.getStatusLine().getStatusCode())
-            val statusCode = response.getStatusLine().getStatusCode()
-
-            // http://stackoverflow.com/questions/6218143/how-to-send-post-request-in-json-using-httpclient
-            if (statusCode == HttpStatus.SC_OK) {
-                // httpPost.setEntity(new StringEntity(jsonAsString));
-                val mapper = ObjectMapper()
-                val entityOut = null // OutputStream
-                //                    response.getEntity().writeTo(entityOut)
-                val jsonAsString = EntityUtils.toString(response.getEntity())
-                LOG.trace("Server call responded with body: '${jsonAsString}'")
-                return mapper.readValue(jsonAsString, javaClass<VersionRto>())
-            } else {
-                // haha, nice hack ;)
-                thrown = RuntimeException("GET ${get.getURI().toURL()} failed with status code: ${statusCode}")
-                return null
-            }
-        } catch(e: Exception) {
-            thrown = e
-            return null
-        }
-    }
-    override fun onPostExecute(result: VersionRto?) {
-        if (thrown != null) {
-            exceptionHandler(thrown!!)
-        } else {
-            resultHandler(result!!)
-        }
-    }
-
-}
-
-class VersionRto {
-    // TODO use common module just containing Rto classes! avoid copy'n'paste
-    public var artifactVersion: String? = null
-    public var buildDate: String? = null
-}
-
 
 class GamePseudoActivity(private val context: Context,
                          private val btnEndTurn: Button,
