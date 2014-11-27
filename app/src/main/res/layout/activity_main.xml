@@ -1,40 +1,47 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity"
-    android:orientation="vertical"
-    android:background="#000000"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:context=".MainActivity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#000000"
     >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
 
-    <TextView
-        android:id="@+id/txtCurrentPlayer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textSize="14pt"
-        />
-    <TextView
-        android:id="@+id/txtInfoMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        />
-    <RelativeLayout
-        android:id="@+id/gameContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="10px" />
-    <Button
-        android:id="@+id/btnEndTurn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="End Turn"
-        android:background="#C3C3C3"/>
+        >
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/txtCurrentPlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="14pt"
+            />
+        <TextView
+            android:id="@+id/txtInfoMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            />
+        <RelativeLayout
+            android:id="@+id/gameContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="10px" />
+        <Button
+            android:id="@+id/btnEndTurn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End Turn"
+            android:background="#C3C3C3"/>
+
+    </LinearLayout>
+</ScrollView>

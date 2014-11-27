@@ -19,30 +19,75 @@ import android.widget.Toast
 import android.content.Context
 import android.view.View
 import at.cpickl.grotlin.BattleResult
+import android.content.pm.ActivityInfo
+import org.apache.http.client.HttpClient
+import org.apache.http.impl.conn.DefaultClientConnection
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.DefaultHttpClient
 
 public class MainActivity : Activity() {
 
     class object {
         private val LOG: Logg = Logg("MainActivity")
     }
+    {
+        // http://stackoverflow.com/questions/582185/android-disable-landscape-mode
+        /*
+        This does not absolve you of having to think about activity lifecycle events or properly
+        saving/restoring state. There are plenty of things besides app rotation that can trigger
+        an activity destruction/recreation, including unavoidable things like multitasking.
+        There are no shortcuts; learn to use bundles and retainInstance fragments.
+         */
+    }
+
+    private var pseudo: GamePseudoActivity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super<Activity>.onCreate(savedInstanceState)
         LOG.info("onCreate(savedInstanceState)")
+        super<Activity>.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
+        if (pseudo == null) {
+            LOG.debug("Create new pseudo activity instance.")
+            pseudo = createPseudo()
+        }
         val container = findViewById(R.id.gameContainer) as ViewGroup
-
-        val pseudo = GamePseudoActivity(this,
-                findViewById(R.id.btnEndTurn) as Button,
-                findViewById(R.id.txtCurrentPlayer) as TextView,
-                findViewById(R.id.txtInfoMessage) as TextView)
-
-        //        container.removeAll???
-        //        container.setBackgroundColor(Color.BLACK)
-        container.addView(pseudo.gameView, AndroidUtil.centered())
+        container.addView(pseudo!!.gameView, AndroidUtil.centered())
     }
+    override fun onDestroy() {
+        LOG.info("onDestroy()")
+        super.onDestroy()
+    }
+
+    override fun onSaveInstanceState(bundle: Bundle) {
+        LOG.info("onSaveInstanceState(bundle) pseudo=${pseudo}")
+        super.onSaveInstanceState(bundle)
+
+    }
+    override fun onRestoreInstanceState(bundle: Bundle) {
+        LOG.info("onRestoreInstanceState(bundle)")
+        super.onRestoreInstanceState(bundle)
+
+    }
+    override fun onRestart() {
+        LOG.info("onRestart()")
+        super.onRestart()
+    }
+    override fun onStart() {
+        LOG.info("onStart()")
+        super.onStart()
+    }
+    override fun onStop() {
+        LOG.info("onStop()")
+        super.onStop()
+    }
+
+    private fun createPseudo() = GamePseudoActivity(this,
+            findViewById(R.id.btnEndTurn) as Button,
+            findViewById(R.id.txtCurrentPlayer) as TextView,
+            findViewById(R.id.txtInfoMessage) as TextView)
+
     override fun onPause() {
         super.onPause()
         LOG.info("onPause()")
@@ -63,11 +108,18 @@ public class MainActivity : Activity() {
 
         when (id) {
             R.id.menu_settings -> { LOG.info("Settings menu clicked"); return true }
-            R.id.menu_restart -> { LOG.info("Restart menu clicked"); return true }
+            R.id.menu_restart -> { onMenuRestart(); return true }
             else -> throw IllegalArgumentException("Unhandled menu item ID: ${id} for menu item: ${item}")
         }
 
         return super.onOptionsItemSelected(item)
+    }
+    private fun onMenuRestart() {
+        LOG.info("onMenuRestart()");
+        val client = DefaultHttpClient()
+        val get = HttpGet("http://10.0.1.12:8888/version")
+        val response = client.execute(get)
+        println("response.getStatusLine().getStatusCode()=" + response.getStatusLine().getStatusCode())
     }
 }
 
@@ -141,4 +193,5 @@ class GamePseudoActivity(private val context: Context,
            txtInfoMessage.setText("Choose source region..")
 //        }
     }
+    override public fun toString() = "GamePseudoActivity[game=${game}]"
 }

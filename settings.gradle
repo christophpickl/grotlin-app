@@ -1,1 +1,2 @@
-include ':app', ':logic'
+include ':app', ':logic', ':multi2'
+project(':multi2').projectDir = new File('multi')

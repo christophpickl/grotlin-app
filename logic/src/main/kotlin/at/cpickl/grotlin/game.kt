@@ -60,6 +60,7 @@ class Game(val map: Map, val players: List<Player>, val dice: Dice = RealDice())
 
     fun distributableRegionsFor(player: Player): Collection<Region> = map.regions.filter { it.owner == player }
 
+    override public fun toString() = "Game[map=${map}, players, dice]"
 }
 
 class GameEngine(private val game: Game, private val listener: GameListener) {
