@@ -4,3 +4,9 @@
   - http://localhost:8888/version
 * deploy via "gradle appengineUpdate"
   - http://swirl-engine.appspot.com/version
+
+
+
+TODO
+* @Secured
+* user roles

@@ -1,13 +1,14 @@
 def versionAppEngine = "1.9.17"
-def versionJersey = "2.13"
+def versionKotlin = "0.9.206"
+def buildDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
 
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:0.9.66'
         classpath "com.google.appengine:gradle-appengine-plugin:1.9.17"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:0.9.206" // why not global working?!
     }
 }
 // https://github.com/GoogleCloudPlatform/gradle-appengine-plugin
@@ -16,11 +17,24 @@ apply plugin: 'war'
 apply plugin: 'appengine'
 apply plugin: 'kotlin'
 
-
 sourceCompatibility = 1.7
 version = '1.0-SNAPSHOT'
 
+
+// http://java.dzone.com/articles/resource-filtering-gradle
+import org.apache.tools.ant.filters.ReplaceTokens
+
+import java.text.SimpleDateFormat
+
+processResources {
+    filter ReplaceTokens, tokens: [
+            "artifact.version": project.property("version"),
+            "build.date"      : buildDate
+    ]
+}
+
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -29,34 +43,38 @@ configurations {
 }
 sourceSets {
     main { compileClasspath += configurations.provided }
+    main.java.srcDirs += 'src/main/kotlin'
 }
 
 dependencies {
-    compile 'org.jetbrains.kotlin:kotlin-stdlib:0.9.66'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin"
     appengineSdk "com.google.appengine:appengine-java-sdk:${versionAppEngine}"
     compile "com.google.appengine:appengine-api-1.0-sdk:${versionAppEngine}"
 
-//    compile "javax.servlet:servlet-api:2.5"
+    compile 'joda-time:joda-time:2.5'
+    compile 'com.google.guava:guava:18.0'
 
     // http://repository.jboss.org/nexus/content/groups/public
     // https://github.com/szymex/Embedded-Jetty-RESTEasy-Guice-Example
     // https://github.com/resteasy/Resteasy/tree/master/jaxrs/examples/guice-hello
     compile 'org.jboss.resteasy:resteasy-guice:3.0.10.Final'
+    compile 'javax.inject:javax.inject:1'
     compile 'com.google.inject:guice:3.0'
 
-//    compile "org.glassfish.jersey.containers:jersey-container-servlet-core:${versionJersey}"
-//    compile "org.glassfish.jersey.core:jersey-server:${versionJersey}"
-//    compile "org.glassfish.jersey.core:jersey-client:${versionJersey}"
-
+    // http://howtodoinjava.com/2013/05/10/resteasy-jackson-json-example/
+    compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.4.Final'
 //    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'
 
     // easy access persistence service for GAE's datastore
     compile 'com.googlecode.objectify:objectify:5.1.1'
 
-    compile 'javax.inject:javax.inject:1'
 
-//    testCompile "com.google.appengine:appengine-testing:${versionAppEngine}"
-//    testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
+    testCompile 'org.testng:testng:6.8.8'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+    testCompile 'org.mockito:mockito-core:1.10.8'
+    testCompile "com.google.appengine:appengine-testing:${versionAppEngine}"
+    testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin"
 }
 
 appengine {
@@ -68,4 +86,25 @@ appengine {
         noCookies = true
         oauth2 = true
     }
+}
+
+test {
+    useTestNG({
+        excludeGroups 'WebTest'
+    })
+}
+
+// http://stackoverflow.com/questions/21009125/including-not-excluding-groups-in-testng-and-gradle
+task testWeb(type: Test) {
+    testLogging {
+        events "started", "passed", "skipped", "failed", "standardOut", "standardError"
+        exceptionFormat "full"
+    }
+    useTestNG() {
+//        excludeGroups 'WebTest'
+        parallel 'classes'
+        threadCount 4
+    }
+    reports.junitXml.destination = file("${reporting.baseDir}/webtest")
+    reports.html.destination = file("${reporting.baseDir}/webtest")
 }
