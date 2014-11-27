@@ -1,16 +1,10 @@
 package at.cpickl.grotlin.multi.resource
 
 import com.google.inject.AbstractModule
-import javax.xml.bind.annotation.XmlAccessorType
-import javax.xml.bind.annotation.XmlAccessType
-import javax.xml.bind.annotation.XmlRootElement
-import javax.xml.bind.annotation.XmlElement
 import javax.ws.rs.Path
 import java.util.logging.Logger
 import javax.ws.rs.GET
-import javax.ws.rs.POST
 import javax.ws.rs.Produces
-import javax.ws.rs.Consumes
 import javax.ws.rs.QueryParam
 import javax.ws.rs.core.MediaType
 import at.cpickl.grotlin.multi.service.UserService
@@ -20,12 +14,21 @@ import at.cpickl.grotlin.multi.FaultCode
 import at.cpickl.grotlin.multi.FaultException
 import javax.ws.rs.core.Response.Status
 import javax.inject.Inject
+import com.google.appengine.api.channel.ChannelService
+import com.google.appengine.api.channel.ChannelServiceFactory
+import javax.ws.rs.PUT
+import com.google.appengine.api.channel.ChannelMessage
+import javax.ws.rs.POST
+import javax.ws.rs.core.Response
+
 //import javax.inject.Inject
 
 public class ResourceModule : AbstractModule() {
     override fun configure() {
         bind(javaClass<VersionResource>())
         bind(javaClass<UserResource>())
+        bind(javaClass<ChannelResource>())
+        bind(javaClass<ChannelPresenceResource>())
         bind(javaClass<AdminResource>())
 
         bind(javaClass<FaultExceptionMapper>())
