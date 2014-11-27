@@ -1,5 +1,7 @@
 #!/bin/bash
 
-echo "Starting local appengine: http://localhost:8888"
+echo "Starting local appengine..."
 gradle appengineRun
+
+# ./gradlew appengineRun
 

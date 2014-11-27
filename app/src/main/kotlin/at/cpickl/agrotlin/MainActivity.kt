@@ -40,6 +40,9 @@ public class MainActivity : Activity() {
          */
     }
 
+    // TODO inject that thing!
+    private val swirlEngineUrl = "http://10.0.1.12:8888"
+
     private var pseudo: GamePseudoActivity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,10 +117,12 @@ public class MainActivity : Activity() {
 
         return super.onOptionsItemSelected(item)
     }
+
     private fun onMenuRestart() {
         LOG.info("onMenuRestart()");
         val client = DefaultHttpClient()
-        val get = HttpGet("http://10.0.1.12:8888/version")
+        val get = HttpGet("${swirlEngineUrl}/version")
+        println("requesting url")
         val response = client.execute(get)
         println("response.getStatusLine().getStatusCode()=" + response.getStatusLine().getStatusCode())
     }

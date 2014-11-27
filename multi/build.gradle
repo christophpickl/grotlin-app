@@ -1,31 +1,36 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+import java.text.SimpleDateFormat
+
 def versionAppEngine = "1.9.17"
 def versionKotlin = "0.9.206"
 def buildDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
 
 buildscript {
+    ext.kotlin_version = '0.9.206'
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath "com.google.appengine:gradle-appengine-plugin:1.9.17"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:0.9.206" // why not global working?!
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // why not global working?!
     }
 }
 // https://github.com/GoogleCloudPlatform/gradle-appengine-plugin
 
+// apply plugin: 'java'
 apply plugin: 'war'
-apply plugin: 'appengine'
 apply plugin: 'kotlin'
+// NO!!! apply plugin: 'kotlin-android'
+apply plugin: 'appengine'
 
 sourceCompatibility = 1.7
+targetCompatibility = 1.7
 version = '1.0-SNAPSHOT'
 
 
 // http://java.dzone.com/articles/resource-filtering-gradle
-import org.apache.tools.ant.filters.ReplaceTokens
-
-import java.text.SimpleDateFormat
-
 processResources {
     filter ReplaceTokens, tokens: [
             "artifact.version": project.property("version"),
@@ -48,38 +53,48 @@ sourceSets {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin"
+
+    // GOOGLE APP ENGINE
+    // =============================================
     appengineSdk "com.google.appengine:appengine-java-sdk:${versionAppEngine}"
     compile "com.google.appengine:appengine-api-1.0-sdk:${versionAppEngine}"
+//    compile "com.google.appengine:appengine-endpoints:${versionAppEngine}"
+    // easy access persistence service for GAE's datastore
+    compile 'com.googlecode.objectify:objectify:5.1.1'
 
-    compile 'joda-time:joda-time:2.5'
-    compile 'com.google.guava:guava:18.0'
-
+    // REST EASY
+    // =============================================
     // http://repository.jboss.org/nexus/content/groups/public
     // https://github.com/szymex/Embedded-Jetty-RESTEasy-Guice-Example
     // https://github.com/resteasy/Resteasy/tree/master/jaxrs/examples/guice-hello
     compile 'org.jboss.resteasy:resteasy-guice:3.0.10.Final'
     compile 'javax.inject:javax.inject:1'
     compile 'com.google.inject:guice:3.0'
-
     // http://howtodoinjava.com/2013/05/10/resteasy-jackson-json-example/
     compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.4.Final'
 //    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'
 
-    // easy access persistence service for GAE's datastore
-    compile 'com.googlecode.objectify:objectify:5.1.1'
+    // MISC
+    // =============================================
+    compile 'joda-time:joda-time:2.5'
+    compile 'com.google.guava:guava:18.0'
 
-
+    // TEST
+    // =============================================
     testCompile 'org.testng:testng:6.8.8'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile 'org.mockito:mockito-core:1.10.8'
+
     testCompile "com.google.appengine:appengine-testing:${versionAppEngine}"
     testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin"
 }
 
 appengine {
     httpPort = 8888
     downloadSdk = true
+    httpAddress = "0.0.0.0"
+//    host = "0.0.0.0"
+//    jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000']
 
     appcfg {
         email = "christoph.pickl@gmail.com"
@@ -108,3 +123,8 @@ task testWeb(type: Test) {
     reports.junitXml.destination = file("${reporting.baseDir}/webtest")
     reports.html.destination = file("${reporting.baseDir}/webtest")
 }
+//android {
+//    sourceSets {
+//        main.java.srcDirs += 'src/main/kotlin'
+//    }
+//}
