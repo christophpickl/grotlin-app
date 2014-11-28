@@ -8,5 +8,9 @@
 
 
 TODO
-* @Secured
-* user roles
+* !! CHANNEL API: webview + javascript to java
+* !
+* ! @Secured
+* -- attack mode
+* -- races
+* user roles (admin, player, guest)
