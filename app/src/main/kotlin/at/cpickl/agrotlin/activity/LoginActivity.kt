@@ -21,8 +21,8 @@ import android.widget.TextView
 import at.cpickl.agrotlin.showToast
 
 // good roboguice sample: https://github.com/roboguice/roboguice/tree/master/astroboy
-ContentView(R.layout.activity_login)
-public open class LoginActivity() : RoboActivity()  {
+
+public open class LoginActivity : SwirlActivity() {
     class object {
         private val LOG: Logg = Logg("LoginActivity")
 
@@ -43,9 +43,10 @@ public open class LoginActivity() : RoboActivity()  {
     Inject private var loginService: LoginService? = null
 
     override fun onCreate(saved: Bundle?) {
-        super<RoboActivity>.onCreate(saved)
-//        setContentView(R.layout.activity_login)
+        super<SwirlActivity>.onCreate(saved)
 //        getIntent().getStringExtra()
+
+        setContentView(R.layout.activity_login)
 
         btnLogin!!.setOnClickListener({ onLogin() })
         btnForgotPassword!!.setOnClickListener({ onForgotPassword() })

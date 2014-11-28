@@ -51,9 +51,11 @@ import at.cpickl.agrotlin.showToast
 import android.media.MediaPlayer
 import at.cpickl.agrotlin.service.SoundPlayer
 import at.cpickl.agrotlin.service.Sound
+import android.view.Window
+import android.view.WindowManager
 
-ContentView(R.layout.activity_main)
-public class MainActivity : RoboActivity() {
+// NO!!! ContentView(R.layout.activity_main)
+public class MainActivity : SwirlActivity() {
     class object {
         private val LOG: Logg = Logg("MainActivity");
         {
@@ -75,7 +77,9 @@ public class MainActivity : RoboActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         LOG.info("onCreate(savedInstanceState)")
-        super<RoboActivity>.onCreate(savedInstanceState)
+        super<SwirlActivity>.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main);
 
         if (!soundPlayer!!.isInit()) {
             LOG.debug("One time initialising sound player")

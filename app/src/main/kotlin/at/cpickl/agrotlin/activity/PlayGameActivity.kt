@@ -46,8 +46,7 @@ import roboguice.inject.InjectView
 import android.widget.EditText
 import at.cpickl.agrotlin.service.VersionHttpRequest
 
-ContentView(R.layout.activity_play_game)
-public class PlayGameActivity : RoboActivity() {
+public class PlayGameActivity : SwirlActivity() {
     class object {
         private val LOG: Logg = Logg("PlayGameActivity");
 
@@ -67,8 +66,9 @@ public class PlayGameActivity : RoboActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         LOG.info("onCreate(savedInstanceState)")
-        super<RoboActivity>.onCreate(savedInstanceState)
+        super<SwirlActivity>.onCreate(savedInstanceState)
 
+        setContentView(R.layout.activity_play_game)
 
         if (pseudo == null) {
             LOG.debug("Create new pseudo activity instance.")
