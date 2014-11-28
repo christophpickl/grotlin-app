@@ -11,11 +11,14 @@
                  a:label="@string/app_name"
                  a:theme="@style/AppTheme" >
 
+        <!-- TODO assign custom activity style globally rather than for each activity definition -->
         <meta-data a:name="roboguice.modules"
                    a:value="at.cpickl.agrotlin.SwirlModule" />
 
         <activity a:name=".activity.MainActivity"
-                  a:label="@string/app_name">
+                  a:label="Main Menu"
+                  a:theme="@style/MyActivity"
+                  >
             <intent-filter>
                 <action a:name="android.intent.action.MAIN" />
                 <category a:name="android.intent.category.LAUNCHER" />
@@ -23,16 +26,20 @@
         </activity>
 
         <activity a:name=".activity.LoginActivity"
-                  a:label="Login Label"
-                  a:parentActivityName=".activity.MainActivity" >
+                  a:label="Login"
+                  a:parentActivityName=".activity.MainActivity"
+                  a:theme="@style/MyActivity"
+            >
             <meta-data a:name="android.support.PARENT_ACTIVITY"
                        a:value="at.cpickl.agrotlin.MainActivity" />
         </activity>
 
         <activity a:name=".activity.PlayGameActivity"
-                  a:label="Play Game"
+                  a:label="Game"
                   a:parentActivityName=".activity.MainActivity"
-                  a:screenOrientation="landscape" >
+                  a:screenOrientation="landscape"
+                  a:theme="@style/MyActivity"
+            >
             <meta-data a:name="android.support.PARENT_ACTIVITY"
                        a:value="at.cpickl.agrotlin.MainActivity" />
         </activity>

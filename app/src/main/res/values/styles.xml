@@ -1,10 +1,56 @@
 <resources>
 
+    <color name="blue_standard">#3669A3</color>
+
+    <!-- https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/res/res/values/styles.xml -->
+    <style name="Animation"></style>
+    <style name="Animation.ScreenAnimation" parent="android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/fade_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/fade_out</item>
+        <item name="android:activityCloseExitAnimation">@anim/fade_in</item>
+        <!--<item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>-->
+        <!--<item name="android:activityOpenExitAnimation">@anim/slide_out_left</item>-->
+        <!--<item name="android:activityCloseEnterAnimation">@anim/slide_out_left</item>-->
+        <!--<item name="android:activityCloseExitAnimation">@anim/slide_in_right</item>-->
+    </style>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <!--<item name="android:textColorPrimary">#FF0000</item>-->
+
+        <!--<item name="android:background">#000000</item> applies to everything, not only activity... -->
+        <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+        <item name="android:buttonStyle">@style/MyButtonStyle</item>
+
+        <item name="android:windowAnimationStyle">@style/Animation.ScreenAnimation</item>
+    </style>
+
+    <style name="MyActivity">
         <item name="android:background">#000000</item>
     </style>
+
+    <style name="MyButtonStyle" parent="android:Widget.Button">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:background">@color/blue_standard</item>
+
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">2pt</item>
+        <item name="android:paddingBottom">2pt</item>
+    </style>
+
+    <style name="MainButtonStyle" parent="MyButtonStyle">
+        <item name="android:width">240dp</item>
+
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MyTextViewStyle" parent="android:Widget.TextView">
+        <!--<item name="android:textStyle">bold</item>-->
+    </style>
+
 
     <style name="CodeFont" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">fill_parent</item>
@@ -12,5 +58,6 @@
         <item name="android:textColor">#00FF00</item>
         <item name="android:typeface">monospace</item>
     </style>
+
 
 </resources>

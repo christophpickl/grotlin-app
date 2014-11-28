@@ -17,6 +17,8 @@ import at.cpickl.agrotlin.Logg
 import at.cpickl.agrotlin.R
 import android.content.Context
 import android.content.Intent
+import android.widget.TextView
+import at.cpickl.agrotlin.showToast
 
 // good roboguice sample: https://github.com/roboguice/roboguice/tree/master/astroboy
 ContentView(R.layout.activity_login)
@@ -31,9 +33,10 @@ public open class LoginActivity() : RoboActivity()  {
         }
     }
 
-    [InjectView(R.id.inp_username)] private var inpUsername: EditText? = null
-    [InjectView(R.id.inp_password)] private var inpPassword: EditText? = null
-    [InjectView(R.id.btn_login)] private var login: Button? = null
+    [InjectView(R.id.inpUsername)] private var inpUsername: EditText? = null
+    [InjectView(R.id.inpPassword)] private var inpPassword: EditText? = null
+    [InjectView(R.id.btnLogin)] private var btnLogin: Button? = null
+    [InjectView(R.id.btnForgotPassword)] private var btnForgotPassword: TextView? = null
 //    @InjectView(R.id.thumbnail)         thumbnail: ImageView? = null
 //    @InjectResource(R.drawable.icon)    icon: Drawable? = null
 //    @InjectResource(R.string.app_name)  myName: String? = null
@@ -44,7 +47,13 @@ public open class LoginActivity() : RoboActivity()  {
 //        setContentView(R.layout.activity_login)
 //        getIntent().getStringExtra()
 
-        login!!.setOnClickListener({ onLogin() })
+        btnLogin!!.setOnClickListener({ onLogin() })
+        btnForgotPassword!!.setOnClickListener({ onForgotPassword() })
+    }
+
+    private fun onForgotPassword() {
+        LOG.info("onForgotPassword()")
+        showToast("Not yet implemented!")
     }
 
     private fun onLogin() {

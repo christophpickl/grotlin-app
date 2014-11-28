@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpGet
 import org.apache.http.HttpStatus
 import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.util.EntityUtils
+import at.cpickl.agrotlin.SwirlException
 
 
 // class Params, class Progress, class Result
@@ -16,38 +17,16 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
     class object {
         private val LOG: Logg = Logg(javaClass.getSimpleName())
     }
-    // TODO inject that thing! make it configurable
-    private val swirlEngineUrl = "http://10.0.1.12:8888"
+
     private var thrown: Exception? = null
 
     // http://stackoverflow.com/questions/3505930/make-an-http-request-with-android
     override fun doInBackground(vararg params: Void?): VersionRto? {
         LOG.debug("doInBackground()")
         try {
-
-            val client = DefaultHttpClient()
-            val get = HttpGet("${swirlEngineUrl}/version")
-            get.setHeader("Accept", "application/json")
-
-            val response = client.execute(get)
-            LOG.debug("response.getStatusLine().getStatusCode()=" + response.getStatusLine().getStatusCode())
-            val statusCode = response.getStatusLine().getStatusCode()
-
-            // http://stackoverflow.com/questions/6218143/how-to-send-post-request-in-json-using-httpclient
-            if (statusCode == HttpStatus.SC_OK) {
-                // httpPost.setEntity(new StringEntity(jsonAsString));
-                val mapper = ObjectMapper()
-                val entityOut = null // OutputStream
-                //                    response.getEntity().writeTo(entityOut)
-                val jsonAsString = EntityUtils.toString(response.getEntity())
-                LOG.trace("Server call responded with body: '${jsonAsString}'")
-                return mapper.readValue(jsonAsString, javaClass<VersionRto>())
-            } else {
-                // haha, nice hack ;)
-                thrown = RuntimeException("GET ${get.getURI().toURL()} failed with status code: ${statusCode}")
-                return null
-            }
-        } catch(e: Exception) {
+            val rest = RestClient() // TODO do not instantiate manually, let inject (requires factory)
+            return rest.get("/version", javaClass<VersionRto>())
+        } catch (e: Exception) {
             thrown = e
             return null
         }

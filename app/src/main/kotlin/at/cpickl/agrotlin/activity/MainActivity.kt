@@ -48,18 +48,21 @@ import at.cpickl.agrotlin.service.VersionHttpRequest
 import javax.inject.Inject
 import at.cpickl.agrotlin.service.VibrateService
 import at.cpickl.agrotlin.showToast
+import android.media.MediaPlayer
+import at.cpickl.agrotlin.service.SoundPlayer
+import at.cpickl.agrotlin.service.Sound
 
 ContentView(R.layout.activity_main)
 public class MainActivity : RoboActivity() {
     class object {
         private val LOG: Logg = Logg("MainActivity");
         {
-            //            public val DEBUG: Boolean = java.lang.Boolean.parseBoolean("true")
-            //            public val APPLICATION_ID: String = "at.cpickl.agrotlin"
-            //            public val BUILD_TYPE: String = "debug"
-            //            public val FLAVOR: String = ""
-            //            public val VERSION_CODE: Int = 1
-            //            public val VERSION_NAME: String = "1.0"
+            // val DEBUG: Boolean = java.lang.Boolean.parseBoolean("true")
+            // val APPLICATION_ID: String = "at.cpickl.agrotlin"
+            // val BUILD_TYPE: String = "debug"
+            // val FLAVOR: String = ""
+            // val VERSION_CODE: Int = 1
+            // val VERSION_NAME: String = "1.0"
             LOG.info("Starting version ${BuildConfig.VERSION_NAME} (debug=${BuildConfig.DEBUG}, build type=${BuildConfig.BUILD_TYPE})")
         }
     }
@@ -67,11 +70,22 @@ public class MainActivity : RoboActivity() {
     [InjectView(R.id.btnRandomGame)] private var btnRandomGame: Button? = null
     [InjectView(R.id.btnLogin)] private var btnLogin: Button? = null
     Inject private var vibrator: VibrateService? = null
+    Inject private var soundPlayer: SoundPlayer? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         LOG.info("onCreate(savedInstanceState)")
         super<RoboActivity>.onCreate(savedInstanceState)
 
+        if (!soundPlayer!!.isInit()) {
+            LOG.debug("One time initialising sound player")
+            soundPlayer!!.init(this)
+        }
+//        setTheme(android.R.style.Theme_Light);
+
+//        animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        // animFadein.setAnimationListener(this);
+        // animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeIn);
         btnRandomGame!!.setOnClickListener { PlayGameActivity.start(this) }
         btnLogin!!.setOnClickListener { LoginActivity.start(this) }
     }
@@ -89,23 +103,14 @@ public class MainActivity : RoboActivity() {
             R.id.menu_about-> {
                 LOG.info("menu about");
                 showToast("About me...")
+                soundPlayer!!.play(Sound.ROLL)
+                vibrator!!.vibrate()
                 return true;
             }
-            else -> throw IllegalArgumentException("Unhandled menu item ID: ${id} for menu item: ${item}")
+//            else -> throw IllegalArgumentException("Unhandled menu item ID: ${id} for menu item: ${item}")
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-    private fun UNUSED_requestVersion() {
-        VersionHttpRequest(
-                {
-                    showToast("Server built date: ${it.buildDate}")
-                },
-                {
-                    it.printStackTrace()
-                    showToast("Exception: ${it.getMessage()}")
-                }
-        ).execute()
-    }
 }
