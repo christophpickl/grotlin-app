@@ -45,6 +45,9 @@ import roboguice.activity.RoboActivity
 import roboguice.inject.InjectView
 import android.widget.EditText
 import at.cpickl.agrotlin.service.VersionHttpRequest
+import javax.inject.Inject
+import at.cpickl.agrotlin.service.VibrateService
+import at.cpickl.agrotlin.showToast
 
 ContentView(R.layout.activity_main)
 public class MainActivity : RoboActivity() {
@@ -61,61 +64,16 @@ public class MainActivity : RoboActivity() {
         }
     }
 
-    private var pseudo: GamePseudoActivity? = null
-
-    [InjectView(R.id.gameContainer)] private var container: ViewGroup? = null
-    [InjectView(R.id.btnEndTurn)] private var btnEndTurn: Button? = null
-    [InjectView(R.id.txtCurrentPlayer)] private var txtCurrentPlayer: TextView? = null
-    [InjectView(R.id.txtInfoMessage)] private var txtInfoMessage: TextView? = null
+    [InjectView(R.id.btnRandomGame)] private var btnRandomGame: Button? = null
+    [InjectView(R.id.btnLogin)] private var btnLogin: Button? = null
+    Inject private var vibrator: VibrateService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         LOG.info("onCreate(savedInstanceState)")
         super<RoboActivity>.onCreate(savedInstanceState)
 
-
-        if (pseudo == null) {
-            LOG.debug("Create new pseudo activity instance.")
-            pseudo = createPseudo()
-        }
-        container!!.addView(pseudo!!.gameView, AndroidUtil.centered())
-    }
-    override fun onDestroy() {
-        LOG.info("onDestroy()")
-        super.onDestroy()
-    }
-
-    override fun onSaveInstanceState(bundle: Bundle) {
-        LOG.info("onSaveInstanceState(bundle) pseudo=${pseudo}")
-        super.onSaveInstanceState(bundle)
-
-    }
-    override fun onRestoreInstanceState(bundle: Bundle) {
-        LOG.info("onRestoreInstanceState(bundle)")
-        super.onRestoreInstanceState(bundle)
-
-    }
-    override fun onRestart() {
-        LOG.info("onRestart()")
-        super.onRestart()
-    }
-    override fun onStart() {
-        LOG.info("onStart()")
-        super.onStart()
-    }
-    override fun onStop() {
-        LOG.info("onStop()")
-        super.onStop()
-    }
-
-    private fun createPseudo() = GamePseudoActivity(this, btnEndTurn!!, txtCurrentPlayer!!, txtInfoMessage!!)
-
-    override fun onPause() {
-        super.onPause()
-        LOG.info("onPause()")
-    }
-    override fun onResume() {
-        super.onResume()
-        LOG.info("onResume()")
+        btnRandomGame!!.setOnClickListener { PlayGameActivity.start(this) }
+        btnLogin!!.setOnClickListener { LoginActivity.start(this) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -128,103 +86,26 @@ public class MainActivity : RoboActivity() {
         val id = item.getItemId()
 
         when (id) {
-            R.id.menu_settings -> { LOG.info("Settings menu clicked"); return true }
-            R.id.menu_restart -> { onMenuRestart(); return true }
+            R.id.menu_about-> {
+                LOG.info("menu about");
+                showToast("About me...")
+                return true;
+            }
             else -> throw IllegalArgumentException("Unhandled menu item ID: ${id} for menu item: ${item}")
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-    private fun onMenuRestart() {
-        LOG.info("onMenuRestart()");
-
-        val intent = Intent(this, javaClass<LoginActivity>())
-        //        intent.putExtra()
-        startActivity(intent)
-    }
-
     private fun UNUSED_requestVersion() {
         VersionHttpRequest(
                 {
-                    Toast.makeText(this, "Server built date: ${it.buildDate}", 5000).show()
+                    showToast("Server built date: ${it.buildDate}")
                 },
                 {
                     it.printStackTrace()
-                    Toast.makeText(this, "Exception: ${it.getMessage()}", 5000).show()
+                    showToast("Exception: ${it.getMessage()}")
                 }
         ).execute()
     }
-}
-
-class GamePseudoActivity(private val context: Context,
-                         private val btnEndTurn: Button,
-                         private val txtCurrentPlayer:TextView,
-                         private val txtInfoMessage:TextView) {
-
-    class object {
-        private val LOG: Logg = Logg("GamePseudoActivity")
-    }
-    public val gameView: GameView
-    private val game: Game
-    private val mapView: MapView
-    private val attackPhase: AttackPhase
-    {
-        val player1 = Player("Player 1", Color.RED)
-        val player2 = Player("Player 2", Color.BLUE)
-
-        val map = MiniMap()
-        map.region1.ownedBy(player1, 2)
-        map.region4.ownedBy(player2, 2)
-        game = Game(map.map, listOf(player1, player2))
-        mapView = MiniMapView(context, map)
-        gameView = GameView(context, game, mapView)
-        attackPhase = AttackPhase(context, game, gameView, txtInfoMessage)
-                .setOnEndGameListener({ onEndGame() })
-                .setOnAttackedListener { onAttacked(it) }
-    }
-
-    {
-        btnEndTurn.setOnClickListener({ onEndTurn() })
-        initPlayer()
-    }
-
-    private fun onAttacked(battle: BattleResult) {
-        LOG.info("onAttacked(${battle})")
-        if (!mapView.isAnyAttackSourceLeft(game.currentPlayer)) {
-            txtInfoMessage.setText("No more attack sources left, END TURN.")
-        }
-    }
-
-    private fun onEndTurn() {
-        LOG.info("onEndTurn()")
-        btnEndTurn.setEnabled(false)
-        var dphase: DistributionPhase = DistributionPhase(context, game, gameView, {
-            txtInfoMessage.setText("Distribute ${it} Unit(s)")
-        }, {
-            LOG.info("onEndTurn().distribute done. next player.")
-            btnEndTurn.setEnabled(true)
-            game.nextPlayer()
-            initPlayer()
-        })
-
-        Toast.makeText(context, "Distribute Unit(s).", 5000).show()
-        mapView.deselectAllRegions() // should actually call gameView, instead of mapView
-        gameView.listener = dphase
-    }
-
-    private fun onEndGame() {
-        LOG.info("onEndGame()")
-        gameView.listener = EndGamePhase()
-        txtInfoMessage.setText("Player '${game.currentPlayer.name}' won!!!")
-    }
-
-    private fun initPlayer() {
-        gameView.listener = attackPhase
-        txtCurrentPlayer.setText("${game.currentPlayer.name}'s turn!")
-        //        if (is source region available) {
-        txtInfoMessage.setText("Choose source region..")
-        //        }
-    }
-    override public fun toString() = "GamePseudoActivity[game=${game}]"
 }

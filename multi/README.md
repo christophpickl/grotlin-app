@@ -8,9 +8,8 @@
 
 
 TODO
-* !! CHANNEL API: webview + javascript to java
-* !
-* ! @Secured
-* -- attack mode
-* -- races
-* user roles (admin, player, guest)
+!! "parship" game finding
+!! CHANNEL API: webview + javascript to java
+! audio (roll dices, win/lose, button clicks)
+! improve game UI (end turn button, player list, better response messages)
+- settings (change audio settings)

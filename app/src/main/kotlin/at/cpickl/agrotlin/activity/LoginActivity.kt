@@ -15,12 +15,20 @@ import javax.inject.Inject
 import at.cpickl.agrotlin.service.LoginService
 import at.cpickl.agrotlin.Logg
 import at.cpickl.agrotlin.R
+import android.content.Context
+import android.content.Intent
 
 // good roboguice sample: https://github.com/roboguice/roboguice/tree/master/astroboy
 ContentView(R.layout.activity_login)
 public open class LoginActivity() : RoboActivity()  {
     class object {
         private val LOG: Logg = Logg("LoginActivity")
+
+        public fun start(callingActivity: Activity) {
+            val intent = Intent(callingActivity, javaClass<LoginActivity>())
+            //        intent.putExtra()
+            callingActivity.startActivity(intent)
+        }
     }
 
     [InjectView(R.id.inp_username)] private var inpUsername: EditText? = null
@@ -29,7 +37,6 @@ public open class LoginActivity() : RoboActivity()  {
 //    @InjectView(R.id.thumbnail)         thumbnail: ImageView? = null
 //    @InjectResource(R.drawable.icon)    icon: Drawable? = null
 //    @InjectResource(R.string.app_name)  myName: String? = null
-//    Inject var vibrator: Vibrator? = null
     Inject private var loginService: LoginService? = null
 
     override fun onCreate(saved: Bundle?) {

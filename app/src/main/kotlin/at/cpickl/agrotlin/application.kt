@@ -6,6 +6,8 @@ import roboguice.AnnotationDatabaseImpl
 import com.google.inject.AbstractModule
 import at.cpickl.agrotlin.service.LoginService
 import at.cpickl.agrotlin.service.HttpLoginService
+import at.cpickl.agrotlin.service.AndroidVibrateService
+import at.cpickl.agrotlin.service.VibrateService
 
 public class SwirlApplication : Application() {
     {
@@ -18,5 +20,6 @@ public class SwirlApplication : Application() {
 class SwirlModule : AbstractModule() {
     override fun configure() {
         bind(javaClass<LoginService>()).toInstance(HttpLoginService())
+        bind(javaClass<VibrateService>()).to(javaClass<AndroidVibrateService>())
     }
 }

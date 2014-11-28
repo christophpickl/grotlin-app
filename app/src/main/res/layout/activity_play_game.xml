@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
-            tools:context=".MainActivity"
+            tools:context=".PlayGameActivity"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,26 +15,33 @@
         android:orientation="vertical"
         >
 
-        <!-- on long click: display context menu, enable debug mode -->
-        <ImageView
-            android:id="@+id/imgLogo"
-            android:src="@drawable/logo"
+        <TextView
+            android:id="@+id/txtCurrentPlayer"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/btnRandomGame"
-            android:text="Random Game"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="14pt"
+            />
+        <TextView
+            android:id="@+id/txtInfoMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            />
+        <RelativeLayout
+            android:id="@+id/gameContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
-
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="10dp" />
         <Button
-            android:id="@+id/btnLogin"
-            android:text="Login"
+            android:id="@+id/btnEndTurn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:text="End Turn"
+            android:background="#C3C3C3"/>
 
     </LinearLayout>
 </ScrollView>

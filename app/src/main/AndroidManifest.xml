@@ -1,37 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="at.cpickl.agrotlin" >
+<manifest xmlns:a="http://schemas.android.com/apk/res/android"
+          package="at.cpickl.agrotlin" >
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission a:name="android.permission.INTERNET" />
+    <uses-permission a:name="android.permission.VIBRATE" />
 
-    <application
-        android:name=".SwirlApplication"
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+    <application a:name=".SwirlApplication"
+                 a:allowBackup="true"
+                 a:icon="@drawable/ic_launcher"
+                 a:label="@string/app_name"
+                 a:theme="@style/AppTheme" >
 
-        <meta-data android:name="roboguice.modules"
-                   android:value="at.cpickl.agrotlin.SwirlModule" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape" >
+        <meta-data a:name="roboguice.modules"
+                   a:value="at.cpickl.agrotlin.SwirlModule" />
+
+        <activity a:name=".activity.MainActivity"
+                  a:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action a:name="android.intent.action.MAIN" />
+                <category a:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.LoginActivity"
-            android:label="Login Label"
-            android:parentActivityName=".activity.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="at.cpickl.agrotlin.MainActivity" />
+        <activity a:name=".activity.LoginActivity"
+                  a:label="Login Label"
+                  a:parentActivityName=".activity.MainActivity" >
+            <meta-data a:name="android.support.PARENT_ACTIVITY"
+                       a:value="at.cpickl.agrotlin.MainActivity" />
+        </activity>
+
+        <activity a:name=".activity.PlayGameActivity"
+                  a:label="Play Game"
+                  a:parentActivityName=".activity.MainActivity"
+                  a:screenOrientation="landscape" >
+            <meta-data a:name="android.support.PARENT_ACTIVITY"
+                       a:value="at.cpickl.agrotlin.MainActivity" />
         </activity>
 
     </application>
