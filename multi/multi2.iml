@@ -50,6 +50,7 @@
     <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
     <orderEntry type="library" exported="" name="guice-3.0" level="project" />
     <orderEntry type="library" exported="" name="resteasy-jackson-provider-3.0.4.Final" level="project" />
+    <orderEntry type="library" exported="" name="servlet-api-2.5" level="project" />
     <orderEntry type="library" exported="" name="joda-time-2.5" level="project" />
     <orderEntry type="library" exported="" name="guava-18.0" level="project" />
     <orderEntry type="library" exported="" name="kotlin-runtime-0.9.206" level="project" />
@@ -82,4 +83,3 @@
     <orderEntry type="library" exported="" scope="TEST" name="objenesis-2.1" level="project" />
   </component>
 </module>
-

@@ -15,9 +15,13 @@ import javax.xml.bind.annotation.XmlElement
 import at.cpickl.grotlin.multi.service.User
 import javax.ws.rs.core.Response
 import javax.inject.Inject
+import java.lang.annotation.Retention
+import java.lang.annotation.Target
+
 //import javax.inject.Inject
 
-Path("/users") public class UserResource [Inject] (private val userService: UserService) {
+Path("/users")
+public class UserResource [Inject] (private val userService: UserService) {
     class object {
         private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
     }
@@ -29,12 +33,15 @@ Path("/users") public class UserResource [Inject] (private val userService: User
         rto
     }
 
-    Path("/") GET Produces(MediaType.APPLICATION_JSON)
-    public fun getUsers(): Collection<UserResponseRto> {
-        return userService.loadAll().map(userTransformer)
+    GET Path("/")
+    Produces(MediaType.APPLICATION_JSON)
+    public fun getUsers(pagination: Pagination): Collection<UserResponseRto> {
+        LOG.fine("getUsers(pagination=${pagination})")
+        return userService.loadAll(pagination).map(userTransformer)
     }
 
-    Path("/login") POST Consumes(MediaType.APPLICATION_JSON) Produces(MediaType.APPLICATION_JSON)
+    POST Path("/login")
+    Consumes(MediaType.APPLICATION_JSON) Produces(MediaType.APPLICATION_JSON)
     public fun login(login: LoginRequestRto): LoginResponseRto {
         val user = userService.login(login.username!!, login.password!!)
         val rto = LoginResponseRto()
@@ -42,7 +49,8 @@ Path("/users") public class UserResource [Inject] (private val userService: User
         return rto
     }
 
-    Path("/logout") POST Consumes(MediaType.APPLICATION_JSON)
+    POST Path("/logout")
+    Consumes(MediaType.APPLICATION_JSON)
     public fun logout(logout: LogoutRequestRto): Response {
         userService.logout(logout.token!!)
         return Response.status(Response.Status.NO_CONTENT).build()

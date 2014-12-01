@@ -10,6 +10,8 @@ import at.cpickl.grotlin.multi.Fault
 import at.cpickl.grotlin.multi.FaultException
 import javax.ws.rs.core.Response.Status
 import at.cpickl.grotlin.multi.FaultCode
+import at.cpickl.grotlin.multi.resource.Pagination
+import at.cpickl.grotlin.multi.resource.paginate
 
 fun main(args: Array<String>) {
     println(hash("foo"))
@@ -18,7 +20,7 @@ fun main(args: Array<String>) {
 
 trait UserService {
     fun saveOrUpdate(user: User)
-    fun loadAll(): Collection<User>
+    fun loadAll(pagination: Pagination): Collection<User>
     /** Throws exception on invalid login. */
     fun login(username: String, password: String): User
     fun logout(token: String)
@@ -37,10 +39,11 @@ class ObjectifyUserService : UserService {
         save(user)
     }
 
-    override public fun loadAll(): Collection<User> {
-        LOG.info("loadAll()")
-        return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).list().map { fromDbo(it) }
+    override public fun loadAll(pagination: Pagination): Collection<User> {
+        LOG.info("loadAll(pagination=${pagination})")
+        return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).paginate(pagination).list().map { fromDbo(it) }
     }
+
 
     override public fun login(username: String, password: String): User {
         LOG.info("login(username=${username}, password)")

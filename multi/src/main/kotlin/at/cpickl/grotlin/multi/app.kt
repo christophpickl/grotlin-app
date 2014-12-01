@@ -42,6 +42,7 @@ data class Fault(public val message: String, public val code: FaultCode)
 enum class FaultCode(public val label: String) {
     NOT_ALLOWED: FaultCode("NOT_ALLOWED")
     INVALID_PAYLOAD: FaultCode("INVALID_PAYLOAD")
+    INVALID_PAGE: FaultCode("INVALID_PAGE")
     INVALID_LOGOUT: FaultCode("INVALID_LOGOUT")
     INVALID_CREDENTIALS: FaultCode("INVALID_CREDENTIALS")
     INTERNAL_ERROR: FaultCode("INTERNAL_ERROR")
@@ -53,7 +54,3 @@ open class FaultException(message: String, public val status: Status, public val
     }
 }
 
-
-public fun Logger.exception(message: String, throwable: Throwable) {
-    log(Level.SEVERE, message, throwable)
-}

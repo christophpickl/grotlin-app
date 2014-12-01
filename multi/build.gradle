@@ -82,6 +82,7 @@ dependencies {
     // http://howtodoinjava.com/2013/05/10/resteasy-jackson-json-example/
     compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.4.Final'
 //    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'
+    compile 'javax.servlet:servlet-api:2.5'
 
     // MISC
     // =============================================
