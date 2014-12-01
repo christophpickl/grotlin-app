@@ -42,8 +42,8 @@ public open class LoginActivity : SwirlActivity() {
 //    @InjectResource(R.string.app_name)  myName: String? = null
     Inject private var loginService: LoginService? = null
 
-    override fun onCreate(saved: Bundle?) {
-        super<SwirlActivity>.onCreate(saved)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super<SwirlActivity>.onCreate(savedInstanceState)
 //        getIntent().getStringExtra()
 
         setContentView(R.layout.activity_login)

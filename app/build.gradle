@@ -55,6 +55,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        // logback references some JMS, servlet, stuff (javax.management, javax.servlet, ...)
+        abortOnError false
+    }
+
 }
 
 buildscript {
