@@ -39,7 +39,7 @@ Provider Consumes(MediaType.WILDCARD) public class PaginationReader : MessageBod
         var pageNumberString = request!!.getParameter("page")
         var pageSizeString = request!!.getParameter("size")
         if (pageNumberString == null && pageSizeString == null) {
-            return Pagination.all()
+            return Pagination.ALL
         }
         if (pageNumberString == null) {
             throw UserException("pageNumberString == null", Fault("Page size was defined but not page number!", FaultCode.INVALID_PAGE))
@@ -69,6 +69,6 @@ fun <T> LoadType<T>.paginate(pagination: Pagination): Query<T> = limit(paginatio
 
 public data class Pagination(public val number: Int, public val size: Int) {
     class object {
-        fun all(): Pagination = Pagination(0, Integer.MAX_VALUE)
+        public val ALL: Pagination = Pagination(0, Integer.MAX_VALUE)
     }
 }

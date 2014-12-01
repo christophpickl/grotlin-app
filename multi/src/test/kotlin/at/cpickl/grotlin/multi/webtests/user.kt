@@ -11,7 +11,11 @@ import org.jboss.resteasy.client.core.BaseClientResponse
 
 class UserClient : Client() {
     fun <T> logout(logoutRequest: LogoutRequestRto): BaseClientResponse<T> {
-        return post("/users/logout", logoutRequest) as BaseClientResponse<T>
+        val response = post("/users/logout", logoutRequest)
+        if(response is BaseClientResponse) {
+            return response as BaseClientResponse<T>
+        }
+        throw RuntimeException("Invalid response type ${response} (expected: BaseClientResponse)")
     }
 }
 

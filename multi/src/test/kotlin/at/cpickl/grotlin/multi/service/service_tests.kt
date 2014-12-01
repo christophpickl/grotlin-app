@@ -11,6 +11,7 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.googlecode.objectify.ObjectifyService
 import at.cpickl.grotlin.multi.assertThat
 import at.cpickl.grotlin.multi.equalTo
+import at.cpickl.grotlin.multi.resource.Pagination
 
 Test public class PropertiesVersionServiceTest {
     public fun loadTestPropertiesFileShouldReturnContent() {

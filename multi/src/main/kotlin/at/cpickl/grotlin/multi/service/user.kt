@@ -20,7 +20,7 @@ fun main(args: Array<String>) {
 
 trait UserService {
     fun saveOrUpdate(user: User)
-    fun loadAll(pagination: Pagination): Collection<User>
+    fun loadAll(pagination: Pagination = Pagination.ALL): Collection<User>
     /** Throws exception on invalid login. */
     fun login(username: String, password: String): User
     fun logout(token: String)
