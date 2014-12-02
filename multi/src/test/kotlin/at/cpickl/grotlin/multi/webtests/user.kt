@@ -10,8 +10,8 @@ import at.cpickl.grotlin.multi.FaultCode
 import org.jboss.resteasy.client.core.BaseClientResponse
 
 class UserClient : Client() {
-    fun <T> logout(logoutRequest: LogoutRequestRto): BaseClientResponse<T> {
-        val response = post("/users/logout", logoutRequest)
+    fun <T> logout(): BaseClientResponse<T> {
+        val response = post("/users/logout")
         if(response is BaseClientResponse) {
             return response as BaseClientResponse<T>
         }
@@ -21,8 +21,8 @@ class UserClient : Client() {
 
 Test(groups = array("WebTest")) public class UserWebTest {
     fun logout_invalidToken_shouldReturn400BadRequest() {
-        val response = UserClient().logout<FaultRto>(LogoutRequestRto.build("invalid_token"))
-        response.assertStatusCode(Response.Status.BAD_REQUEST)
-        assertThat(response.getEntity(javaClass<FaultRto>()), equalTo(FaultRto.build("No user session found", FaultCode.INVALID_LOGOUT)))
+        val response = UserClient().logout<FaultRto>()
+        response.assertStatusCode(Response.Status.UNAUTHORIZED)
+        assertThat(response.getEntity(javaClass<FaultRto>()), equalTo(FaultRto.build("Authentication required to access this resource!", FaultCode.UNAUTHORIZED)))
     }
 }

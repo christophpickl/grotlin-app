@@ -10,6 +10,8 @@ public class ServiceModule : AbstractModule() {
     override fun configure() {
         bind(javaClass<VersionService>()).toInstance(PropertiesVersionService("/swirl.config.properties"))
         bind(javaClass<UserService>()).toInstance(ObjectifyUserService())
+        bind(javaClass<AuthUserService>())
+        bind(javaClass<FakeUserReader>()) // needs to be in context, but will not be used if debug app is not enabled
     }
 }
 

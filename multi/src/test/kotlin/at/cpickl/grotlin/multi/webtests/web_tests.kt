@@ -11,67 +11,52 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response.Status
 import at.cpickl.grotlin.multi.assertThat
 import at.cpickl.grotlin.multi.equalTo
+import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
+import org.hamcrest.Description
+import org.testng.annotations.BeforeSuite
 
-fun Response.assertStatusCode(expected: Status) {
-    assertThat(getStatus(), equalTo(expected.getStatusCode()))
-}
-
-abstract class Client {
-    class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
-    }
-    private val baseUrl: String
-    {
-        val target = System.getProperty("testTarget", "UNDEFINED")
-        when (target) {
-            "LOCAL" -> baseUrl = "http://localhost:8888"
-            "PROD" -> baseUrl = "http://swirl-engine.appspot.com"
-            "UNDEFINED" -> {
-                println("No system property 'testTarget' defined, using default LOCAL target instead.")
-                baseUrl = "http://localhost:8888"
-            }
-            else -> throw IllegalArgumentException("Invalid testTarget: '${target}'!")
-        }
-        LOG.fine("Test client base url: '${baseUrl}'")
-    }
-
-    fun <T> get(endpointUrl: String, entityType: Class<T>, expectedStatus: Int = 200): ClientResponse<T> {
-        val url = "${baseUrl}${endpointUrl}"
-        LOG.finer("GET ${url}")
-        val request = ClientRequest(url)
-        request.accept(MediaType.APPLICATION_JSON)
-        val response = request.get(entityType)
-        assertThat(response.getStatus(), equalTo(expectedStatus))
-        return response
-    }
-
-    fun getAny(endpointUrl: String): ClientResponse<out Any?> {
-        val url = "${baseUrl}${endpointUrl}"
-        LOG.finer("GET ${url}")
-        val request = ClientRequest(url)
-        request.accept(MediaType.APPLICATION_JSON)
-        return request.get()
-    }
-
-    fun post(endpointUrl: String, body: Any): ClientResponse<out Any?> {
-        val url = "${baseUrl}${endpointUrl}"
-        LOG.finer("POST ${url}")
-        val request = ClientRequest(url)
-        request.accept(MediaType.APPLICATION_JSON)
-        request.body(MediaType.APPLICATION_JSON, body)
-        val response = request.post()
-        return response
-    }
-}
 
 class TestClient : Client() {
     fun get(url: String): Response {
-        return getAny(url)
+        return getAny(url).get()
     }
 }
 
-Test(groups = array("WebTest")) public class MiscWebTest {
-    public fun invalidUrlShouldReturn404NotFound() {
-        assertThat(TestClient().getAny("/not_existing").getStatus(), equalTo(Response.Status.NOT_FOUND.getStatusCode()))
+Test(groups = array("WebTest")) public class SecuredWebTest {
+
+    public fun securedEndpointWithoutAccessTokenShouldBeUnauthorized() {
+        TestClient().get("/test/secured").assertStatusCode(Response.Status.UNAUTHORIZED)
     }
+
+    public fun securedEndpointWithHeaderFakeAccessTokenShouldBeOk() {
+        TestClient().getAny("/test/secured").header("X-access_token", FAKE_TOKEN_USER).get().assertStatusCode(Response.Status.OK)
+    }
+
+    public fun securedAdminEndpointWithHeaderFakeUserAccessTokenShouldBeForbidden() {
+        TestClient().getAny("/test/secured_admin").header("X-access_token", FAKE_TOKEN_USER).get().assertStatusCode(Response.Status.FORBIDDEN)
+    }
+
+    public fun securedAdminEndpointWithHeaderFakeAdminAccessTokenShouldBeOk() {
+        TestClient().getAny("/test/secured_admin").header("X-access_token", FAKE_TOKEN_ADMIN).get().assertStatusCode(Response.Status.OK)
+    }
+
+    // gnah, resteasy's message body reader doesnt provide access to query params :-/
+    //    public fun securedEndpointWithQueryParamFakeAccessTokenShouldBeOk() {
+    //        TestClient().getAny("/test/secured").queryParameter("X-access_token", "1").get().assertStatusCode(Response.Status.OK)
+    //    }
 }
+
+Test(groups = array("WebTest")) public class MiscWebTest {
+
+    BeforeSuite
+    public fun resetDB() {
+
+    }
+
+    public fun invalidUrlShouldReturn404NotFound() {
+        TestClient().get("/not_existing").assertStatusCode(Response.Status.NOT_FOUND)
+    }
+
+}
+

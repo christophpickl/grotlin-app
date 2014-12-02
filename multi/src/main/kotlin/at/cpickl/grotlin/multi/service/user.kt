@@ -26,6 +26,9 @@ trait UserService {
     fun logout(user: User)
 
     fun userByToken(token: String): User?
+
+    // only used by fake access token support
+    fun userByName(name: String): User
 }
 
 // https://code.google.com/p/objectify-appengine/
@@ -50,6 +53,11 @@ class ObjectifyUserService : UserService {
     override fun userByToken(token: String): User? {
         LOG.info("userByToken(token)")
         return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).filter({ it.accessToken == token }).first?.toUser()
+    }
+
+    override fun userByName(name: String): User {
+        LOG.info("userByName(name='${name}')")
+        return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).filter({ it.name == name }).first!!.toUser()
     }
 
     override public fun login(username: String, password: String): User {
@@ -79,9 +87,9 @@ class ObjectifyUserService : UserService {
         if (result.size == 0) {
             throw FaultException("No user found with token '${user.accessToken}'!", Status.BAD_REQUEST, Fault("No user session found", FaultCode.INVALID_LOGOUT))
         }
-        val user = result.first()
-        user.accessToken = null
-        save(user)
+        val found = result.first()
+        found.accessToken = null
+        save(found)
     }
 
     private fun save(user: User) {

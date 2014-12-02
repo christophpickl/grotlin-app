@@ -12,6 +12,8 @@ import java.util.logging.Logger
 import java.util.logging.Level
 
 
+fun isDebugApp(): Boolean = System.getProperty("appDebug", "false").equals("true")
+
 public class AppModule : AbstractModule() {
     override fun configure() {
         install(ResourceModule())

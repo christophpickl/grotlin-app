@@ -8,6 +8,12 @@ import org.testng.annotations.BeforeSuite
 import java.util.logging.Logger
 import java.util.logging.ConsoleHandler
 import java.util.logging.Level
+import org.jboss.resteasy.client.ClientResponse
+import org.hamcrest.TypeSafeMatcher
+import org.hamcrest.Description
+import org.hamcrest.Factory
+import javax.ws.rs.core.Response
+import at.cpickl.grotlin.multi.webtests.TestClient
 
 Test public class EnableLogNonTest {
 
