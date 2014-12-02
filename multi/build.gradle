@@ -102,7 +102,8 @@ dependencies {
 appengine {
     downloadSdk = true
     // via this it's possible to access it via its LAN IP address (rather localhost)
-    httpAddress = "0.0.0.0"
+    httpAddress = "localhost"
+//    httpAddress = "0.0.0.0"
     httpPort = 8888
 
 //    jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000']

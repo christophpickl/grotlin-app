@@ -34,6 +34,8 @@ Provider class UnrecognizedPropertyExceptionMapper : ExceptionMapper<Unrecognize
     }
 }
 
+// KotlinNullPointerExceptionMapper -> internal server error
+
 // javax.ws.rs.NotFoundException
 //Provider class GeneralExceptionMapper : ExceptionMapper<Exception> {
 //    class object {

@@ -46,6 +46,10 @@ enum class FaultCode(public val label: String) {
     INVALID_LOGOUT: FaultCode("INVALID_LOGOUT")
     INVALID_CREDENTIALS: FaultCode("INVALID_CREDENTIALS")
     INTERNAL_ERROR: FaultCode("INTERNAL_ERROR")
+
+    UNAUTHORIZED: FaultCode("UNAUTHORIZED")
+    FORBIDDEN: FaultCode("FORBIDDEN")
+
 }
 
 open class FaultException(message: String, public val status: Status, public val fault: Fault) : RuntimeException(message) {

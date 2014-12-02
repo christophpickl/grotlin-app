@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response
 import javax.inject.Inject
 import java.lang.annotation.Retention
 import java.lang.annotation.Target
+import at.cpickl.grotlin.multi.service.Role
 
 //import javax.inject.Inject
 
@@ -29,11 +30,11 @@ public class UserResource [Inject] (private val userService: UserService) {
     private val userTransformer: (User) -> UserResponseRto = {(user) ->
         val rto = UserResponseRto()
         rto.name = user.name
-        rto.token = user.token
+        rto.role = user.role.label
         rto
     }
 
-    GET Path("/")
+    Secured(Role.ADMIN) GET Path("/")
     Produces(MediaType.APPLICATION_JSON)
     public fun getUsers(pagination: Pagination): Collection<UserResponseRto> {
         LOG.fine("getUsers(pagination=${pagination})")
@@ -45,15 +46,20 @@ public class UserResource [Inject] (private val userService: UserService) {
     public fun login(login: LoginRequestRto): LoginResponseRto {
         val user = userService.login(login.username!!, login.password!!)
         val rto = LoginResponseRto()
-        rto.token = user.token
+        rto.accessToken = user.accessToken
         return rto
     }
 
-    POST Path("/logout")
-    Consumes(MediaType.APPLICATION_JSON)
-    public fun logout(logout: LogoutRequestRto): Response {
-        userService.logout(logout.token!!)
+    Secured POST Path("/logout")
+    public fun logout(user: User): Response {
+        userService.logout(user)
         return Response.status(Response.Status.NO_CONTENT).build()
+    }
+
+    Secured GET Path("/profile")
+    Produces(MediaType.APPLICATION_JSON)
+    public fun getProfile(user: User): UserResponseRto {
+        return userTransformer(user)
     }
 
 }
@@ -68,26 +74,12 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginRequestRt
 }
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginResponseRto {
-    public var token: String? = null
-    override public fun toString() = "LoginResultRto[token='${token}']"
-}
-
-XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LogoutRequestRto {
-    class object {
-        public fun build(token: String): LogoutRequestRto {
-            val rto = LogoutRequestRto()
-            rto.token = token
-            return rto
-        }
-    }
-    XmlElement(required = true, nillable = false)
-    public var token: String? = null
-
-    override public fun toString() = "LogoutRequestRto[token='${token}']"
+    public var accessToken: String? = null
+    override public fun toString() = "LoginResultRto[accessToken='${accessToken}']"
 }
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class UserResponseRto {
     public var name: String? = null
-    public var token: String? = null // TODO delete me
+    public var role: String? = null
     override public fun toString() = "UserRto[name='${name}']"
 }

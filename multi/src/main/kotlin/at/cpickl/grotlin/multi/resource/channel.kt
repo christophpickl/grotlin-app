@@ -20,7 +20,7 @@ Path("/channel") public class ChannelResource {
     Path("/") POST Produces(MediaType.APPLICATION_JSON)
     public fun createChannelToken(): String {
         // By default, tokens expire in two hours.
-        // If a client remains connected to a channel for longer than the token duration, the socket’s onerror() and onclose()
+        // If a client remains connected to a channel for longer than the token duration, the sockets onerror() and onclose()
         // callbacks are called. At this point, the client can make an XHR request to the application to request a new token and
         // open a new channel.
         val channelService: ChannelService  = ChannelServiceFactory.getChannelService();

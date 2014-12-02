@@ -23,11 +23,14 @@ trait UserService {
     fun loadAll(pagination: Pagination = Pagination.ALL): Collection<User>
     /** Throws exception on invalid login. */
     fun login(username: String, password: String): User
-    fun logout(token: String)
+    fun logout(user: User)
+
+    fun userByToken(token: String): User?
 }
 
 // https://code.google.com/p/objectify-appengine/
 class ObjectifyUserService : UserService {
+
     class object {
         private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName());
         {
@@ -41,9 +44,13 @@ class ObjectifyUserService : UserService {
 
     override public fun loadAll(pagination: Pagination): Collection<User> {
         LOG.info("loadAll(pagination=${pagination})")
-        return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).paginate(pagination).list().map { fromDbo(it) }
+        return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).paginate(pagination).list().map { it.toUser() }
     }
 
+    override fun userByToken(token: String): User? {
+        LOG.info("userByToken(token)")
+        return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).filter({ it.accessToken == token }).first?.toUser()
+    }
 
     override public fun login(username: String, password: String): User {
         LOG.info("login(username=${username}, password)")
@@ -51,26 +58,29 @@ class ObjectifyUserService : UserService {
         if (foundUser == null) {
             throw LoginException("No user found by username '${username}'!", Fault("Invalid username/password", FaultCode.INVALID_CREDENTIALS))
         }
-        val user = fromDbo(foundUser)
+        val user = foundUser.toUser()
         if (user.password != password) {
             throw LoginException("Invalid password for user '${username}'!", Fault("Invalid username/password", FaultCode.INVALID_CREDENTIALS))
         }
-        user.token = UUID.randomUUID().toString()
+        user.accessToken = UUID.randomUUID().toString()
         save(user) // update token
         return user
     }
 
-    override public fun logout(token: String) {
-        LOG.info("logout(token=${token})")
-        val result = ObjectifyService.ofy().load().type(javaClass<UserDbo>()).filter { it.token == token }
+    override public fun logout(user: User) {
+        LOG.info("logout(user=${user})")
+        if (user.accessToken == null) {
+            throw RuntimeException("Can not logout a not logged in user: ${user}")
+        }
+        val result = ObjectifyService.ofy().load().type(javaClass<UserDbo>()).filter { it.accessToken == user.accessToken }
         if (result.size > 1) {
-            throw TechException("There were more than one entries (${result.size}) found for token '${token}'!", "Invalid token")
+            throw TechException("There were more than one entries (${result.size}) found for token '${user.accessToken}'!", "Invalid token")
         }
         if (result.size == 0) {
-            throw FaultException("No user found with token '${token}'!", Status.BAD_REQUEST, Fault("No user session found", FaultCode.INVALID_LOGOUT))
+            throw FaultException("No user found with token '${user.accessToken}'!", Status.BAD_REQUEST, Fault("No user session found", FaultCode.INVALID_LOGOUT))
         }
         val user = result.first()
-        user.token = null
+        user.accessToken = null
         save(user)
     }
 
@@ -87,22 +97,37 @@ class ObjectifyUserService : UserService {
         dbo.name = user.name
         dbo.email = user.email
         dbo.password = user.password
-        dbo.token = user.token
+        dbo.role = user.role
+        dbo.accessToken = user.accessToken
         return dbo
     }
 
-    private fun fromDbo(dbo: UserDbo): User = User(dbo.name!!, dbo.email!!, dbo.password!!, dbo.token)
 }
 
 class LoginException(message: String, fault: Fault) : FaultException(message, Status.FORBIDDEN, fault)
 
-data public class User(public val name: String, public val email: String, public val password: String, public var token: String? = null)
+data public class User(
+        public val name: String,
+        public val email: String,
+        public val password: String,
+        public val role: Role,
+        public var accessToken: String? = null)
+
+enum class Role(public val label: String, private val level: Int) {
+    USER: Role("User", 40)
+    ADMIN: Role("Admin", 80)
+
+    fun isAtLeast(other: Role): Boolean = this.level >= other.level
+}
 
 Entity data class UserDbo() {
     Id public var name: String? = null
     public var email: String? = null
     public var password: String? = null
-    public var token: String? = null
+    public var role: Role? = null
+    public var accessToken: String? = null
+
+    fun toUser(): User = User(name!!, email!!, password!!, role!!, accessToken)
 }
 
 // TODO move this to the central game logic module (use it on server side and within android)
