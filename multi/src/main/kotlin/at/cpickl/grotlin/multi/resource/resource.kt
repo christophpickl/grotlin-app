@@ -38,9 +38,9 @@ import org.slf4j.LoggerFactory
 
 // https://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/html/Validation.html
 
-public class ResourceModule : AbstractModule() {
+class ResourceModule : AbstractModule() {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<ResourceModule>())
     }
 
     override fun configure() {
@@ -70,15 +70,15 @@ public class ResourceModule : AbstractModule() {
 
 Path("/test")
 Produces(MediaType.APPLICATION_JSON)
-public class TestResource {
+class TestResource {
 
     Secured GET Path("/secured")
-    public fun secured(): Response {
+    fun secured(): Response {
         return Response.ok().build()
     }
 
     Secured(role = Role.ADMIN) GET Path("/secured_admin")
-    public fun securedAdmin(): Response {
+    fun securedAdmin(): Response {
         return Response.ok().build()
     }
 
@@ -86,13 +86,13 @@ public class TestResource {
 
 Path("/admin")
 Produces(MediaType.APPLICATION_JSON)
-public class AdminResource [Inject] (private val userService: UserService) {
+class AdminResource [Inject] (private val userService: UserService) {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<AdminResource>())
     }
 
     GET Path("/resetDB")
-    public fun resetDatabase(QueryParam("secret") secret: String?): String {
+    fun resetDatabase(QueryParam("secret") secret: String?): String {
         if (secret != "hans") {
             throw AdminException("Invalid secret '${secret}'!", Fault("You shall not pass!", FaultCode.NOT_ALLOWED))
         }

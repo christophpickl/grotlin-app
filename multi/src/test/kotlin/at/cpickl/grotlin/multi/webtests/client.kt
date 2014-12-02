@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
 
 abstract class Client {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<Client>())
     }
     private val baseUrl: String
     {

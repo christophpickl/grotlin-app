@@ -13,12 +13,12 @@ class VersionClient : Client() {
     }
 }
 
-Test(groups = array("WebTest")) public class VersionWebTest {
+Test(groups = array("WebTest")) class VersionWebTest {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<VersionWebTest>())
     }
 
-    public fun getVersion() {
+    fun getVersion() {
         val version = VersionClient().get()
         LOG.debug("Returned version: ${version}")
         assertThat(version.artifactVersion, Matchers.notNullValue())

@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory
 //import javax.inject.Inject
 
 Path("/users")
-public class UserResource [Inject] (private val userService: UserService) {
+class UserResource [Inject] (private val userService: UserService) {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<UserResource>())
     }
 
     private val userTransformer: (User) -> UserResponseRto = {(user) ->
@@ -37,14 +37,14 @@ public class UserResource [Inject] (private val userService: UserService) {
 
     Secured(Role.ADMIN) GET Path("/")
     Produces(MediaType.APPLICATION_JSON)
-    public fun getUsers(pagination: Pagination): Collection<UserResponseRto> {
+    fun getUsers(pagination: Pagination): Collection<UserResponseRto> {
         LOG.debug("getUsers(pagination=${pagination})")
         return userService.loadAll(pagination).map(userTransformer)
     }
 
     POST Path("/login")
     Consumes(MediaType.APPLICATION_JSON) Produces(MediaType.APPLICATION_JSON)
-    public fun login(login: LoginRequestRto): LoginResponseRto {
+    fun login(login: LoginRequestRto): LoginResponseRto {
         val user = userService.login(login.username!!, login.password!!)
         val rto = LoginResponseRto()
         rto.accessToken = user.accessToken
@@ -52,14 +52,14 @@ public class UserResource [Inject] (private val userService: UserService) {
     }
 
     Secured POST Path("/logout")
-    public fun logout(user: User): Response {
+    fun logout(user: User): Response {
         userService.logout(user)
         return Response.status(Response.Status.NO_CONTENT).build()
     }
 
     Secured GET Path("/profile")
     Produces(MediaType.APPLICATION_JSON)
-    public fun getProfile(user: User): UserResponseRto {
+    fun getProfile(user: User): UserResponseRto {
         return userTransformer(user)
     }
 
@@ -67,20 +67,20 @@ public class UserResource [Inject] (private val userService: UserService) {
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginRequestRto {
     XmlElement(required = true, nillable = false)
-    public var username: String? = null
+    var username: String? = null
     XmlElement(required = true, nillable = false)
-    public var password: String? = null
+    var password: String? = null
 
-    override public fun toString() = "LoginRto[username='${username}']"
+    override fun toString() = "LoginRto[username='${username}']"
 }
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginResponseRto {
-    public var accessToken: String? = null
-    override public fun toString() = "LoginResultRto[accessToken='${accessToken}']"
+    var accessToken: String? = null
+    override fun toString() = "LoginResultRto[accessToken='${accessToken}']"
 }
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class UserResponseRto {
-    public var name: String? = null
-    public var role: String? = null
-    override public fun toString() = "UserRto[name='${name}']"
+    var name: String? = null
+    var role: String? = null
+    override fun toString() = "UserRto[name='${name}']"
 }

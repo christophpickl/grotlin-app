@@ -12,8 +12,8 @@ import org.hamcrest.Factory
 import javax.ws.rs.core.Response
 import at.cpickl.grotlin.multi.webtests.TestClient
 
-//Test public class EnableLogNonTest {
-//    BeforeSuite public fun initLogging() {
+//Test class EnableLogNonTest {
+//    BeforeSuite fun initLogging() {
 //        println("EnableLogNonTest#initLogging()")
 //        val root = Logger.getLogger("")
 //        val handler = ConsoleHandler()
@@ -22,10 +22,10 @@ import at.cpickl.grotlin.multi.webtests.TestClient
 //    }
 //}
 
-public fun <T> assertThat(actual: T, matcher: Matcher<T>) {
+fun <T> assertThat(actual: T, matcher: Matcher<T>) {
     MatcherAssert.assertThat(actual, matcher)
 }
 
-public fun <T> equalTo(operand: T): Matcher<T> {
+fun <T> equalTo(operand: T): Matcher<T> {
     return Matchers.equalTo(operand)
 }

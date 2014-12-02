@@ -14,7 +14,15 @@ import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.Description
 import org.testng.annotations.BeforeSuite
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
+
+class AdminClient : Client() {
+    fun resetDb() {
+        getAny("/admin/resetDB").queryParameter("secret", "hans").get().assertStatusCode(Response.Status.OK)
+    }
+}
 
 class TestClient : Client() {
     fun get(url: String): Response {
@@ -22,38 +30,40 @@ class TestClient : Client() {
     }
 }
 
-Test(groups = array("WebTest")) public class SecuredWebTest {
+Test(groups = array("WebTest")) class SecuredWebTest {
 
-    public fun securedEndpointWithoutAccessTokenShouldBeUnauthorized() {
+    fun securedEndpointWithoutAccessTokenShouldBeUnauthorized() {
         TestClient().get("/test/secured").assertStatusCode(Response.Status.UNAUTHORIZED)
     }
 
-    public fun securedEndpointWithHeaderFakeAccessTokenShouldBeOk() {
+    fun securedEndpointWithHeaderFakeAccessTokenShouldBeOk() {
         TestClient().getAny("/test/secured").header("X-access_token", FAKE_TOKEN_USER).get().assertStatusCode(Response.Status.OK)
     }
 
-    public fun securedAdminEndpointWithHeaderFakeUserAccessTokenShouldBeForbidden() {
+    fun securedAdminEndpointWithHeaderFakeUserAccessTokenShouldBeForbidden() {
         TestClient().getAny("/test/secured_admin").header("X-access_token", FAKE_TOKEN_USER).get().assertStatusCode(Response.Status.FORBIDDEN)
     }
 
-    public fun securedAdminEndpointWithHeaderFakeAdminAccessTokenShouldBeOk() {
+    fun securedAdminEndpointWithHeaderFakeAdminAccessTokenShouldBeOk() {
         TestClient().getAny("/test/secured_admin").header("X-access_token", FAKE_TOKEN_ADMIN).get().assertStatusCode(Response.Status.OK)
     }
 
     // gnah, resteasy's message body reader doesnt provide access to query params :-/
-    //    public fun securedEndpointWithQueryParamFakeAccessTokenShouldBeOk() {
+    //    fun securedEndpointWithQueryParamFakeAccessTokenShouldBeOk() {
     //        TestClient().getAny("/test/secured").queryParameter("X-access_token", "1").get().assertStatusCode(Response.Status.OK)
     //    }
 }
 
-Test(groups = array("WebTest")) public class MiscWebTest {
+Test(groups = array("WebTest")) class MiscWebTest {
+    class object {
+        private val LOG = LoggerFactory.getLogger(javaClass<MiscWebTest>())
+    }
 
-//    BeforeSuite
-//    public fun resetDB() {
-// TODO invoke resetDB, otherwise there will be no users
-//    }
+    BeforeSuite fun resetDB() {
+        AdminClient().resetDb()
+    }
 
-    public fun invalidUrlShouldReturn404NotFound() {
+    fun invalidUrlShouldReturn404NotFound() {
         TestClient().get("/not_existing").assertStatusCode(Response.Status.NOT_FOUND)
     }
 

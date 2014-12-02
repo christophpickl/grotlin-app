@@ -14,27 +14,27 @@ import org.slf4j.LoggerFactory
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class VersionRto {
     class object {
-        public fun build(artifactVersion: String, buildDate: String): VersionRto {
+        fun build(artifactVersion: String, buildDate: String): VersionRto {
             val version = VersionRto()
             version.artifactVersion = artifactVersion
             version.buildDate = buildDate
             return version
         }
     }
-    public var artifactVersion: String? = null
-    public var buildDate: String? = null
+    var artifactVersion: String? = null
+    var buildDate: String? = null
 
-    override public fun toString() = "VersionRto[artifactVersion='${artifactVersion}', buildDate='${buildDate}']"
+    override fun toString() = "VersionRto[artifactVersion='${artifactVersion}', buildDate='${buildDate}']"
 
 }
 
-Path("/version") public class VersionResource [Inject] (private val versionService: VersionService) {
+Path("/version") class VersionResource [Inject] (private val versionService: VersionService) {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<VersionResource>())
     }
 
     // Produces(MediaType.APPLICATION_JSON, "application/vnd.swirl.version+json")
-    GET Produces(MediaType.APPLICATION_JSON) public fun getVersion(): VersionRto {
+    GET Produces(MediaType.APPLICATION_JSON) fun getVersion(): VersionRto {
         LOG.debug("getVersion()")
         val version = versionService.load()
         return VersionRto.build(version.artifactVersion, version.buildDate)

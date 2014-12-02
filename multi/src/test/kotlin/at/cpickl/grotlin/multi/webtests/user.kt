@@ -18,7 +18,7 @@ class UserClient : Client() {
     }
 }
 
-Test(groups = array("WebTest")) public class UserWebTest {
+Test(groups = array("WebTest")) class UserWebTest {
     fun logout_invalidToken_shouldReturn400BadRequest() {
         val response = UserClient().logout<FaultRto>()
         response.assertStatusCode(Response.Status.UNAUTHORIZED)

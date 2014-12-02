@@ -11,15 +11,15 @@ import javax.ws.rs.core.Response
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-Path("/channel") public class ChannelResource {
+Path("/channel") class ChannelResource {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<ChannelResource>())
     }
 
     private val channelKey = "useUserTokenInstead"
 
     Path("/") POST Produces(MediaType.APPLICATION_JSON)
-    public fun createChannelToken(): String {
+    fun createChannelToken(): String {
         // By default, tokens expire in two hours.
         // If a client remains connected to a channel for longer than the token duration, the sockets onerror() and onclose()
         // callbacks are called. At this point, the client can make an XHR request to the application to request a new token and
@@ -30,7 +30,7 @@ Path("/channel") public class ChannelResource {
     }
 
     Path("/push") POST Produces(MediaType.APPLICATION_JSON)
-    public fun pushMessage(): String {
+    fun pushMessage(): String {
         val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
         val message = "my server message"
         channelService.sendMessage(ChannelMessage(channelKey, message))
@@ -39,19 +39,19 @@ Path("/channel") public class ChannelResource {
 
 }
 
-Path("/_ah/channel") public class ChannelPresenceResource {
+Path("/_ah/channel") class ChannelPresenceResource {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<ChannelPresenceResource>())
     }
     Path("/connected") POST
-    public fun userConnected(): Response {
+    fun userConnected(): Response {
         LOG.debug("userConnected()")
         val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
         //        val presence = channelService.parsePresence(request)
         return Response.ok().build()
     }
     Path("/disconnected") POST
-    public fun userDisconnected(): Response {
+    fun userDisconnected(): Response {
         LOG.debug("userDisconnected()")
         val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
         //        val presence = channelService.parsePresence(request)

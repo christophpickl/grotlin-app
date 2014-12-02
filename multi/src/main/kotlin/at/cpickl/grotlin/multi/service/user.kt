@@ -36,17 +36,17 @@ trait UserService {
 class ObjectifyUserService : UserService {
 
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass);
+        private val LOG = LoggerFactory.getLogger(javaClass<ObjectifyUserService>());
         {
             ObjectifyService.register(javaClass<UserDbo>())
         }
     }
-    override public fun saveOrUpdate(user: User) {
+    override fun saveOrUpdate(user: User) {
         LOG.info("saveOrUpdate(user)")
         save(user)
     }
 
-    override public fun loadAll(pagination: Pagination): Collection<User> {
+    override fun loadAll(pagination: Pagination): Collection<User> {
         LOG.info("loadAll(pagination=${pagination})")
         return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).paginate(pagination).list().map { it.toUser() }
     }
@@ -61,7 +61,7 @@ class ObjectifyUserService : UserService {
         return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).filter({ it.name == name }).first!!.toUser()
     }
 
-    override public fun login(username: String, password: String): User {
+    override fun login(username: String, password: String): User {
         LOG.info("login(username=${username}, password)")
         val foundUser = ObjectifyService.ofy().load().type(javaClass<UserDbo>()).id(username).now()
         if (foundUser == null) {
@@ -76,7 +76,7 @@ class ObjectifyUserService : UserService {
         return user
     }
 
-    override public fun logout(user: User) {
+    override fun logout(user: User) {
         LOG.info("logout(user=${user})")
         if (user.accessToken == null) {
             throw RuntimeException("Can not logout a not logged in user: ${user}")
@@ -115,14 +115,14 @@ class ObjectifyUserService : UserService {
 
 class LoginException(message: String, fault: Fault) : FaultException(message, Status.FORBIDDEN, fault)
 
-data public class User(
-        public val name: String,
-        public val email: String,
-        public val password: String,
-        public val role: Role,
-        public var accessToken: String? = null)
+data class User(
+        val name: String,
+        val email: String,
+        val password: String,
+        val role: Role,
+        var accessToken: String? = null)
 
-enum class Role(public val label: String, private val level: Int) {
+enum class Role(val label: String, private val level: Int) {
     USER: Role("User", 40)
     ADMIN: Role("Admin", 80)
 
@@ -130,11 +130,11 @@ enum class Role(public val label: String, private val level: Int) {
 }
 
 Entity data class UserDbo() {
-    Id public var name: String? = null
-    public var email: String? = null
-    public var password: String? = null
-    public var role: Role? = null
-    public var accessToken: String? = null
+    Id var name: String? = null
+    var email: String? = null
+    var password: String? = null
+    var role: Role? = null
+    var accessToken: String? = null
 
     fun toUser(): User = User(name!!, email!!, password!!, role!!, accessToken)
 }

@@ -6,7 +6,7 @@ import at.cpickl.grotlin.multi.FaultException
 import javax.ws.rs.core.Response.Status
 import at.cpickl.grotlin.multi.FaultCode
 
-public class ServiceModule : AbstractModule() {
+class ServiceModule : AbstractModule() {
     override fun configure() {
         bind(javaClass<VersionService>()).toInstance(PropertiesVersionService("/swirl.config.properties"))
         bind(javaClass<UserService>()).toInstance(ObjectifyUserService())

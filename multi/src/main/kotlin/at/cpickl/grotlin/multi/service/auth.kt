@@ -10,7 +10,7 @@ class AuthUserService [Inject] (
         private val fakeUserReader: FakeUserReader
 ) {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<AuthUserService>())
     }
     fun authUser(token: String): User? {
         val foundUser = userService.userByToken(token)

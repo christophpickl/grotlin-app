@@ -12,7 +12,7 @@ import org.jboss.resteasy.spi.interception.MessageBodyWriterContext
 
 fun isDebugApp(): Boolean = System.getProperty("appDebug", "false").equals("true")
 
-public class AppModule : AbstractModule() {
+class AppModule : AbstractModule() {
     override fun configure() {
         install(ResourceModule())
         install(ServiceModule())
@@ -24,7 +24,7 @@ public class AppModule : AbstractModule() {
 // ... You must allocate this and register it as a singleton provider from your Application class. See the javadoc or its various settings.
 
 // https://code.google.com/r/sergiobossa-terrastore-kryo/source/browse/src/main/java/terrastore/server/impl/cors/CorsInterceptor.java
-Provider ServerInterceptor public class CorsInterceptor: MessageBodyWriterInterceptor {
+Provider ServerInterceptor class CorsInterceptor: MessageBodyWriterInterceptor {
     override fun write(context: MessageBodyWriterContext?) {
         if (context == null) {
             return
@@ -37,9 +37,9 @@ Provider ServerInterceptor public class CorsInterceptor: MessageBodyWriterInterc
     }
 }
 
-data class Fault(public val message: String, public val code: FaultCode)
+data class Fault(val message: String, val code: FaultCode)
 
-enum class FaultCode(public val label: String) {
+enum class FaultCode(val label: String) {
     NOT_ALLOWED: FaultCode("NOT_ALLOWED")
     INVALID_PAYLOAD: FaultCode("INVALID_PAYLOAD")
     INVALID_PAGE: FaultCode("INVALID_PAGE")
@@ -52,8 +52,8 @@ enum class FaultCode(public val label: String) {
 
 }
 
-open class FaultException(message: String, public val status: Status, public val fault: Fault) : RuntimeException(message) {
-    override public fun toString(): String {
+open class FaultException(message: String, val status: Status, val fault: Fault) : RuntimeException(message) {
+    override fun toString(): String {
         return "FaultException[message='${getMessage()}', status='$status', fault=${fault}]"
     }
 }

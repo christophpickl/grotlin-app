@@ -17,16 +17,16 @@ import at.cpickl.grotlin.multi.toIntOrThrow
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-//Provider Produces(MediaType.WILDCARD) public class InjectPaginationInterceptor : ContextResolver<Pagination> {
+//Provider Produces(MediaType.WILDCARD) class InjectPaginationInterceptor : ContextResolver<Pagination> {
 //    Context private var request: HttpServletRequest? = null
 //    override fun getContext(type: Class<out Any?>?): Pagination? {
 //        return Pagination(0, 100)
 //    }
 //}
 
-Provider Consumes(MediaType.WILDCARD) public class PaginationReader : MessageBodyReader<Pagination> {
+Provider Consumes(MediaType.WILDCARD) class PaginationReader : MessageBodyReader<Pagination> {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<PaginationReader>())
     }
     Context private var request: HttpServletRequest? = null
 
@@ -68,8 +68,8 @@ Provider Consumes(MediaType.WILDCARD) public class PaginationReader : MessageBod
 
 fun <T> LoadType<T>.paginate(pagination: Pagination): Query<T> = limit(pagination.size).offset(pagination.number * pagination.size)
 
-public data class Pagination(public val number: Int, public val size: Int) {
+data class Pagination(val number: Int, val size: Int) {
     class object {
-        public val ALL: Pagination = Pagination(0, Integer.MAX_VALUE)
+        val ALL: Pagination = Pagination(0, Integer.MAX_VALUE)
     }
 }

@@ -24,11 +24,11 @@ import org.slf4j.LoggerFactory
 
 val ACCESS_TOKEN_HEADER_NAME = "X-access_token"
 
-Provider Consumes(MediaType.WILDCARD) public class UserReader [Inject] (
+Provider Consumes(MediaType.WILDCARD) class UserReader [Inject] (
         private val authUserService: AuthUserService
 ) : MessageBodyReader<User> {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<UserReader>())
     }
     override fun isReadable(type: Class<out Any?>?, genericType: Type?, annotations: Array<out Annotation>?, mediaType: MediaType?): Boolean {
         return type == javaClass<User>()
@@ -47,7 +47,7 @@ Provider Consumes(MediaType.WILDCARD) public class UserReader [Inject] (
 /** see http://howtodoinjava.com/2013/07/25/jax-rs-2-0-resteasy-3-0-2-final-security-tutorial/ */
 Provider Secured class SecuredFilter [Inject] (private val authUserService: AuthUserService) : ContainerRequestFilter  {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<SecuredFilter>())
     }
 
     override fun filter(requestContext: ContainerRequestContext) {

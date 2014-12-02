@@ -12,36 +12,42 @@ import com.googlecode.objectify.ObjectifyService
 import at.cpickl.grotlin.multi.assertThat
 import at.cpickl.grotlin.multi.equalTo
 import at.cpickl.grotlin.multi.resource.Pagination
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-Test public class PropertiesVersionServiceTest {
-    public fun loadTestPropertiesFileShouldReturnContent() {
+Test class PropertiesVersionServiceTest {
+    fun loadTestPropertiesFileShouldReturnContent() {
         MatcherAssert.assertThat(PropertiesVersionService("/swirltest/test_version.properties").load(),
                 Matchers.equalTo(Version("testArtifactVersion", "testBuildDate")))
     }
 }
 
-Test public class ObjectifyUserServiceTest {
+Test class ObjectifyUserServiceTest {
+    class object {
+        private val LOG = LoggerFactory.getLogger(javaClass<ObjectifyUserServiceTest>())
+    }
 
     private var testee: ObjectifyUserService = ObjectifyUserService()
     private var engineHelper: LocalServiceTestHelper? = null
 
-    BeforeMethod public fun setUp() {
+    BeforeMethod fun setUp() {
+        LOG.debug("setUp()")
         testee = ObjectifyUserService()
         engineHelper = LocalServiceTestHelper(LocalDatastoreServiceTestConfig())
         engineHelper!!.setUp()
     }
 
-    AfterMethod public fun tearDown() {
+    AfterMethod fun tearDown() {
         engineHelper!!.tearDown()
     }
 
-    public fun loadAll() {
+    fun loadAll() {
         ObjectifyService.run({
             assertThat(testee.loadAll().size, equalTo(0))
         })
     }
 
-    Test(dependsOnMethods = array("loadAll")) public fun saveOrUpdate() {
+    Test(dependsOnMethods = array("loadAll")) fun saveOrUpdate() {
         ObjectifyService.run({
             assertThat(testee.loadAll().size, equalTo(0))
             val user = User("cpi", "email", "password", Role.USER)

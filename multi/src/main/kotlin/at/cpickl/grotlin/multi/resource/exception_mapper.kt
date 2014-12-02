@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory
 
 Provider class FaultExceptionMapper : ExceptionMapper<FaultException> {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<FaultExceptionMapper>())
     }
     override fun toResponse(exception: FaultException): Response {
         LOG.warn("Fault exception!", exception)
@@ -26,7 +26,7 @@ Provider class FaultExceptionMapper : ExceptionMapper<FaultException> {
 
 Provider class UnrecognizedPropertyExceptionMapper : ExceptionMapper<UnrecognizedPropertyException> {
     class object {
-        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG = LoggerFactory.getLogger(javaClass<UnrecognizedPropertyExceptionMapper>())
     }
     override fun toResponse(exception: UnrecognizedPropertyException): Response {
         LOG.warn("JSON exception!", exception)
@@ -38,9 +38,6 @@ Provider class UnrecognizedPropertyExceptionMapper : ExceptionMapper<Unrecognize
 
 // javax.ws.rs.NotFoundException
 //Provider class GeneralExceptionMapper : ExceptionMapper<Exception> {
-//    class object {
-//        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
-//    }
 //    override fun toResponse(exception: Exception): Response {
 //        LOG.exception("Uncaught exception!", exception)
 //        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(Fault("Unknown error occured!", FaultCode.INTERNAL_ERROR).toRto()).build()
@@ -49,15 +46,15 @@ Provider class UnrecognizedPropertyExceptionMapper : ExceptionMapper<Unrecognize
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class FaultRto {
     class object {
-        public fun build(message: String, code: FaultCode): FaultRto {
+        fun build(message: String, code: FaultCode): FaultRto {
             val rto = FaultRto()
             rto.message = message
             rto.code = code.label
             return rto
         }
     }
-    public var message: String? = null
-    public var code: String? = null
+    var message: String? = null
+    var code: String? = null
 
     // strangely the @data generated equals fails...
     override fun equals(other: Any?): Boolean {
@@ -67,14 +64,14 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class FaultRto {
         return false
     }
 
-    override public fun toString(): String {
+    override fun toString(): String {
         return "FaultRto[message='${message}', code='${code}']"
     }
 }
 
-public class UserException(message: String, fault: Fault) : FaultException(message, Response.Status.BAD_REQUEST, fault)
+class UserException(message: String, fault: Fault) : FaultException(message, Response.Status.BAD_REQUEST, fault)
 
-public fun Fault.toRto(): FaultRto {
+fun Fault.toRto(): FaultRto {
     val rto = FaultRto()
     rto.message = message
     rto.code = code.label
