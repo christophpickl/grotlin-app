@@ -4,7 +4,6 @@ import com.googlecode.objectify.ObjectifyService
 import com.googlecode.objectify.annotation.Entity
 import com.googlecode.objectify.annotation.Id
 import java.security.MessageDigest
-import java.util.logging.Logger
 import java.util.UUID
 import at.cpickl.grotlin.multi.Fault
 import at.cpickl.grotlin.multi.FaultException
@@ -12,6 +11,8 @@ import javax.ws.rs.core.Response.Status
 import at.cpickl.grotlin.multi.FaultCode
 import at.cpickl.grotlin.multi.resource.Pagination
 import at.cpickl.grotlin.multi.resource.paginate
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 fun main(args: Array<String>) {
     println(hash("foo"))
@@ -35,7 +36,7 @@ trait UserService {
 class ObjectifyUserService : UserService {
 
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName());
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass);
         {
             ObjectifyService.register(javaClass<UserDbo>())
         }
@@ -96,7 +97,7 @@ class ObjectifyUserService : UserService {
         save(toDbo(user))
     }
     private fun save(user: UserDbo) {
-        LOG.finer("save(user=${user})")
+        LOG.debug("save(user=${user})")
         ObjectifyService.ofy().save().entity(user).now()
     }
 

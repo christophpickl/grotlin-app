@@ -2,7 +2,6 @@ package at.cpickl.grotlin.multi.resource
 
 import com.google.inject.AbstractModule
 import javax.ws.rs.Path
-import java.util.logging.Logger
 import javax.ws.rs.GET
 import javax.ws.rs.Produces
 import javax.ws.rs.QueryParam
@@ -32,6 +31,8 @@ import javax.ws.rs.core.MultivaluedMap
 import java.io.InputStream
 import javax.ws.rs.core.Response
 import at.cpickl.grotlin.multi.isDebugApp
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 //import javax.inject.Inject
 
@@ -39,7 +40,7 @@ import at.cpickl.grotlin.multi.isDebugApp
 
 public class ResourceModule : AbstractModule() {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
 
     override fun configure() {
@@ -61,7 +62,7 @@ public class ResourceModule : AbstractModule() {
         bind(javaClass<AdminResource>())
 
         if (isDebugApp()) {
-            LOG.fine("Registering additional test resources because debug app is enabled")
+            LOG.debug("Registering additional test resources because debug app is enabled")
             bind(javaClass<TestResource>())
         }
     }
@@ -87,7 +88,7 @@ Path("/admin")
 Produces(MediaType.APPLICATION_JSON)
 public class AdminResource [Inject] (private val userService: UserService) {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
 
     GET Path("/resetDB")

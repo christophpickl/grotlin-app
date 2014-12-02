@@ -8,8 +8,6 @@ import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
 import javax.ws.rs.ext.Provider;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterContext
-import java.util.logging.Logger
-import java.util.logging.Level
 
 
 fun isDebugApp(): Boolean = System.getProperty("appDebug", "false").equals("true")

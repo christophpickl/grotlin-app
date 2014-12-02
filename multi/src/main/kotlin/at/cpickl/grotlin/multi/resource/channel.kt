@@ -1,7 +1,6 @@
 package at.cpickl.grotlin.multi.resource
 
 import javax.ws.rs.Path
-import java.util.logging.Logger
 import javax.ws.rs.POST
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
@@ -9,10 +8,12 @@ import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.api.channel.ChannelServiceFactory
 import com.google.appengine.api.channel.ChannelMessage
 import javax.ws.rs.core.Response
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 Path("/channel") public class ChannelResource {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
 
     private val channelKey = "useUserTokenInstead"
@@ -40,18 +41,18 @@ Path("/channel") public class ChannelResource {
 
 Path("/_ah/channel") public class ChannelPresenceResource {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
     Path("/connected") POST
     public fun userConnected(): Response {
-        LOG.fine("userConnected()")
+        LOG.debug("userConnected()")
         val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
         //        val presence = channelService.parsePresence(request)
         return Response.ok().build()
     }
     Path("/disconnected") POST
     public fun userDisconnected(): Response {
-        LOG.fine("userDisconnected()")
+        LOG.debug("userDisconnected()")
         val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
         //        val presence = channelService.parsePresence(request)
         return Response.ok().build()

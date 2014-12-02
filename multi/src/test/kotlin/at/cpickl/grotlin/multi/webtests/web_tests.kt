@@ -4,7 +4,6 @@ import org.testng.annotations.Test
 import org.hamcrest.Matchers
 import org.jboss.resteasy.client.ClientRequest
 import org.jboss.resteasy.client.ClientResponse
-import java.util.logging.Logger
 import at.cpickl.grotlin.multi.resource.VersionRto
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.MediaType
@@ -49,10 +48,10 @@ Test(groups = array("WebTest")) public class SecuredWebTest {
 
 Test(groups = array("WebTest")) public class MiscWebTest {
 
-    BeforeSuite
-    public fun resetDB() {
-
-    }
+//    BeforeSuite
+//    public fun resetDB() {
+// TODO invoke resetDB, otherwise there will be no users
+//    }
 
     public fun invalidUrlShouldReturn404NotFound() {
         TestClient().get("/not_existing").assertStatusCode(Response.Status.NOT_FOUND)

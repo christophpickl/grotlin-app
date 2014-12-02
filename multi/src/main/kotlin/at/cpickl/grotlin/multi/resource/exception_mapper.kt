@@ -7,29 +7,29 @@ import javax.xml.bind.annotation.XmlRootElement
 import javax.ws.rs.ext.Provider
 import at.cpickl.grotlin.multi.FaultException
 import at.cpickl.grotlin.multi.Fault
-import java.util.logging.Logger
-import at.cpickl.grotlin.multi.exception
 import javax.ws.rs.core.Response.Status
 import at.cpickl.grotlin.multi.FaultCode
 import javax.ws.rs.ext.ExceptionMapper
 import org.codehaus.jackson.map.exc.UnrecognizedPropertyException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 Provider class FaultExceptionMapper : ExceptionMapper<FaultException> {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
     override fun toResponse(exception: FaultException): Response {
-        LOG.exception("Fault exception!", exception)
+        LOG.warn("Fault exception!", exception)
         return Response.status(exception.status).entity(exception.fault.toRto()).build()
     }
 }
 
 Provider class UnrecognizedPropertyExceptionMapper : ExceptionMapper<UnrecognizedPropertyException> {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
     override fun toResponse(exception: UnrecognizedPropertyException): Response {
-        LOG.exception("JSON exception!", exception)
+        LOG.warn("JSON exception!", exception)
         return Response.status(Status.BAD_REQUEST).entity(Fault(exception.getMessage(), FaultCode.INVALID_PAYLOAD).toRto()).build()
     }
 }
@@ -39,7 +39,7 @@ Provider class UnrecognizedPropertyExceptionMapper : ExceptionMapper<Unrecognize
 // javax.ws.rs.NotFoundException
 //Provider class GeneralExceptionMapper : ExceptionMapper<Exception> {
 //    class object {
-//        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+//        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
 //    }
 //    override fun toResponse(exception: Exception): Response {
 //        LOG.exception("Uncaught exception!", exception)

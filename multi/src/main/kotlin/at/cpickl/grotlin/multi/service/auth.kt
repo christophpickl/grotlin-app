@@ -1,15 +1,16 @@
 package at.cpickl.grotlin.multi.service
 
 import javax.inject.Inject
-import java.util.logging.Logger
 import at.cpickl.grotlin.multi.isDebugApp
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class AuthUserService [Inject] (
         private val userService: UserService,
         private val fakeUserReader: FakeUserReader
 ) {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
     fun authUser(token: String): User? {
         val foundUser = userService.userByToken(token)
@@ -19,7 +20,7 @@ class AuthUserService [Inject] (
         if (foundUser != null) {
             return foundUser
         }
-        LOG.fine("Looking for fake access token because debug app is enabled")
+        LOG.debug("Looking for fake access token because debug app is enabled")
         return fakeUserReader.read(token)
     }
 }

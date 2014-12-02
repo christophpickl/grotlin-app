@@ -14,7 +14,8 @@ import at.cpickl.grotlin.multi.Fault
 import at.cpickl.grotlin.multi.FaultCode
 import com.googlecode.objectify.cmd.Query
 import at.cpickl.grotlin.multi.toIntOrThrow
-import java.util.logging.Logger
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 //Provider Produces(MediaType.WILDCARD) public class InjectPaginationInterceptor : ContextResolver<Pagination> {
 //    Context private var request: HttpServletRequest? = null
@@ -25,7 +26,7 @@ import java.util.logging.Logger
 
 Provider Consumes(MediaType.WILDCARD) public class PaginationReader : MessageBodyReader<Pagination> {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
     Context private var request: HttpServletRequest? = null
 
@@ -35,7 +36,7 @@ Provider Consumes(MediaType.WILDCARD) public class PaginationReader : MessageBod
                           mediaType: MediaType?,
                           httpHeaders: MultivaluedMap<String, String>?,
                           entityStream: InputStream?): Pagination? {
-        LOG.finest("readFrom(type=${type}) ... request=${request}")
+        LOG.debug("readFrom(type=${type}) ... request=${request}")
         var pageNumberString = request!!.getParameter("page")
         var pageSizeString = request!!.getParameter("size")
         if (pageNumberString == null && pageSizeString == null) {

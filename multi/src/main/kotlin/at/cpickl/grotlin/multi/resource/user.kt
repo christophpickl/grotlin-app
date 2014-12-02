@@ -2,7 +2,6 @@ package at.cpickl.grotlin.multi.resource
 
 import javax.ws.rs.Path
 import at.cpickl.grotlin.multi.service.UserService
-import java.util.logging.Logger
 import javax.ws.rs.GET
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
@@ -18,13 +17,15 @@ import javax.inject.Inject
 import java.lang.annotation.Retention
 import java.lang.annotation.Target
 import at.cpickl.grotlin.multi.service.Role
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 //import javax.inject.Inject
 
 Path("/users")
 public class UserResource [Inject] (private val userService: UserService) {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
 
     private val userTransformer: (User) -> UserResponseRto = {(user) ->
@@ -37,7 +38,7 @@ public class UserResource [Inject] (private val userService: UserService) {
     Secured(Role.ADMIN) GET Path("/")
     Produces(MediaType.APPLICATION_JSON)
     public fun getUsers(pagination: Pagination): Collection<UserResponseRto> {
-        LOG.fine("getUsers(pagination=${pagination})")
+        LOG.debug("getUsers(pagination=${pagination})")
         return userService.loadAll(pagination).map(userTransformer)
     }
 

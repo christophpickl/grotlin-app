@@ -2,9 +2,10 @@ package at.cpickl.grotlin.multi.webtests
 
 import at.cpickl.grotlin.multi.resource.VersionRto
 import org.testng.annotations.Test
-import java.util.logging.Logger
 import at.cpickl.grotlin.multi.assertThat
 import org.hamcrest.Matchers
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class VersionClient : Client() {
     fun get(): VersionRto {
@@ -14,12 +15,12 @@ class VersionClient : Client() {
 
 Test(groups = array("WebTest")) public class VersionWebTest {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
 
     public fun getVersion() {
         val version = VersionClient().get()
-        LOG.fine("Returned version: ${version}")
+        LOG.debug("Returned version: ${version}")
         assertThat(version.artifactVersion, Matchers.notNullValue())
         assertThat(version.buildDate, Matchers.notNullValue())
     }

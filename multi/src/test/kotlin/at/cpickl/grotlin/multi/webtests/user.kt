@@ -1,6 +1,5 @@
 package at.cpickl.grotlin.multi.webtests
 
-import at.cpickl.grotlin.multi.resource.LogoutRequestRto
 import javax.ws.rs.core.Response
 import org.testng.annotations.Test
 import at.cpickl.grotlin.multi.assertThat

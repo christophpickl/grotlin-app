@@ -1,15 +1,16 @@
 package at.cpickl.grotlin.multi.webtests
 
-import java.util.logging.Logger
 import org.jboss.resteasy.client.ClientResponse
 import org.jboss.resteasy.client.ClientRequest
 import javax.ws.rs.core.MediaType
 import at.cpickl.grotlin.multi.assertThat
 import at.cpickl.grotlin.multi.equalTo
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 abstract class Client {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
     private val baseUrl: String
     {
@@ -24,12 +25,12 @@ abstract class Client {
             }
             else -> throw IllegalArgumentException("Invalid testTarget: '${target}'!")
         }
-        LOG.fine("Test client base url: '${baseUrl}'")
+        LOG.debug("Test client base url: '${baseUrl}'")
     }
 
     fun <T> get(endpointUrl: String, entityType: Class<T>, expectedStatus: Int = 200): ClientResponse<T> {
         val url = "${baseUrl}${endpointUrl}"
-        LOG.finer("GET ${url}")
+        LOG.debug("GET ${url}")
         val request = ClientRequest(url)
         request.accept(MediaType.APPLICATION_JSON)
         val response = request.get(entityType)
@@ -39,7 +40,7 @@ abstract class Client {
 
     fun getAny(endpointUrl: String): ClientRequest {
         val url = "${baseUrl}${endpointUrl}"
-        LOG.finer("GET ${url}")
+        LOG.debug("GET ${url}")
         val request = ClientRequest(url)
         request.accept(MediaType.APPLICATION_JSON)
         return request
@@ -47,7 +48,7 @@ abstract class Client {
 
     fun post(endpointUrl: String, body: Any? = null): ClientResponse<out Any?> {
         val url = "${baseUrl}${endpointUrl}"
-        LOG.finer("POST ${url}")
+        LOG.debug("POST ${url}")
         val request = ClientRequest(url)
         request.accept(MediaType.APPLICATION_JSON)
         if (body != null) {

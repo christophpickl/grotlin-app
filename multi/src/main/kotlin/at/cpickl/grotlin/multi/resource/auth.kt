@@ -7,7 +7,6 @@ import javax.inject.Inject
 import at.cpickl.grotlin.multi.service.UserService
 import javax.ws.rs.ext.MessageBodyReader
 import at.cpickl.grotlin.multi.service.User
-import java.util.logging.Logger
 import java.lang.reflect.Type
 import javax.ws.rs.core.MultivaluedMap
 import java.io.InputStream
@@ -19,6 +18,8 @@ import at.cpickl.grotlin.multi.FaultCode
 import org.jboss.resteasy.core.Headers
 import at.cpickl.grotlin.multi.isDebugApp
 import at.cpickl.grotlin.multi.service.AuthUserService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 
 val ACCESS_TOKEN_HEADER_NAME = "X-access_token"
@@ -27,7 +28,7 @@ Provider Consumes(MediaType.WILDCARD) public class UserReader [Inject] (
         private val authUserService: AuthUserService
 ) : MessageBodyReader<User> {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
     override fun isReadable(type: Class<out Any?>?, genericType: Type?, annotations: Array<out Annotation>?, mediaType: MediaType?): Boolean {
         return type == javaClass<User>()
@@ -46,11 +47,11 @@ Provider Consumes(MediaType.WILDCARD) public class UserReader [Inject] (
 /** see http://howtodoinjava.com/2013/07/25/jax-rs-2-0-resteasy-3-0-2-final-security-tutorial/ */
 Provider Secured class SecuredFilter [Inject] (private val authUserService: AuthUserService) : ContainerRequestFilter  {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
 
     override fun filter(requestContext: ContainerRequestContext) {
-        LOG.fine("secured working for context: method=${requestContext.getMethod()} URI=${requestContext.getUriInfo()}")
+        LOG.debug("secured working for context: method=${requestContext.getMethod()} URI=${requestContext.getUriInfo()}")
         var token: String? = requestContext.getHeaderString(ACCESS_TOKEN_HEADER_NAME)
         if (token == null) {
             requestContext.abortWithUnauthorized()
@@ -67,7 +68,7 @@ Provider Secured class SecuredFilter [Inject] (private val authUserService: Auth
         }
         val annotation = methodInvoker.getMethod().getAnnotation(javaClass<Secured>())
         if (!maybeUser.role.isAtLeast(annotation.role())) {
-            LOG.fine("User has role '${maybeUser.role}' but role '${annotation.role()}' was required!")
+            LOG.debug("User has role '${maybeUser.role}' but role '${annotation.role()}' was required!")
             requestContext.abortWithForbidden()
             return
         }
