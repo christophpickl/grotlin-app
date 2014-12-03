@@ -7,21 +7,32 @@ import at.cpickl.grotlin.multi.resource.FaultRto
 import at.cpickl.grotlin.multi.equalTo
 import at.cpickl.grotlin.multi.FaultCode
 import org.jboss.resteasy.client.core.BaseClientResponse
+import at.cpickl.grotlin.multi.resource.LoginRequestRto
+import at.cpickl.grotlin.multi.resource.LoginResponseRto
+import at.cpickl.grotlin.multi.resource.VersionRto
 
-class UserClient : Client() {
-    fun <T> logout(): BaseClientResponse<T> {
-        val response = post("/users/logout")
-        if(response is BaseClientResponse) {
-            return response as BaseClientResponse<T>
-        }
-        throw RuntimeException("Invalid response type ${response} (expected: BaseClientResponse)")
+class UserClient {
+
+    fun login(request: LoginRequestRto): LoginResponseRto {
+        return RestClient().post().body(request).url("/users/login").unmarshallTo(javaClass<LoginResponseRto>())
     }
+
+    fun logout(token: String): RestResponse {
+        return RestClient().post().accessToken(token).url("/users/logout")
+    }
+
 }
 
 Test(groups = array("WebTest")) class UserWebTest {
+
+    fun login_user1_success() {
+        println(UserClient().login(LoginRequestRto.build("user1", "0BEEC7B5EA3F0FDBC95D0DD47F3C5BC275DA8A33")))
+    }
+
     fun logout_invalidToken_shouldReturn400BadRequest() {
-        val response = UserClient().logout<FaultRto>()
+        val response = UserClient().logout("invalid")
         response.assertStatusCode(Response.Status.UNAUTHORIZED)
-        assertThat(response.getEntity(javaClass<FaultRto>()), equalTo(FaultRto.build("Authentication required to access this resource!", FaultCode.UNAUTHORIZED)))
+        assertThat(response.unmarshallTo(javaClass<FaultRto>()),
+            equalTo(FaultRto.build("Authentication required to access this resource!", FaultCode.UNAUTHORIZED)))
     }
 }

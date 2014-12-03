@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 
 class VersionClient : Client() {
     fun get(): VersionRto {
-        return get("/version", javaClass<VersionRto>()).getEntity()
+        return RestClient().get().url("/version").unmarshallTo(javaClass<VersionRto>())
     }
 }
 

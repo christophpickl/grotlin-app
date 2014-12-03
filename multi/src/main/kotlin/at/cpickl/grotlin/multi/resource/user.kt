@@ -66,6 +66,14 @@ class UserResource [Inject] (private val userService: UserService) {
 }
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginRequestRto {
+    class object {
+        fun build(username: String, password: String): LoginRequestRto {
+            val rto = LoginRequestRto()
+            rto.username = username
+            rto.password = password
+            return rto
+        }
+    }
     XmlElement(required = true, nillable = false)
     var username: String? = null
     XmlElement(required = true, nillable = false)
