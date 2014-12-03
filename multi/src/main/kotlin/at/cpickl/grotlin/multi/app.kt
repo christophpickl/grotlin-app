@@ -50,6 +50,7 @@ enum class FaultCode(val label: String) {
     UNAUTHORIZED: FaultCode("UNAUTHORIZED")
     FORBIDDEN: FaultCode("FORBIDDEN")
 
+    GAME_NOT_FOUND: FaultCode("GAME_NOT_FOUND")
 }
 
 open class FaultException(message: String, val status: Status, val fault: Fault) : RuntimeException(message) {

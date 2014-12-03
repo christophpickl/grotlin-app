@@ -16,6 +16,7 @@ import org.hamcrest.Description
 import org.testng.annotations.BeforeSuite
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import at.cpickl.grotlin.multi.TestData
 
 
 class AdminClient : Client() {
@@ -37,15 +38,15 @@ Test(groups = array("WebTest")) class SecuredWebTest {
     }
 
     fun securedEndpointWithHeaderFakeAccessTokenShouldBeOk() {
-        TestClient().getAny("/test/secured").header("X-access_token", FAKE_TOKEN_USER).get().assertStatusCode(Response.Status.OK)
+        TestClient().getAny("/test/secured").header("X-access_token", TestData.FAKE_TOKEN_USER).get().assertStatusCode(Response.Status.OK)
     }
 
     fun securedAdminEndpointWithHeaderFakeUserAccessTokenShouldBeForbidden() {
-        TestClient().getAny("/test/secured_admin").header("X-access_token", FAKE_TOKEN_USER).get().assertStatusCode(Response.Status.FORBIDDEN)
+        TestClient().getAny("/test/secured_admin").header("X-access_token", TestData.FAKE_TOKEN_USER).get().assertStatusCode(Response.Status.FORBIDDEN)
     }
 
     fun securedAdminEndpointWithHeaderFakeAdminAccessTokenShouldBeOk() {
-        TestClient().getAny("/test/secured_admin").header("X-access_token", FAKE_TOKEN_ADMIN).get().assertStatusCode(Response.Status.OK)
+        TestClient().getAny("/test/secured_admin").header("X-access_token", TestData.FAKE_TOKEN_ADMIN).get().assertStatusCode(Response.Status.OK)
     }
 
     // gnah, resteasy's message body reader doesnt provide access to query params :-/

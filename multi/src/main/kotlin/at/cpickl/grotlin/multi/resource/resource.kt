@@ -33,6 +33,8 @@ import javax.ws.rs.core.Response
 import at.cpickl.grotlin.multi.isDebugApp
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import javax.ws.rs.POST
+import at.cpickl.grotlin.multi.service.WaitingRandomGameService
 
 //import javax.inject.Inject
 
@@ -60,6 +62,7 @@ class ResourceModule : AbstractModule() {
         bind(javaClass<ChannelResource>())
         bind(javaClass<ChannelPresenceResource>())
         bind(javaClass<AdminResource>())
+        bind(javaClass<GameResource>())
 
         if (isDebugApp()) {
             LOG.debug("Registering additional test resources because debug app is enabled")
@@ -84,28 +87,3 @@ class TestResource {
 
 }
 
-Path("/admin")
-Produces(MediaType.APPLICATION_JSON)
-class AdminResource [Inject] (private val userService: UserService) {
-    class object {
-        private val LOG = LoggerFactory.getLogger(javaClass<AdminResource>())
-    }
-
-    GET Path("/resetDB")
-    fun resetDatabase(QueryParam("secret") secret: String?): String {
-        if (secret != "hans") {
-            throw AdminException("Invalid secret '${secret}'!", Fault("You shall not pass!", FaultCode.NOT_ALLOWED))
-        }
-        if (!userService.loadAll().empty) {
-            return """{ "success": false}"""
-        }
-        // password == "foo"
-        userService.saveOrUpdate(User("user1", "m@ail1.at", "0BEEC7B5EA3F0FDBC95D0DD47F3C5BC275DA8A33", Role.ADMIN))
-        userService.saveOrUpdate(User("user2", "m@ail2.at", "0BEEC7B5EA3F0FDBC95D0DD47F3C5BC275DA8A33", Role.USER))
-        userService.saveOrUpdate(User("user3", "m@ail3.at", "0BEEC7B5EA3F0FDBC95D0DD47F3C5BC275DA8A33", Role.USER))
-        return """{ "success": true}"""
-    }
-
-}
-
-class AdminException(message: String, fault: Fault) : FaultException(message, Status.FORBIDDEN, fault)

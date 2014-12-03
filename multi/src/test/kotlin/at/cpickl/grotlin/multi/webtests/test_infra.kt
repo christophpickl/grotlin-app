@@ -7,10 +7,6 @@ import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.Description
 
-
-val FAKE_TOKEN_ADMIN = "1"
-val FAKE_TOKEN_USER = "2"
-
 fun Response.assertStatusCode(expected: Status) {
     assertThat(this, hasStatus(expected))
 }

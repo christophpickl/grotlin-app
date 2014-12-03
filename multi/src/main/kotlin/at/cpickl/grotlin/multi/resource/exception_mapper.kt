@@ -71,6 +71,8 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class FaultRto {
 
 class UserException(message: String, fault: Fault) : FaultException(message, Response.Status.BAD_REQUEST, fault)
 
+class NotFoundException(message: String, fault: Fault) : FaultException(message, Response.Status.NOT_FOUND, fault)
+
 fun Fault.toRto(): FaultRto {
     val rto = FaultRto()
     rto.message = message

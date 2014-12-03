@@ -71,7 +71,7 @@ class ObjectifyUserService : UserService {
         if (user.password != password) {
             throw LoginException("Invalid password for user '${username}'!", Fault("Invalid username/password", FaultCode.INVALID_CREDENTIALS))
         }
-        user.accessToken = UUID.randomUUID().toString()
+        user.accessToken = randomUUID()
         save(user) // update token
         return user
     }

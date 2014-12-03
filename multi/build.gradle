@@ -45,6 +45,7 @@ processResources {
 repositories {
     mavenLocal()
     mavenCentral()
+//    jcenter()
 }
 
 configurations {
@@ -100,6 +101,7 @@ dependencies {
     testCompile 'org.testng:testng:6.8.8'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
     testCompile 'org.mockito:mockito-core:1.10.8'
+//    testCompile 'org.mockito:mockito-all:1.10.8'
 
     testCompile "com.google.appengine:appengine-testing:${versionAppEngine}"
     testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"

@@ -5,6 +5,10 @@ import at.cpickl.grotlin.multi.Fault
 import at.cpickl.grotlin.multi.FaultException
 import javax.ws.rs.core.Response.Status
 import at.cpickl.grotlin.multi.FaultCode
+import com.google.inject.Scopes
+import java.util.UUID
+
+fun randomUUID() = UUID.randomUUID().toString()
 
 class ServiceModule : AbstractModule() {
     override fun configure() {
@@ -12,6 +16,9 @@ class ServiceModule : AbstractModule() {
         bind(javaClass<UserService>()).toInstance(ObjectifyUserService())
         bind(javaClass<AuthUserService>())
         bind(javaClass<FakeUserReader>()) // needs to be in context, but will not be used if debug app is not enabled
+        bind(javaClass<WaitingRandomGameService>()).`in`(Scopes.SINGLETON)
+        bind(javaClass<RunningGameService>()).to(javaClass<InMemoryRunningGameService>()).`in`(Scopes.SINGLETON)
+        bind(javaClass<AdminService>())
     }
 }
 
