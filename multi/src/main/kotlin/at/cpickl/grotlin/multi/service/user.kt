@@ -29,7 +29,7 @@ trait UserService {
     fun userByToken(token: String): User?
 
     // only used by fake access token support
-    fun userByName(name: String): User
+    fun userByName(name: String): User?
 }
 
 // https://code.google.com/p/objectify-appengine/
@@ -56,9 +56,9 @@ class ObjectifyUserService : UserService {
         return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).filter({ it.accessToken == token }).first?.toUser()
     }
 
-    override fun userByName(name: String): User {
+    override fun userByName(name: String): User? {
         LOG.info("userByName(name='${name}')")
-        return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).filter({ it.name == name }).first!!.toUser()
+        return ObjectifyService.ofy().load().type(javaClass<UserDbo>()).filter({ it.name == name }).first?.toUser()
     }
 
     override fun login(username: String, password: String): User {

@@ -1,15 +1,10 @@
 package at.cpickl.grotlin.multi.webtests
 
 import org.testng.annotations.Test
-import org.hamcrest.Matchers
-import org.jboss.resteasy.client.ClientRequest
-import org.jboss.resteasy.client.ClientResponse
 import at.cpickl.grotlin.multi.resource.VersionRto
-import javax.ws.rs.core.Response
 import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response.Status
-import at.cpickl.grotlin.multi.assertThat
-import at.cpickl.grotlin.multi.equalTo
+import org.hamcrest.MatcherAssert.*
+import org.hamcrest.Matchers.*
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.Description
@@ -17,36 +12,39 @@ import org.testng.annotations.BeforeSuite
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.multi.TestData
+import at.cpickl.grotlin.restclient.RestClient
+import at.cpickl.grotlin.restclient.assertStatusCode
+import at.cpickl.grotlin.restclient.Status
+import at.cpickl.grotlin.restclient.RestResponse
 
-
-class AdminClient : Client() {
+class AdminClient {
     fun resetDb() {
-        getAny("/admin/resetDB").queryParameter("secret", "hans").get().assertStatusCode(Response.Status.OK)
+        TestClient().get().queryParameter("secret", "hans").url("/admin/resetDB").assertStatusCode(Status._200_OK)
     }
 }
 
-class TestClient : Client() {
-    fun get(url: String): Response {
-        return getAny(url).get()
+class MiscTestClient {
+    fun get(url: String): RestResponse {
+        return TestClient().get().url(url)
     }
 }
 
 Test(groups = array("WebTest")) class SecuredWebTest {
 
     fun securedEndpointWithoutAccessTokenShouldBeUnauthorized() {
-        TestClient().get("/test/secured").assertStatusCode(Response.Status.UNAUTHORIZED)
+        TestClient().get().url("/test/secured").assertStatusCode(Status._401_UNAUTHORIZED)
     }
 
     fun securedEndpointWithHeaderFakeAccessTokenShouldBeOk() {
-        TestClient().getAny("/test/secured").header("X-access_token", TestData.FAKE_TOKEN_USER).get().assertStatusCode(Response.Status.OK)
+        TestClient().get().accessToken(TestData.FAKE_TOKEN_USER).url("/test/secured").assertStatusCode(Status._200_OK)
     }
 
     fun securedAdminEndpointWithHeaderFakeUserAccessTokenShouldBeForbidden() {
-        TestClient().getAny("/test/secured_admin").header("X-access_token", TestData.FAKE_TOKEN_USER).get().assertStatusCode(Response.Status.FORBIDDEN)
+        TestClient().get().accessToken(TestData.FAKE_TOKEN_USER).url("/test/secured_admin").assertStatusCode(Status._403_FORBIDDEN)
     }
 
     fun securedAdminEndpointWithHeaderFakeAdminAccessTokenShouldBeOk() {
-        TestClient().getAny("/test/secured_admin").header("X-access_token", TestData.FAKE_TOKEN_ADMIN).get().assertStatusCode(Response.Status.OK)
+        TestClient().get().accessToken(TestData.FAKE_TOKEN_ADMIN).url("/test/secured_admin").assertStatusCode(Status._200_OK)
     }
 
     // gnah, resteasy's message body reader doesnt provide access to query params :-/
@@ -60,13 +58,12 @@ Test(groups = array("WebTest")) class MiscWebTest {
         private val LOG = LoggerFactory.getLogger(javaClass<MiscWebTest>())
     }
 
-    BeforeSuite fun resetDB() {
+    BeforeSuite fun initUsersForAllTestsBeforeAnyOtherTestIsExecuted_viaAdminResetDb() {
         AdminClient().resetDb()
     }
 
     fun invalidUrlShouldReturn404NotFound() {
-        TestClient().get("/not_existing").assertStatusCode(Response.Status.NOT_FOUND)
+        MiscTestClient().get("/not_existing").assertStatusCode(Status._404_NOT_FOUND)
     }
 
 }
-

@@ -7,8 +7,8 @@ import at.cpickl.grotlin.multi.AppModule
 import at.cpickl.grotlin.multi.resource.GameResource
 import at.cpickl.grotlin.multi.TestData
 import org.hamcrest.Matchers
-import at.cpickl.grotlin.multi.assertThat
-import at.cpickl.grotlin.multi.equalTo
+import org.hamcrest.MatcherAssert.*
+import org.hamcrest.Matchers.*
 import com.google.inject.AbstractModule
 import at.cpickl.grotlin.multi.service.RunningGameService
 import at.cpickl.grotlin.multi.service.InMemoryRunningGameService

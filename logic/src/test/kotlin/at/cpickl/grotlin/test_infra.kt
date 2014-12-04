@@ -3,6 +3,22 @@ package at.cpickl.grotlin
 import org.hamcrest.MatcherAssert.*
 import org.hamcrest.Matchers.*
 
+
+
+//fun <T> assertThat(message: String, actual: T, matcher: Matcher<T>) {
+//    MatcherAssert.assertThat(message, actual, matcher)
+//}
+//
+//fun <T> assertThat(actual: T, matcher: Matcher<T>) {
+//    MatcherAssert.assertThat(actual, matcher)
+//}
+//
+//fun <T> equalTo(operand: T): Matcher<T> {
+//    return Matchers.equalTo(operand)
+//}
+
+
+
 //fun testDice(vararg rolls: Int): Dice = TestDice(rolls)
 class TestDice(_rolls: IntArray) : Dice {
 

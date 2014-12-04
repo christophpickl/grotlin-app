@@ -21,11 +21,25 @@ class AuthUserService [Inject] (
             return foundUser
         }
         LOG.debug("Looking for fake access token because debug app is enabled")
+        if (!fakeUserReader.isFakeToken(token)) {
+            return null
+        }
         return fakeUserReader.read(token)
     }
 }
 
 class FakeUserReader [Inject] (private val userService: UserService) {
+
     private val nameByToken = mapOf(Pair("1", "user1"), Pair("2", "user2"))
-    fun read(token: String): User = userService.userByName(nameByToken.get(token)!!)
+
+    fun isFakeToken(token: String): Boolean = nameByToken.containsKey(token)
+    fun read(token: String): User {
+        val name = nameByToken.get(token)!!
+        val user = userService.userByName(name)
+        if (user == null) {
+            throw IllegalStateException("Could not find user by name '${name}' for fake token '${token}'!")
+        }
+        return user
+    }
+
 }

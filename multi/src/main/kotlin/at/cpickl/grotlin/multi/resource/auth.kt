@@ -53,6 +53,7 @@ Provider Secured class SecuredFilter [Inject] (private val authUserService: Auth
     override fun filter(requestContext: ContainerRequestContext) {
         LOG.debug("secured working for context: method=${requestContext.getMethod()} URI=${requestContext.getUriInfo()}")
         var token: String? = requestContext.getHeaderString(ACCESS_TOKEN_HEADER_NAME)
+        LOG.debug("Token from header is: '{}'", token)
         if (token == null) {
             requestContext.abortWithUnauthorized()
             return

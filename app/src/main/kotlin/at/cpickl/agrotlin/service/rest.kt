@@ -8,7 +8,7 @@ import org.apache.http.HttpStatus
 import org.apache.http.util.EntityUtils
 import at.cpickl.agrotlin.SwirlException
 
-
+/*
 class RestClient {
     class object {
         private val LOG: Logg = Logg(javaClass.getSimpleName())
@@ -43,3 +43,4 @@ class RestClient {
 class RestException(message: String) : SwirlException(message) {
 
 }
+*/
