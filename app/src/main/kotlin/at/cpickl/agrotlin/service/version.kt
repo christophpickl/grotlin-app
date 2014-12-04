@@ -9,6 +9,7 @@ import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.util.EntityUtils
 import at.cpickl.agrotlin.SwirlException
 import at.cpickl.grotlin.restclient.RestClient
+import com.google.common.base.MoreObjects
 
 
 // class Params, class Progress, class Result
@@ -23,12 +24,12 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
     private val swirlEngineUrl: String;
     {
         val user = System.getProperty("user.name")
-        if (user == "s6917") {
+//        if (user == "s6917") {
 //            swirlEngineUrl = "http://10.18.101.204:8888"
-            swirlEngineUrl = "http://http://swirl-engine.appspot.com"
-        } else {
-            swirlEngineUrl = "http://10.0.1.12:8888"
-        }
+            swirlEngineUrl = "http://swirl-engine.appspot.com"
+//        } else {
+//            swirlEngineUrl = "http://10.0.1.12:8888"
+//        }
     }
 
     private var thrown: Exception? = null
@@ -39,9 +40,9 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
         try {
             val rest = RestClient(swirlEngineUrl) // TODO do not instantiate manually, let inject (requires factory)
             val response = rest.get().url("/version")
-            val c = DefaultHttpClient()
-
-            return response.unmarshallTo(javaClass<VersionRto>())
+            val version = response.unmarshallTo(javaClass<VersionRto>())
+            println("Got version: ${version}")
+            return version
         } catch (e: Exception) {
             thrown = e
             return null
@@ -61,4 +62,6 @@ class VersionRto {
     // TODO use common module just containing Rto classes! avoid copy'n'paste
     public var artifactVersion: String? = null
     public var buildDate: String? = null
+
+    override fun toString() = MoreObjects.toStringHelper(this).add("artifactVersion", artifactVersion).add("buildDate", buildDate).toString()
 }

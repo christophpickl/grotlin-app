@@ -1,4 +1,7 @@
 
+! logging via logback
+    java.lang.VerifyError: ch/qos/logback/classic/joran/action/InsertFromJNDIAction
+
 * bugfix on orientation (saveInstance, ..)
 
 * zoom map

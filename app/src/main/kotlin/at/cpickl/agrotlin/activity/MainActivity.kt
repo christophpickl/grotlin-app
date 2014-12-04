@@ -93,7 +93,8 @@ public class MainActivity : SwirlActivity() {
         btnRandomGame!!.setOnClickListener { PlayGameActivity.start(this) }
         btnLogin!!.setOnClickListener {
 //            LoginActivity.start(this)
-            VersionHttpRequest({ showToast("Version received: ${it}")}, { showToast("Fail: ${it}") }).execute()
+            LOG.debug("on btnLogin clicked")
+            VersionHttpRequest({ showToast("Version received: ${it}")}, { showToast("Fail: ${it}"); it.printStackTrace() }).execute()
         }
     }
 

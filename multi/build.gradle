@@ -93,10 +93,6 @@ dependencies {
     compile "ch.qos.logback:logback-core:1.1.2"
     compile "ch.qos.logback:logback-classic:1.1.2"
 
-    // MISC
-    // =============================================
-    compile 'joda-time:joda-time:2.5'
-    compile 'com.google.guava:guava:18.0'
 
     // TEST
     // =============================================
