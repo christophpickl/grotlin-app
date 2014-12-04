@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpPost
 import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.entity.StringEntity
 import java.net.URLEncoder
+import org.apache.http.impl.client.HttpClients
 
 
 public abstract class BaseRestClientImpl <T : AnyRestClient<T>, R : HttpRequestBase> (private val baseUrl: String) : AnyRestClient<T> {
@@ -20,7 +21,7 @@ public abstract class BaseRestClientImpl <T : AnyRestClient<T>, R : HttpRequestB
     private val queryParams = hashMapOf<String, String>()
 
     override public fun url(endpoint: String): RestResponse {
-        val client = DefaultHttpClient()
+        val client = HttpClients.createDefault()
         val request = request()
 
         request.setURI(URI("${baseUrl}${endpoint}${buildQueryParams()}"))
@@ -28,6 +29,7 @@ public abstract class BaseRestClientImpl <T : AnyRestClient<T>, R : HttpRequestB
 //        headers.forEach { (key, value) -> request.setHeader(key, value) }
 
         LOG.info("Executing request to: {}", request.getURI())
+        println("client = ${client}")
         val response = client.execute(request)
         return RestResponse(response)
     }
