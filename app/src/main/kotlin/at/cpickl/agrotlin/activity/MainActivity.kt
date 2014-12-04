@@ -71,7 +71,8 @@ public class MainActivity : SwirlActivity() {
 
     [InjectView(R.id.btnRandomGame)] private var btnRandomGame: Button? = null
     [InjectView(R.id.btnLogin)] private var btnLogin: Button? = null
-    Inject private var vibrator: VibrateService? = null
+    [InjectView(R.id.btnDebug)] private var btnDebug: Button? = null
+
     Inject private var soundPlayer: SoundPlayer? = null
 
 
@@ -91,13 +92,12 @@ public class MainActivity : SwirlActivity() {
         // animFadein.setAnimationListener(this);
         // animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeIn);
         btnRandomGame!!.setOnClickListener { PlayGameActivity.start(this) }
-        btnLogin!!.setOnClickListener {
-//            LoginActivity.start(this)
-            LOG.debug("on btnLogin clicked")
-            VersionHttpRequest({ showToast("Version received: ${it}")}, { showToast("Fail: ${it}"); it.printStackTrace() }).execute()
-        }
+        btnLogin!!.setOnClickListener { LoginActivity.start(this) }
+        btnDebug!!.setOnClickListener { DebugActivity.start(this) }
     }
 
+    /*
+    its fullscreen, so we dont see it :)
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         getMenuInflater().inflate(R.menu.menu_main, menu)
         return true
@@ -120,5 +120,6 @@ public class MainActivity : SwirlActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+    */
 
 }

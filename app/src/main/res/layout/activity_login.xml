@@ -52,6 +52,7 @@
                 a:layout_width="wrap_content"
                 a:layout_height="wrap_content"
                 a:layout_marginTop="10pt"
+                a:layout_marginBottom="6pt"
                 a:layout_gravity="center_horizontal"
             />
         <TextView a:text="Forgot Password?"

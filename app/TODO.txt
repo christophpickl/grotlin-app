@@ -6,3 +6,21 @@
 
 * zoom map
 * reset game
+
+use http://java-websocket.org/??
+
+
+
+    <!-- To check the network state your application requires the android.permission.ACCESS_NETWORK_STATE permission
+    public boolean isNetworkAvailable() {
+    ConnectivityManager cm = (ConnectivityManager)
+      getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+    // if no network is available networkInfo will be null
+    // otherwise check if we are connected
+    if (networkInfo != null && networkInfo.isConnected()) {
+        return true;
+    }
+    return false;
+}
+    -->

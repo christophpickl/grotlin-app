@@ -3,21 +3,6 @@
           package="at.cpickl.agrotlin" >
 
     <uses-permission a:name="android.permission.INTERNET" />
-    <!-- To check the network state your application requires the android.permission.ACCESS_NETWORK_STATE permission
-    public boolean isNetworkAvailable() {
-    ConnectivityManager cm = (ConnectivityManager)
-      getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-    // if no network is available networkInfo will be null
-    // otherwise check if we are connected
-    if (networkInfo != null && networkInfo.isConnected()) {
-        return true;
-    }
-    return false;
-}
-    -->
-
-    <!-- use http://java-websocket.org/ -->
 
     <uses-permission a:name="android.permission.VIBRATE" />
 
@@ -54,6 +39,15 @@
                   a:label="Game"
                   a:parentActivityName=".activity.MainActivity"
                   a:screenOrientation="landscape"
+                  a:theme="@style/MyActivity"
+            >
+            <meta-data a:name="android.support.PARENT_ACTIVITY"
+                       a:value="at.cpickl.agrotlin.MainActivity" />
+        </activity>
+
+        <activity a:name=".activity.DebugActivity"
+                  a:label="Debug"
+                  a:parentActivityName=".activity.MainActivity"
                   a:theme="@style/MyActivity"
             >
             <meta-data a:name="android.support.PARENT_ACTIVITY"

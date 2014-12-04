@@ -26,26 +26,25 @@
             a:layout_gravity="center"
             a:orientation="vertical"
             >
-            <Button a:id="@+id/btnRandomGame"
+            <Button a:id="@+id/btnLoadVersion"
                     style="@style/MainButtonStyle"
-                    a:text="Random Game"
+                    a:text="Load Version"
                     a:layout_width="wrap_content"
                     a:layout_height="wrap_content"
                     a:layout_marginBottom="4pt"
                 />
-            <Button a:id="@+id/btnLogin"
+            <Button a:id="@+id/btnFoobar"
                     style="@style/MainButtonStyle"
-                    a:text="Login"
+                    a:text="Foobar"
                     a:layout_width="wrap_content"
                     a:layout_height="wrap_content"
                     a:layout_marginBottom="4pt"
                 />
-            <Button a:id="@+id/btnDebug"
-                    style="@style/MainButtonStyle"
-                    a:text="Debug"
-                    a:layout_width="wrap_content"
-                    a:layout_height="wrap_content"
-                />
+            <LinearLayout a:id="@+id/myContainer"
+                          a:layout_width="fill_parent"
+                          a:layout_height="20pt"
+                          a:orientation="vertical"
+                ></LinearLayout>
             </LinearLayout>
     </LinearLayout>
 </ScrollView>
