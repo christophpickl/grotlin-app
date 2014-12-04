@@ -111,6 +111,10 @@ dependencies {
     testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
 }
 
+configurations.testCompile.each {
+    println "testCompile: $it"
+}
+
 appengine {
     downloadSdk = true
     // via this it's possible to access it via its LAN IP address (rather localhost)

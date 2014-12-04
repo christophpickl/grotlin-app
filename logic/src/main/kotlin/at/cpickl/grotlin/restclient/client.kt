@@ -40,6 +40,8 @@ public class RestResponse(private val response: CloseableHttpResponse) {
         }
     }
 
+//    override fun toString() = MoreObjec
+
 }
 
 public trait AnyRestClient<T : AnyRestClient<T>> {

@@ -24,7 +24,8 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
     {
         val user = System.getProperty("user.name")
         if (user == "s6917") {
-            swirlEngineUrl = "http://10.18.101.204:8888"
+//            swirlEngineUrl = "http://10.18.101.204:8888"
+            swirlEngineUrl = "http://http://swirl-engine.appspot.com"
         } else {
             swirlEngineUrl = "http://10.0.1.12:8888"
         }
@@ -38,6 +39,8 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
         try {
             val rest = RestClient(swirlEngineUrl) // TODO do not instantiate manually, let inject (requires factory)
             val response = rest.get().url("/version")
+            val c = DefaultHttpClient()
+
             return response.unmarshallTo(javaClass<VersionRto>())
         } catch (e: Exception) {
             thrown = e

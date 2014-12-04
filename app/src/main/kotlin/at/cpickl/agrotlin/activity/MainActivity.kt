@@ -91,7 +91,10 @@ public class MainActivity : SwirlActivity() {
         // animFadein.setAnimationListener(this);
         // animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeIn);
         btnRandomGame!!.setOnClickListener { PlayGameActivity.start(this) }
-        btnLogin!!.setOnClickListener { LoginActivity.start(this) }
+        btnLogin!!.setOnClickListener {
+//            LoginActivity.start(this)
+            VersionHttpRequest({ showToast("Version received: ${it}")}, { showToast("Fail: ${it}") }).execute()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

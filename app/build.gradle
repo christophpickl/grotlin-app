@@ -4,8 +4,18 @@ apply plugin: 'kotlin-android'
 
 def versionRoboguice = "3.0.1"
 
+configurations {
+    all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+}
 dependencies {
     compile project(':logic')
+//            {
+//        exclude group: 'org.apache.httpcomponents', module 'httpclient'
+//    }
+    // https://hc.apache.org/httpcomponents-client-4.3.x/android-port.html
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
+
+
     // WARNING: Dependency org.apache.httpcomponents:httpclient:4.3.6 is ignored for debug as it may be conflicting with the internal version provided by Android.
     compile fileTree(dir: 'libs', include: ['*.jar'])
 

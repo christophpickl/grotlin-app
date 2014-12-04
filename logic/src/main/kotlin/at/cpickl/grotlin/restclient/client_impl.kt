@@ -25,7 +25,7 @@ public abstract class BaseRestClientImpl <T : AnyRestClient<T>, R : HttpRequestB
 
         request.setURI(URI("${baseUrl}${endpoint}${buildQueryParams()}"))
         request.setHeader("Accept", "application/json")
-        headers.forEach { (key, value) -> request.setHeader(key, value) }
+//        headers.forEach { (key, value) -> request.setHeader(key, value) }
 
         LOG.info("Executing request to: {}", request.getURI())
         val response = client.execute(request)

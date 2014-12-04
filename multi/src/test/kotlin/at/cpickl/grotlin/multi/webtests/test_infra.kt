@@ -1,7 +1,9 @@
 package at.cpickl.grotlin.multi.webtests
 
 import at.cpickl.grotlin.restclient.RestClient
-
+import at.cpickl.grotlin.restclient.RestResponse
+import at.cpickl.grotlin.restclient.Status
+import org.hamcrest.MatcherAssert.assertThat
 
 private fun baseUrl(): String {
     // i am a too stupid kotlin dev, i dont know how to init this property as a static constant :(
