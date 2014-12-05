@@ -37,8 +37,10 @@ class FakeUserReader [Inject] (private val userService: UserService) {
         val name = nameByToken.get(token)!!
         val user = userService.userByName(name)
         if (user == null) {
-            throw IllegalStateException("Could not find user by name '${name}' for fake token '${token}'!")
+            throw IllegalStateException("Could not find user by name '${name}' for fake token '${token}'! (try resetDB)")
         }
+        user.accessToken = token
+        userService.saveOrUpdate(user)
         return user
     }
 

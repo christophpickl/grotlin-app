@@ -10,51 +10,58 @@ import com.google.appengine.api.channel.ChannelMessage
 import javax.ws.rs.core.Response
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
+import at.cpickl.grotlin.multi.service.ChannelApiService
+import javax.ws.rs.GET
+import com.google.appengine.api.channel.ChannelPresence
+import javax.ws.rs.core.Context
+import javax.servlet.http.HttpServletRequest
+import at.cpickl.grotlin.multi.service.Role
+import at.cpickl.grotlin.multi.service.User
 
-Path("/channel") class ChannelResource {
+// TODO make those endpoint secured
+
+Path("/channel") class ChannelResource [Inject] (private val channelApiService: ChannelApiService) {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<ChannelResource>())
     }
 
-    private val channelKey = "useUserTokenInstead"
-
-    Path("/") POST Produces(MediaType.APPLICATION_JSON)
-    fun createChannelToken(): String {
-        // By default, tokens expire in two hours.
-        // If a client remains connected to a channel for longer than the token duration, the sockets onerror() and onclose()
-        // callbacks are called. At this point, the client can make an XHR request to the application to request a new token and
-        // open a new channel.
-        val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
-        val token = channelService.createChannel(channelKey)
-        return """{ "token": "${token}" }"""
+    Secured Path("/") POST Produces(MediaType.APPLICATION_JSON)
+    fun createChannelToken(user: User): String {
+        val channelToken = channelApiService.createToken(user)
+        return """{ "channelToken": "${channelToken}" }"""
     }
 
-    Path("/push") POST Produces(MediaType.APPLICATION_JSON)
-    fun pushMessage(): String {
-        val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
-        val message = "my server message"
-        channelService.sendMessage(ChannelMessage(channelKey, message))
+    Secured Path("/push") POST Produces(MediaType.APPLICATION_JSON)
+    fun pushMessage(user: User): String {
+        val message = "sent from youuu"
+        channelApiService.sendFoobarMessage(user, message)
         return """{ "sent": "${message}" }"""
+    }
+
+    Secured(Role.ADMIN) Path("/connections") GET Produces(MediaType.APPLICATION_JSON)
+    fun listConnections(): String {
+        return """{ "connectionsCount": "${channelApiService.connectionsCount}" }"""
     }
 
 }
 
-Path("/_ah/channel") class ChannelPresenceResource {
+Path("/_ah/channel") class ChannelPresenceResource [Inject] (private val channelApiService: ChannelApiService) {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<ChannelPresenceResource>())
     }
+
     Path("/connected") POST
-    fun userConnected(): Response {
-        LOG.debug("userConnected()")
-        val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
-        //        val presence = channelService.parsePresence(request)
+    fun userConnected([Context] request: HttpServletRequest): Response {
+        LOG.debug("userConnected(request)")
+        channelApiService.onConnected(request)
         return Response.ok().build()
     }
+
     Path("/disconnected") POST
-    fun userDisconnected(): Response {
-        LOG.debug("userDisconnected()")
-        val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
-        //        val presence = channelService.parsePresence(request)
+    fun userDisconnected([Context] request: HttpServletRequest): Response {
+        LOG.debug("userDisconnected(request)")
+        channelApiService.onDisconnected(request)
         return Response.ok().build()
     }
 

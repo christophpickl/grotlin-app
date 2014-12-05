@@ -11,6 +11,8 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import javax.ws.rs.core.Context
+import javax.servlet.http.HttpServletRequest
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class VersionRto {
     class object {

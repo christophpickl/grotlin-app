@@ -40,7 +40,6 @@ public open class DebugActivity : SwirlActivity() {
     [InjectView(R.id.btnFoobar)] private var btnFoobar: Button? = null
     [InjectView(R.id.myContainer)] private var myContainer: LinearLayout? = null
 
-    Inject private var vibrator: VibrateService? = null
     private var webView: WebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +75,6 @@ public open class DebugActivity : SwirlActivity() {
 
     private fun onLoadVersion() {
         LOG.info("onLoadVersion()")
-        vibrator!!.vibrate()
         VersionHttpRequest({ showToast("Version received: ${it}")}, { showToast("Fail: ${it}"); it.printStackTrace(); }).execute()
     }
 

@@ -6,25 +6,12 @@ function getVersion() {
         accept: "application/json",
         success: function(data) {
             console.log("SUCCESS version")
+            alert('Server version is: ' + data.artifactVersion + "\nBuild date: " + data.buildDate)
         },
         error: function(request, status, error) {
-            console.log("ERROR: " + error)
+            alert("ERROR: " + error + " (status=" + status + ")")
         }
     })
-}
-
-onOpened = function () {
-    console.log("onOpened()");
-}
-onMessage = function (message) {
-    console.log("onMessage(message.data=" + message.data+ ")");
-}
-onError = function(error) {
-    // error.code
-    console.log("onError(error.description=" + error.description + ")");
-}
-onClose = function() {
-    console.log("onClose()");
 }
 
 function connectChannel(token) {
@@ -58,14 +45,37 @@ function sendMessage() {
         async: false,
         data: JSON.stringify({  }),
         success: function(data) {
-            console.log("SUCCESS")
+            console.log("SUCCESS: data=" + data)
         },
         error: function(request, status, error) {
-            console.log("ERROR: " + error)
+            alert("ERROR: " + error + " (status=" + status + ")")
         }
     })
 }
 
+function getChannelToken() {
+    console.log("getChannelToken()");
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8888/channel",
+        dataType: 'json',
+        headers: {
+            "X-access_token": $("#txt_access_token").val()
+        },
+        // contentType : 'application/json',
+        // noooooo ... async: false,
+        data: JSON.stringify({  }),
+        success: function(data) {
+            console.log("SUCCESS: channel token = " + data.token)
+            $("#txt_channel_token").val(data.token)
+        },
+        error: function(request, status, error) {
+            alert("ERROR: " + error + " (status=" + status + ")")
+            // request.responseJSON.message ... how to access those? seen in debugger, but not accessible this way.
+            // request.responseJSON.code
+        }
+    })
+}
 
 $(document).ready(function() {
     console.log("Start it up, pump it up!");
@@ -73,9 +83,12 @@ $(document).ready(function() {
     $("#btn_get_version").click(function() {
         getVersion()
     })
+    $("#btn_get_channel_token").click(function() {
+        getChannelToken()
+    })
+
     $("#btn_connect_channel").click(function() {
-        // token = JSON.parse(request.response)["token"];
-        connectChannel($("#txt_token").val())
+        connectChannel($("#txt_channel_token").val())
     })
 });
 

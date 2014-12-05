@@ -10,13 +10,25 @@
         body {
             background-color: #C2CFCF;
         }
+        #txt_access_token, #txt_channel_token {
+            width: 250px;
+        }
     </style>
 </head>
 <body>
-	<h1>Welcome you</h1>
+    <div id="header">
+        <h1>Swirl Testclient</h1>
+    </div>
+
+    Access Token: <input type="text" id="txt_access_token" value="1" /><br/>
+
     <input type="submit" id="btn_get_version" value="GET /version" /><br/>
-    Token: <input type="text" id="txt_token" /><br/>
-    <input type="submit" id="btn_connect_channel" value="connect 2 GAE channel" /><br/>
+
+    Create channel token: <input type="submit" id="btn_get_channel_token" value="POST /channel" /><br/>
+
+    Channel Token: <input type="text" id="txt_channel_token" /><br/>
+
+    <input type="submit" id="btn_connect_channel" value="Connect to Channel" /><br/>
 
     <script src="js/main.js" type="text/javascript"></script>
 </body>
