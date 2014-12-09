@@ -19,8 +19,9 @@ import java.lang.annotation.Target
 import at.cpickl.grotlin.multi.service.Role
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-
-//import javax.inject.Inject
+import at.cpickl.grotlin.endpoints.LoginRequestRto
+import at.cpickl.grotlin.endpoints.UserResponseRto
+import at.cpickl.grotlin.endpoints.LoginResponseRto
 
 Path("/users")
 class UserResource [Inject] (private val userService: UserService) {
