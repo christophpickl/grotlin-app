@@ -13,22 +13,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import javax.ws.rs.core.Context
 import javax.servlet.http.HttpServletRequest
-
-XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class VersionRto {
-    class object {
-        fun build(artifactVersion: String, buildDate: String): VersionRto {
-            val version = VersionRto()
-            version.artifactVersion = artifactVersion
-            version.buildDate = buildDate
-            return version
-        }
-    }
-    var artifactVersion: String? = null
-    var buildDate: String? = null
-
-    override fun toString() = "VersionRto[artifactVersion='${artifactVersion}', buildDate='${buildDate}']"
-
-}
+import at.cpickl.grotlin.endpoints.VersionRto
 
 Path("/version") class VersionResource [Inject] (private val versionService: VersionService) {
     class object {

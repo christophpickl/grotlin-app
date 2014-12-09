@@ -4,8 +4,11 @@ import at.cpickl.grotlin.restclient.RestClient
 import at.cpickl.grotlin.restclient.RestResponse
 import at.cpickl.grotlin.restclient.Status
 import org.hamcrest.MatcherAssert.assertThat
+import at.cpickl.grotlin.endpoints.UserClient
+import at.cpickl.grotlin.endpoints.VersionClient
 
-private fun baseUrl(): String {
+
+fun baseUrl(): String {
     // i am a too stupid kotlin dev, i dont know how to init this property as a static constant :(
     val target = System.getProperty("testTarget", "UNDEFINED")
     when (target) {
@@ -19,4 +22,9 @@ private fun baseUrl(): String {
     }
 }
 
-class TestClient : RestClient(baseUrl())
+class Clients {
+    class object {
+        fun user(): UserClient = UserClient(baseUrl())
+        fun version(): VersionClient = VersionClient(baseUrl())
+    }
+}

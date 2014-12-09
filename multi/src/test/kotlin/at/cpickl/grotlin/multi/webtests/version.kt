@@ -9,12 +9,7 @@ import at.cpickl.grotlin.restclient
 import org.hamcrest.MatcherAssert.*
 import org.hamcrest.Matchers.*
 import at.cpickl.grotlin.restclient.RestClient
-
-class VersionClient {
-    fun get(): VersionRto {
-        return TestClient().get().url("/version").unmarshallTo(javaClass<VersionRto>())
-    }
-}
+import at.cpickl.grotlin.endpoints.VersionClient
 
 Test(groups = array("WebTest")) class VersionWebTest {
     class object {
@@ -22,7 +17,7 @@ Test(groups = array("WebTest")) class VersionWebTest {
     }
 
     fun getVersion() {
-        val version = VersionClient().get()
+        val version = Clients.version().get()
         LOG.debug("Returned version: ${version}")
         assertThat(version.artifactVersion, Matchers.notNullValue())
         assertThat(version.buildDate, Matchers.notNullValue())

@@ -14,27 +14,18 @@ import at.cpickl.grotlin.restclient.RestClient
 import at.cpickl.grotlin.restclient.Status
 import at.cpickl.grotlin.restclient.RestResponse
 import at.cpickl.grotlin.restclient.assertStatusCode
+import at.cpickl.grotlin.endpoints.UserClient
+import at.cpickl.grotlin.endpoints.LoginRequestRto
 
-class UserClient {
-
-    fun login(request: LoginRequestRto): LoginResponseRto {
-        return TestClient().post().body(request).url("/users/login").unmarshallTo(javaClass<LoginResponseRto>())
-    }
-
-    fun logout(token: String): RestResponse {
-        return TestClient().post().accessToken(token).url("/users/logout")
-    }
-
-}
 
 Test(groups = array("WebTest")) class UserWebTest {
 
     fun login_user1_success() {
-        println(UserClient().login(LoginRequestRto.build("user1", "0BEEC7B5EA3F0FDBC95D0DD47F3C5BC275DA8A33")))
+        println(Clients.user().login(LoginRequestRto.build("user1", "0BEEC7B5EA3F0FDBC95D0DD47F3C5BC275DA8A33")))
     }
 
     fun logout_invalidToken_shouldReturn400BadRequest() {
-        val response = UserClient().logout("invalid")
+        val response = Clients.user().logout("invalid")
         response.assertStatusCode(Status._401_UNAUTHORIZED)
         assertThat(response.unmarshallTo(javaClass<FaultRto>()),
             equalTo(FaultRto.build("Authentication required to access this resource!", FaultCode.UNAUTHORIZED)))

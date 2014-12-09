@@ -10,6 +10,8 @@ import org.apache.http.util.EntityUtils
 import at.cpickl.agrotlin.SwirlException
 import at.cpickl.grotlin.restclient.RestClient
 import com.google.common.base.MoreObjects
+import at.cpickl.grotlin.endpoints.VersionClient
+import at.cpickl.grotlin.endpoints.VersionRto
 
 
 // class Params, class Progress, class Result
@@ -38,10 +40,9 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
     override fun doInBackground(vararg params: Void?): VersionRto? {
         LOG.debug("doInBackground()")
         try {
-            val rest = RestClient(swirlEngineUrl) // TODO do not instantiate manually, let inject (requires factory)
-            val response = rest.get().url("/version")
-            val version = response.unmarshallTo(javaClass<VersionRto>())
-            println("Got version: ${version}")
+            // TODO do not instantiate manually, let inject (requires factory)
+            val version = VersionClient(swirlEngineUrl).get()
+            LOG.debug("Got version: ${version}")
             return version
         } catch (e: Exception) {
             thrown = e
@@ -58,10 +59,3 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
 
 }
 
-class VersionRto {
-    // TODO use common module just containing Rto classes! avoid copy'n'paste
-    public var artifactVersion: String? = null
-    public var buildDate: String? = null
-
-    override fun toString() = MoreObjects.toStringHelper(this).add("artifactVersion", artifactVersion).add("buildDate", buildDate).toString()
-}

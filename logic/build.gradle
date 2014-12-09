@@ -48,11 +48,6 @@ artifacts {
     testOutput testJar
 }
 
-jar {
-    baseName = 'my-logic-jar'
-    version =  '1.42'
-}
-
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 

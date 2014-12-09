@@ -19,32 +19,32 @@ import at.cpickl.grotlin.restclient.RestResponse
 
 class AdminClient {
     fun resetDb() {
-        TestClient().get().queryParameter("secret", "hans").url("/admin/resetDB").assertStatusCode(Status._200_OK)
+        RestClient(baseUrl()).get().queryParameter("secret", "hans").url("/admin/resetDB").assertStatusCode(Status._200_OK)
     }
 }
 
 class MiscTestClient {
     fun get(url: String): RestResponse {
-        return TestClient().get().url(url)
+        return RestClient(baseUrl()).get().url(url)
     }
 }
 
 Test(groups = array("WebTest")) class SecuredWebTest {
 
     fun securedEndpointWithoutAccessTokenShouldBeUnauthorized() {
-        TestClient().get().url("/test/secured").assertStatusCode(Status._401_UNAUTHORIZED)
+        RestClient(baseUrl()).get().url("/test/secured").assertStatusCode(Status._401_UNAUTHORIZED)
     }
 
     fun securedEndpointWithHeaderFakeAccessTokenShouldBeOk() {
-        TestClient().get().accessToken(TestData.FAKE_TOKEN_USER).url("/test/secured").assertStatusCode(Status._200_OK)
+        RestClient(baseUrl()).get().accessToken(TestData.FAKE_TOKEN_USER).url("/test/secured").assertStatusCode(Status._200_OK)
     }
 
     fun securedAdminEndpointWithHeaderFakeUserAccessTokenShouldBeForbidden() {
-        TestClient().get().accessToken(TestData.FAKE_TOKEN_USER).url("/test/secured_admin").assertStatusCode(Status._403_FORBIDDEN)
+        RestClient(baseUrl()).get().accessToken(TestData.FAKE_TOKEN_USER).url("/test/secured_admin").assertStatusCode(Status._403_FORBIDDEN)
     }
 
     fun securedAdminEndpointWithHeaderFakeAdminAccessTokenShouldBeOk() {
-        TestClient().get().accessToken(TestData.FAKE_TOKEN_ADMIN).url("/test/secured_admin").assertStatusCode(Status._200_OK)
+        RestClient(baseUrl()).get().accessToken(TestData.FAKE_TOKEN_ADMIN).url("/test/secured_admin").assertStatusCode(Status._200_OK)
     }
 
     // gnah, resteasy's message body reader doesnt provide access to query params :-/
