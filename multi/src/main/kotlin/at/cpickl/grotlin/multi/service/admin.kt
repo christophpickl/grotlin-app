@@ -1,12 +1,12 @@
 package at.cpickl.grotlin.multi.service
 
 import javax.inject.Inject
-import at.cpickl.grotlin.multi.Fault
-import at.cpickl.grotlin.multi.FaultCode
 import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.multi.resource.AdminResource
 import at.cpickl.grotlin.multi.FaultException
 import javax.ws.rs.core.Response.Status
+import at.cpickl.grotlin.endpoints.Fault
+import at.cpickl.grotlin.endpoints.FaultCode
 
 class AdminService [Inject] (private val userService: UserService) {
     class object {

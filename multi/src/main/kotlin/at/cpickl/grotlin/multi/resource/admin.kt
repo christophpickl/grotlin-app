@@ -8,8 +8,8 @@ import at.cpickl.grotlin.multi.service.UserService
 import org.slf4j.LoggerFactory
 import javax.ws.rs.GET
 import javax.ws.rs.QueryParam
-import at.cpickl.grotlin.multi.Fault
-import at.cpickl.grotlin.multi.FaultCode
+import at.cpickl.grotlin.endpoints.Fault
+import at.cpickl.grotlin.endpoints.FaultCode
 import at.cpickl.grotlin.multi.service.User
 import at.cpickl.grotlin.multi.service.Role
 import at.cpickl.grotlin.multi.FaultException

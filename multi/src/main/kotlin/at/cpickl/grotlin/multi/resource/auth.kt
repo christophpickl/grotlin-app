@@ -14,15 +14,15 @@ import javax.ws.rs.container.ContainerRequestFilter
 import javax.ws.rs.container.ContainerRequestContext
 import org.jboss.resteasy.core.ResourceMethodInvoker
 import org.jboss.resteasy.core.ServerResponse
-import at.cpickl.grotlin.multi.FaultCode
+import at.cpickl.grotlin.endpoints.FaultCode
 import org.jboss.resteasy.core.Headers
 import at.cpickl.grotlin.multi.isDebugApp
 import at.cpickl.grotlin.multi.service.AuthUserService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import at.cpickl.grotlin.endpoints.FaultRto
+import at.cpickl.grotlin.restclient.ACCESS_TOKEN_HEADER_NAME
 
-
-val ACCESS_TOKEN_HEADER_NAME = "X-access_token"
 
 Provider Consumes(MediaType.WILDCARD) class UserReader [Inject] (
         private val authUserService: AuthUserService
@@ -53,7 +53,7 @@ Provider Secured class SecuredFilter [Inject] (private val authUserService: Auth
     override fun filter(requestContext: ContainerRequestContext) {
         LOG.debug("secured working for context: method=${requestContext.getMethod()} URI=${requestContext.getUriInfo()}")
         var token: String? = requestContext.getHeaderString(ACCESS_TOKEN_HEADER_NAME)
-        LOG.debug("Token from header is: '{}'", token)
+        LOG.debug("Token from header '{}' has value: '{}'", ACCESS_TOKEN_HEADER_NAME, token)
         if (token == null) {
             requestContext.abortWithUnauthorized()
             return
@@ -73,6 +73,7 @@ Provider Secured class SecuredFilter [Inject] (private val authUserService: Auth
             requestContext.abortWithForbidden()
             return
         }
+        LOG.debug("User granted access.")
     }
 
 }

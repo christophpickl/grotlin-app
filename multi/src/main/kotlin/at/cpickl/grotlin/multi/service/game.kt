@@ -6,8 +6,8 @@ import com.google.common.base.Objects
 import com.google.common.base.MoreObjects
 import javax.inject.Inject
 import at.cpickl.grotlin.multi.resource.NotFoundException
-import at.cpickl.grotlin.multi.Fault
-import at.cpickl.grotlin.multi.FaultCode
+import at.cpickl.grotlin.endpoints.Fault
+import at.cpickl.grotlin.endpoints.FaultCode
 import at.cpickl.grotlin.multi.resource.UserException
 
 class WaitingRandomGameService [Inject] (private val runningGameService: RunningGameService) {

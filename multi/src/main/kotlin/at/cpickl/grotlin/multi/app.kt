@@ -8,6 +8,7 @@ import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
 import javax.ws.rs.ext.Provider;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterContext
+import at.cpickl.grotlin.endpoints.Fault
 
 
 fun isDebugApp(): Boolean = System.getProperty("appDebug", "false").equals("true")
@@ -35,22 +36,6 @@ Provider ServerInterceptor class CorsInterceptor: MessageBodyWriterInterceptor {
         context.getHeaders().add("Access-Control-Max-Age", "");
         context.proceed()
     }
-}
-
-data class Fault(val message: String, val code: FaultCode)
-
-enum class FaultCode(val label: String) {
-    NOT_ALLOWED: FaultCode("NOT_ALLOWED")
-    INVALID_PAYLOAD: FaultCode("INVALID_PAYLOAD")
-    INVALID_PAGE: FaultCode("INVALID_PAGE")
-    INVALID_LOGOUT: FaultCode("INVALID_LOGOUT")
-    INVALID_CREDENTIALS: FaultCode("INVALID_CREDENTIALS")
-    INTERNAL_ERROR: FaultCode("INTERNAL_ERROR")
-
-    UNAUTHORIZED: FaultCode("UNAUTHORIZED")
-    FORBIDDEN: FaultCode("FORBIDDEN")
-
-    GAME_NOT_FOUND: FaultCode("GAME_NOT_FOUND")
 }
 
 open class FaultException(message: String, val status: Status, val fault: Fault) : RuntimeException(message) {

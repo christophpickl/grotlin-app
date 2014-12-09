@@ -10,12 +10,12 @@ import java.lang.reflect.Type
 import javax.ws.rs.core.MultivaluedMap
 import java.io.InputStream
 import com.googlecode.objectify.cmd.LoadType
-import at.cpickl.grotlin.multi.Fault
-import at.cpickl.grotlin.multi.FaultCode
 import com.googlecode.objectify.cmd.Query
 import at.cpickl.grotlin.multi.toIntOrThrow
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import at.cpickl.grotlin.endpoints.Fault
+import at.cpickl.grotlin.endpoints.FaultCode
 
 //Provider Produces(MediaType.WILDCARD) class InjectPaginationInterceptor : ContextResolver<Pagination> {
 //    Context private var request: HttpServletRequest? = null

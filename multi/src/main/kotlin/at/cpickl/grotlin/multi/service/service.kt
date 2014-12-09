@@ -1,10 +1,10 @@
 package at.cpickl.grotlin.multi.service
 
 import com.google.inject.AbstractModule
-import at.cpickl.grotlin.multi.Fault
+import at.cpickl.grotlin.endpoints.Fault
+import at.cpickl.grotlin.endpoints.FaultCode
 import at.cpickl.grotlin.multi.FaultException
 import javax.ws.rs.core.Response.Status
-import at.cpickl.grotlin.multi.FaultCode
 import com.google.inject.Scopes
 import java.util.UUID
 

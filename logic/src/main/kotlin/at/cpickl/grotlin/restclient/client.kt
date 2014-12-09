@@ -12,13 +12,17 @@ import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.util.EntityUtils
 import java.net.URI
 import org.codehaus.jackson.JsonProcessingException
+import at.cpickl.grotlin.endpoints.FaultRto
+import at.cpickl.grotlin.endpoints.ClientFaultException
+
+val ACCESS_TOKEN_HEADER_NAME = "X-access_token"
 
 public open class RestClient(private val baseUrl: String) {
     fun get(): GetRestClient = GetRestClientImpl(baseUrl)
     fun post(): PostRestClient = PostRestClientImpl(baseUrl)
 }
 
-public class RestResponse(private val response: CloseableHttpResponse) {
+public class RestResponse(private val response: CloseableHttpResponse, private val url: String) {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<RestResponse>())
     }
@@ -38,6 +42,14 @@ public class RestResponse(private val response: CloseableHttpResponse) {
             LOG.error("Invalid JSON: '{}'", jsonString)
             throw e
         }
+    }
+    fun verifyStatusCode(expectedStatus: Status = Status._200_OK): RestResponse {
+        if (status == expectedStatus) {
+            return this
+        }
+        val fault = unmarshallTo(javaClass<FaultRto>())
+        throw ClientFaultException("Expected status code ${expectedStatus} but was ${status} for URL: '${url}'!", this, fault)
+
     }
 
 //    override fun toString() = MoreObjec

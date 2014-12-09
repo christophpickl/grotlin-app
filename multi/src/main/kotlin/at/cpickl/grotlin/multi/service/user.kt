@@ -5,10 +5,10 @@ import com.googlecode.objectify.annotation.Entity
 import com.googlecode.objectify.annotation.Id
 import java.security.MessageDigest
 import java.util.UUID
-import at.cpickl.grotlin.multi.Fault
+import at.cpickl.grotlin.endpoints.Fault
+import at.cpickl.grotlin.endpoints.FaultCode
 import at.cpickl.grotlin.multi.FaultException
 import javax.ws.rs.core.Response.Status
-import at.cpickl.grotlin.multi.FaultCode
 import at.cpickl.grotlin.multi.resource.Pagination
 import at.cpickl.grotlin.multi.resource.paginate
 import org.slf4j.Logger
