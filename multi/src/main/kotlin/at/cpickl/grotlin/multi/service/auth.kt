@@ -14,9 +14,10 @@ class AuthUserService [Inject] (
     }
     fun authUser(token: String): User? {
         val foundUser = userService.userByToken(token)
-        if (!isDebugApp()) {
-            return foundUser
-        }
+        // TODO LATER ... re-enable debug-app check again when going to PROD some time later!
+//        if (!isDebugApp()) {
+//            return foundUser
+//        }
         if (foundUser != null) {
             return foundUser
         }

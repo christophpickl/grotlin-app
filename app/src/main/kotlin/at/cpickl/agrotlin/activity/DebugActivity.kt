@@ -59,14 +59,32 @@ public open class DebugActivity : SwirlActivity() {
         webView!!.loadData("""
         <html>
         <head>
-        <script type="text/javascript">
-        function myJs(message) {
-            window.${jsInterfaceName}.doEchoTest(message)
-        }
-        </script>
+            <!-- https://talkgadget.google.com/talkgadget/channel.js -->
+            <script type="text/javascript" src="http://swirl-engine.appspot.com/_ah/channel/jsapi"></script>
+            <script type="text/javascript">
+            function connectChannel(token) {
+                window.${jsInterfaceName}.doEchoTest("connectChannel(token=" + token + ")");
+                var channel = new goog.appengine.Channel(token);
+
+                var socket = channel.open();
+                socket.onopen = function () {
+                    window.${jsInterfaceName}.doEchoTest("onOpen");
+                };
+                socket.onmessage = function (myMessage) {
+                    window.${jsInterfaceName}.doEchoTest("onMessage: " + myMessage.data);
+                };
+                socket.onerror = function (error) {
+                    window.${jsInterfaceName}.doEchoTest("onError: " + error.description);
+                };
+                socket.onclose = function () {
+                    window.${jsInterfaceName}.doEchoTest("onClose");
+                };
+                window.${jsInterfaceName}.doEchoTest("Async connection opening ...");
+            }
+            </script>
         </head>
         <body>
-        <h1>hello webview</h1>
+            <h1>hello webview</h1>
         </body>
         </html>
         """, "text/html", "UTF-8")
@@ -80,13 +98,13 @@ public open class DebugActivity : SwirlActivity() {
 
     private fun onFoobar() {
         LOG.info("onFoobar()")
-        webView!!.loadUrl("javascript:myJs('hello from java/javascript/java')")
+        webView!!.loadUrl("javascript:connectChannel('AHRlWrqXEgyuYEgHgfe7Zqf_aKHM1jW_xOPDdjIl2MpThmYwIpvfG7kK1B7OkOwSCSMA5fx2LdEG51t8W4EX3_Ejx4Fy3JCxgpUnwUa3tbBGT6vfOFk9tSk')")
     }
 
 }
 
 class JsInterface(private val context: Context) {
     JavascriptInterface fun doEchoTest(message: String) {
-        context.showToast(message)
+        println("JS says ................ '${message}'")
     }
 }

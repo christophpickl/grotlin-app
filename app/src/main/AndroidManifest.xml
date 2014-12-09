@@ -17,7 +17,7 @@
                    a:value="at.cpickl.agrotlin.SwirlModule" />
 
         <activity a:name=".activity.MainActivity"
-                  a:label="Main Menu"
+                  a:label="Swirl"
                   a:theme="@style/MyActivity"
                   >
             <intent-filter>
