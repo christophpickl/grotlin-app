@@ -105,12 +105,12 @@ dependencies {
     testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
 }
 
-configurations.testCompile.each {
-    println "testCompile: $it"
-}
-configurations.testRuntime.each {
-    println "testRuntime: $it"
-}
+//configurations.testCompile.each {
+//    println "testCompile: $it"
+//}
+//configurations.testRuntime.each {
+//    println "testRuntime: $it"
+//}
 
 appengine {
     downloadSdk = true
