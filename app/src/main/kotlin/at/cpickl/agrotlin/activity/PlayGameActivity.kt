@@ -28,7 +28,6 @@ import android.os.AsyncTask
 import org.apache.http.HttpStatus
 import org.apache.http.util.EntityUtils
 import android.content.Intent
-import at.cpickl.agrotlin.Logg
 import at.cpickl.agrotlin.BuildConfig
 import at.cpickl.agrotlin.AndroidUtil
 import at.cpickl.agrotlin.R
@@ -44,10 +43,11 @@ import roboguice.activity.RoboActivity
 import roboguice.inject.InjectView
 import android.widget.EditText
 import at.cpickl.agrotlin.service.VersionHttpRequest
+import org.slf4j.LoggerFactory
 
 public class PlayGameActivity : SwirlActivity() {
     class object {
-        private val LOG: Logg = Logg("PlayGameActivity");
+        private val LOG = LoggerFactory.getLogger(javaClass<PlayGameActivity>())
 
         public fun start(callingActivity: Activity) {
             val intent = Intent(callingActivity, javaClass<PlayGameActivity>())
@@ -127,7 +127,7 @@ class PlayGamePseudoActivity(private val context: Context,
                          private val txtInfoMessage:TextView) {
 
     class object {
-        private val LOG: Logg = Logg("GamePseudoActivity")
+        private val LOG = LoggerFactory.getLogger(javaClass<PlayGamePseudoActivity>())
     }
     public val gameView: GameView
     private val game: Game

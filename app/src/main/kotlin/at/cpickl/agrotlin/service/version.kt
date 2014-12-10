@@ -1,7 +1,6 @@
 package at.cpickl.agrotlin.service
 
 import android.os.AsyncTask
-import at.cpickl.agrotlin.Logg
 import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.HttpStatus
@@ -11,6 +10,7 @@ import at.cpickl.grotlin.restclient.RestClient
 import com.google.common.base.MoreObjects
 import at.cpickl.grotlin.endpoints.VersionClient
 import at.cpickl.grotlin.endpoints.VersionRto
+import org.slf4j.LoggerFactory
 
 
 // class Params, class Progress, class Result
@@ -18,7 +18,7 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
                          private val exceptionHandler: (Exception) -> Unit)
 : AsyncTask<Void, Void, VersionRto>() {
     class object {
-        private val LOG: Logg = Logg(javaClass.getSimpleName())
+        private val LOG = LoggerFactory.getLogger(javaClass<VersionHttpRequest>())
     }
 
     // TODO inject that thing! make it configurable. inject provider

@@ -28,7 +28,6 @@ import android.os.AsyncTask
 import org.apache.http.HttpStatus
 import org.apache.http.util.EntityUtils
 import android.content.Intent
-import at.cpickl.agrotlin.Logg
 import at.cpickl.agrotlin.BuildConfig
 import at.cpickl.agrotlin.AndroidUtil
 import at.cpickl.agrotlin.R
@@ -52,11 +51,12 @@ import at.cpickl.agrotlin.service.SoundPlayer
 import at.cpickl.agrotlin.service.Sound
 import android.view.Window
 import android.view.WindowManager
+import org.slf4j.LoggerFactory
 
 // NO!!! ContentView(R.layout.activity_main)
 public class MainActivity : SwirlActivity() {
     class object {
-        private val LOG: Logg = Logg("MainActivity");
+        private val LOG = LoggerFactory.getLogger(javaClass<MainActivity>());
         {
             // val DEBUG: Boolean = java.lang.Boolean.parseBoolean("true")
             // val APPLICATION_ID: String = "at.cpickl.agrotlin"

@@ -2,7 +2,6 @@ package at.cpickl.agrotlin.activity
 
 import android.content.Context
 import android.webkit.WebView
-import at.cpickl.agrotlin.Logg
 import javax.inject.Inject
 import org.slf4j.LoggerFactory
 import android.webkit.JavascriptInterface
@@ -16,7 +15,7 @@ import at.cpickl.grotlin.channel.ChannelNotificationRto
 
 class ChannelWebView(context: Context, jsInterface: JsInterface) : WebView(context) {
     class object {
-        private val LOG: Logg = Logg("ChannelWebView")
+        private val LOG = LoggerFactory.getLogger(javaClass<ChannelWebView>())
     }
 
     {

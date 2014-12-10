@@ -12,7 +12,6 @@ import android.view.View
 import android.os.Vibrator
 import javax.inject.Inject
 import at.cpickl.agrotlin.service.LoginService
-import at.cpickl.agrotlin.Logg
 import at.cpickl.agrotlin.R
 import android.content.Context
 import android.content.Intent
@@ -39,7 +38,7 @@ import at.cpickl.grotlin.channel.GameStartsNotificationResponder
 public open class DebugActivity: SwirlActivity(), GameStartsNotificationResponder {
 
     class object {
-        private val LOG: Logg = Logg("DebugActivity")
+        private val LOG = LoggerFactory.getLogger(javaClass<DebugActivity>())
 
         public fun start(callingActivity: Activity) {
             val intent = Intent(callingActivity, javaClass<DebugActivity>())
@@ -86,19 +85,12 @@ public open class DebugActivity: SwirlActivity(), GameStartsNotificationResponde
                 .show()
         })
 
+        notificationDistributor!!.register(this)
+//        notificationDistributor!!.unregister(this)
+
         // TODO do not re-create webView here, because this will reset stuff, e.g. on orientation change... :-/
         webView = ChannelWebView(this, jsInterfaceProvider!!.create(this))
         myContainer!!.addView(webView)
-    }
-
-    override fun onResume() {
-        super<SwirlActivity>.onResume()
-        notificationDistributor!!.register(this)
-    }
-
-    override fun onPause() {
-        super<SwirlActivity>.onPause()
-        notificationDistributor!!.unregister(this)
     }
 
     override fun onGameStarts(notification: GameStartsNotification) {
