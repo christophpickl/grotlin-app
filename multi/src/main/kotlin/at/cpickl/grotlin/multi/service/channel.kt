@@ -7,7 +7,7 @@ import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.api.channel.ChannelServiceFactory
 import com.google.appengine.api.channel.ChannelMessage
 import javax.servlet.http.HttpServletRequest
-import at.cpickl.grotlin.channel.ChannelNotification
+import at.cpickl.grotlin.channel.ChannelNotificationRto
 import at.cpickl.grotlin.JsonMarshaller
 import at.cpickl.grotlin.channel.GameStartsNotification
 import at.cpickl.grotlin.channel.GameStartsNotificationRto

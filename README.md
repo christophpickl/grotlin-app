@@ -13,6 +13,7 @@ app
 ---------
 
 TODO
+! black background should only apply to activity (not dialogs, toasts, etc)
 !! logging doesnt work
 
 multi
@@ -31,3 +32,4 @@ TODO
 ! improve game UI (end turn button, player list, better response messages)
 - settings (change audio settings)
 - invalidate access token after x hours
+- during build, dont cache version.properties, so buildDate is up2date
