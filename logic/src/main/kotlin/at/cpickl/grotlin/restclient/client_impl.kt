@@ -6,7 +6,6 @@ import org.apache.http.impl.client.DefaultHttpClient
 import java.net.URI
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpPost
-import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.entity.StringEntity
 import java.net.URLEncoder
 import org.apache.http.impl.client.HttpClients
@@ -14,6 +13,7 @@ import org.apache.http.conn.ssl.SSLContexts
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory
 import org.apache.http.HttpHost
 import org.apache.http.impl.client.CloseableHttpClient
+import at.cpickl.grotlin.JsonMarshaller
 
 
 public abstract class BaseRestClientImpl <T : AnyRestClient<T>, R : HttpRequestBase> (private val baseUrl: String) : AnyRestClient<T> {
@@ -87,12 +87,12 @@ class GetRestClientImpl(baseUrl: String) : BaseRestClientImpl<GetRestClient, Htt
 
 class PostRestClientImpl(baseUrl: String) : BaseRestClientImpl<PostRestClient, HttpPost>(baseUrl), PostRestClient {
     private var entity: Any? = null
-    private val mapper = ObjectMapper()
+    private val marshaller = JsonMarshaller()
 
     override fun request(): HttpPost {
         val request = HttpPost()
         if (entity != null) {
-            val entityAsJson = mapper.writeValueAsString(entity)
+            val entityAsJson = marshaller.toJson(entity!!)
             header("Content-Type", "application/json")
             request.setEntity(StringEntity(entityAsJson))
         }

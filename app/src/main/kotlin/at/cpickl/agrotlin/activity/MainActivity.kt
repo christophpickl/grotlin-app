@@ -26,7 +26,6 @@ import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
 import android.os.AsyncTask
 import org.apache.http.HttpStatus
-import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.util.EntityUtils
 import android.content.Intent
 import at.cpickl.agrotlin.Logg

@@ -9,9 +9,7 @@ configurations {
 }
 dependencies {
     compile project(':logic')
-//            {
-//        exclude group: 'org.apache.httpcomponents', module 'httpclient'
-//    }
+
     // https://hc.apache.org/httpcomponents-client-4.3.x/android-port.html
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
 
@@ -22,6 +20,7 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:1.3.9' // for the optional Nullable annotation
 
     compile "org.roboguice:roboguice:${versionRoboguice}"
+
     compile "org.roboguice:roboblender:${versionRoboguice}" // should be provided ... :-/
     // test 'org.robolectric:robolectric:3.0.1'
 

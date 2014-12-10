@@ -14,21 +14,10 @@ class VersionClient(private val baseUrl: String) {
     }
 }
 
-XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class VersionRto {
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class VersionRto(
+        var artifactVersion: String? = null,
+        var buildDate: String? = null) {
     class object {
-        fun build(artifactVersion: String, buildDate: String): VersionRto {
-            val version = VersionRto()
-            version.artifactVersion = artifactVersion
-            version.buildDate = buildDate
-            return version
-        }
+        fun build(artifactVersion: String, buildDate: String) = VersionRto(artifactVersion, buildDate)
     }
-    var artifactVersion: String? = null
-    var buildDate: String? = null
-
-    override fun toString() =
-            MoreObjects.toStringHelper(this)
-                    .add("artifactVersion", artifactVersion)
-                    .add("buildDate", buildDate)
-                    .toString()
 }

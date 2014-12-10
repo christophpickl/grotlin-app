@@ -12,6 +12,9 @@ import at.cpickl.agrotlin.service.PooledSoundPlayer
 import at.cpickl.agrotlin.service.SoundPlayer
 import com.google.inject.Scope
 import com.google.inject.Scopes
+import at.cpickl.agrotlin.activity.JsInterfaceProvider
+import at.cpickl.agrotlin.activity.NotificationDistributor
+import at.cpickl.agrotlin.activity.JsInterface
 
 // roboguice.application.RoboApplication
 public class SwirlApplication : Application() {
@@ -27,6 +30,9 @@ class SwirlModule : AbstractModule() {
         bind(javaClass<LoginService>()).toInstance(HttpLoginService())
         bind(javaClass<VibrateService>()).to(javaClass<AndroidVibrateService>())
         bind(javaClass<SoundPlayer>()).to(javaClass<PooledSoundPlayer>())
+
+        bind(javaClass<NotificationDistributor>())
+        bind(javaClass<JsInterfaceProvider>()).`in`(Scopes.SINGLETON)
     }
 }
 

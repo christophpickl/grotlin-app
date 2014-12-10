@@ -7,13 +7,13 @@ import org.apache.http.client.methods.HttpGet
 import org.apache.http.client.methods.HttpRequestBase
 import org.apache.http.client.methods.HttpPost
 import org.apache.http.entity.StringEntity
-import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.util.EntityUtils
 import java.net.URI
 import org.codehaus.jackson.JsonProcessingException
 import at.cpickl.grotlin.endpoints.FaultRto
 import at.cpickl.grotlin.endpoints.ClientFaultException
+import at.cpickl.grotlin.JsonMarshaller
 
 val ACCESS_TOKEN_HEADER_NAME = "X-access_token"
 
@@ -27,22 +27,18 @@ public class RestResponse(private val response: CloseableHttpResponse, private v
         private val LOG = LoggerFactory.getLogger(javaClass<RestResponse>())
     }
 
-    private val mapper = ObjectMapper()
+    private val marshaller = JsonMarshaller()
     val status: Status
     {
         status = Status.byCode(response.getStatusLine().getStatusCode())
     }
 
-    fun <T> unmarshallTo(javaClass: Class<T>): T {
+    fun <T> unmarshallTo(type: Class<T>): T {
         val entity = response.getEntity()
         val jsonString = EntityUtils.toString(entity)
-        try {
-            return mapper.readValue(jsonString, javaClass)
-        } catch(e: JsonProcessingException) {
-            LOG.error("Invalid JSON: '{}'", jsonString)
-            throw e
-        }
+        return marshaller.fromJson(jsonString, type)
     }
+
     fun verifyStatusCode(expectedStatus: Status = Status._200_OK): RestResponse {
         if (status == expectedStatus) {
             return this

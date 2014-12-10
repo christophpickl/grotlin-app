@@ -18,8 +18,8 @@ import javax.ws.rs.core.Context
 import javax.servlet.http.HttpServletRequest
 import at.cpickl.grotlin.multi.service.Role
 import at.cpickl.grotlin.multi.service.User
-
-// TODO make those endpoint secured
+import at.cpickl.grotlin.channel.GameStartsNotification
+import at.cpickl.grotlin.channel.GameStartsNotificationRto
 
 Path("/channel") class ChannelResource [Inject] (private val channelApiService: ChannelApiService) {
     class object {
@@ -34,9 +34,8 @@ Path("/channel") class ChannelResource [Inject] (private val channelApiService: 
 
     Secured Path("/push") POST Produces(MediaType.APPLICATION_JSON)
     fun pushMessage(user: User): String {
-        val message = "sent from youuu"
-        channelApiService.sendFoobarMessage(user, message)
-        return """{ "sent": "${message}" }"""
+        channelApiService.sendNotification(user, GameStartsNotification("my game id"))
+        return """{ "sent": true }"""
     }
 
     Secured(Role.ADMIN) Path("/connections") GET Produces(MediaType.APPLICATION_JSON)

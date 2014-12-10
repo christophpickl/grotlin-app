@@ -1,7 +1,6 @@
 package at.cpickl.agrotlin.service
 
 import at.cpickl.agrotlin.Logg
-import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.HttpStatus
@@ -14,8 +13,6 @@ class RestClient {
         private val LOG: Logg = Logg(javaClass.getSimpleName())
     }
 
-    private val mapper = ObjectMapper()
-    // TODO inject that thing! make it configurable
     private val swirlEngineUrl = "http://10.0.1.12:8888"
 
     public fun <T> get(endpoint: String, type: Class<T>): T {

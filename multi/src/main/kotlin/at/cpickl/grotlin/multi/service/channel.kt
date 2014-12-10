@@ -7,6 +7,10 @@ import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.api.channel.ChannelServiceFactory
 import com.google.appengine.api.channel.ChannelMessage
 import javax.servlet.http.HttpServletRequest
+import at.cpickl.grotlin.channel.ChannelNotification
+import at.cpickl.grotlin.JsonMarshaller
+import at.cpickl.grotlin.channel.GameStartsNotification
+import at.cpickl.grotlin.channel.GameStartsNotificationRto
 
 class ChannelApiService {
     class object {
@@ -14,6 +18,7 @@ class ChannelApiService {
     }
 
     private val channelService: ChannelService  = ChannelServiceFactory.getChannelService()
+    private val marshaller = JsonMarshaller()
 
     var connectionsCount: Int = 0
         get() = $connectionsCount
@@ -27,11 +32,11 @@ class ChannelApiService {
         // open a new channel.
         val token = channelService.createChannel(user.accessToken!!)
         return token
-
     }
 
-    fun sendFoobarMessage(user: User, message: String) {
-        channelService.sendMessage(ChannelMessage(user.accessToken!!, message))
+    fun sendNotification(user: User, notification: GameStartsNotification) { // ChannelNotification
+        val json = marshaller.toJson(notification.toRto())
+        channelService.sendMessage(ChannelMessage(user.accessToken!!, json))
     }
 
     fun onConnected(request: HttpServletRequest) {

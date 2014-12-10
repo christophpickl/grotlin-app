@@ -24,8 +24,14 @@ import android.widget.LinearLayout
 import android.webkit.WebView
 import at.cpickl.agrotlin.service.VibrateService
 import android.webkit.JavascriptInterface
+import org.slf4j.LoggerFactory
+import org.json.JSONObject
+import at.cpickl.grotlin.JsonMarshaller
+import at.cpickl.grotlin.channel.GameStartsNotificationRto
+import at.cpickl.grotlin.channel.ChannelNotification
+import at.cpickl.grotlin.channel.GameStartsNotification
 
-public open class DebugActivity : SwirlActivity() {
+public open class DebugActivity: SwirlActivity() {
     class object {
         private val LOG: Logg = Logg("DebugActivity")
 
@@ -39,6 +45,7 @@ public open class DebugActivity : SwirlActivity() {
     [InjectView(R.id.btnLoadVersion)] private var btnLoadVersion: Button? = null
     [InjectView(R.id.btnFoobar)] private var btnFoobar: Button? = null
     [InjectView(R.id.myContainer)] private var myContainer: LinearLayout? = null
+    Inject private var jsInterfaceProvider: JsInterfaceProvider? = null
 
     private var webView: WebView? = null
 
@@ -52,39 +59,39 @@ public open class DebugActivity : SwirlActivity() {
 
         webView = WebView(this)
         // http://stackoverflow.com/questions/4325639/android-calling-javascript-functions-in-webview
-        val jsInterfaceName = "JSInterface"
-        val jsInterface = JsInterface(this)
+
+        val jsApiSource = "http://swirl-engine.appspot.com/_ah/channel/jsapi"
+        val jsInterface = jsInterfaceProvider!!.create(this)
         webView!!.getSettings().setJavaScriptEnabled(true)
-        webView!!.addJavascriptInterface(jsInterface, jsInterfaceName)
+        webView!!.addJavascriptInterface(jsInterface, JsConstants.INTERFACE_NAME)
         webView!!.loadData("""
         <html>
         <head>
             <!-- https://talkgadget.google.com/talkgadget/channel.js -->
-            <script type="text/javascript" src="http://swirl-engine.appspot.com/_ah/channel/jsapi"></script>
+            <script type="text/javascript" src="${jsApiSource}"></script>
             <script type="text/javascript">
-            function connectChannel(token) {
-                window.${jsInterfaceName}.doEchoTest("connectChannel(token=" + token + ")");
-                var channel = new goog.appengine.Channel(token);
-
-                var socket = channel.open();
-                socket.onopen = function () {
-                    window.${jsInterfaceName}.doEchoTest("onOpen");
-                };
-                socket.onmessage = function (myMessage) {
-                    window.${jsInterfaceName}.doEchoTest("onMessage: " + myMessage.data);
-                };
-                socket.onerror = function (error) {
-                    window.${jsInterfaceName}.doEchoTest("onError: " + error.description);
-                };
-                socket.onclose = function () {
-                    window.${jsInterfaceName}.doEchoTest("onClose");
-                };
-                window.${jsInterfaceName}.doEchoTest("Async connection opening ...");
-            }
+                function ${JsConstants.CONNECT_METHOD}(token) {
+                    window.${JsConstants.INTERFACE_NAME}.debug('Connecting to GAE channel API via token: ' + token);
+                    var channel = new goog.appengine.Channel(token);
+                    var socket = channel.open();
+                    socket.onopen = function () {
+                        window.${JsConstants.INTERFACE_NAME}.onOpen();
+                    };
+                    socket.onmessage = function (message) {
+                        window.${JsConstants.INTERFACE_NAME}.onMessage(message.data);
+                    };
+                    socket.onerror = function (error) {
+                        window.${JsConstants.INTERFACE_NAME}.onError("onError: " + error.description);
+                    };
+                    socket.onclose = function () {
+                        window.${JsConstants.INTERFACE_NAME}.onClose();
+                    };
+                    window.${JsConstants.INTERFACE_NAME}.debug('Waiting for async callback function invocations ...');
+                }
             </script>
         </head>
         <body>
-            <h1>hello webview</h1>
+            <p>webview loaded</p>
         </body>
         </html>
         """, "text/html", "UTF-8")
@@ -98,13 +105,60 @@ public open class DebugActivity : SwirlActivity() {
 
     private fun onFoobar() {
         LOG.info("onFoobar()")
-        webView!!.loadUrl("javascript:connectChannel('AHRlWrqXEgyuYEgHgfe7Zqf_aKHM1jW_xOPDdjIl2MpThmYwIpvfG7kK1B7OkOwSCSMA5fx2LdEG51t8W4EX3_Ejx4Fy3JCxgpUnwUa3tbBGT6vfOFk9tSk')")
+        val channelToken = "AHRlWrojcP1vYE5_S13ZZhmsvPxWQ6OYRTzLAK7zH8iEoLgH8HYTbaFQ8B0vE-fKlP0N15UAO3qRP-ceiVqyTWjINPdKkFjI_467OI_vo06r2MYjCyJphPA"
+        // this can be created by swirl-engine POST /channel ... this is the most famous "channel token"
+        webView!!.loadUrl("javascript:${JsConstants.CONNECT_METHOD}('${channelToken}')")
     }
 
 }
 
-class JsInterface(private val context: Context) {
-    JavascriptInterface fun doEchoTest(message: String) {
-        println("JS says ................ '${message}'")
+class JsConstants {
+    class object {
+        val INTERFACE_NAME: String = "JSInterface"
+        val CONNECT_METHOD: String = "connectChannel"
+    }
+}
+
+class NotificationDistributor {
+    fun distribute(notification: GameStartsNotification) { // change type to: ChannelNotification!!!!!!!!!
+        println("yesssssssss! distributing channel notification .............. " + notification)
+    }
+}
+
+
+class JsInterfaceProvider [Inject] (private val distributor: NotificationDistributor) {
+    fun create(context: Context): JsInterface = JsInterface(distributor, context)
+}
+
+// not a bean, see: JsInterfaceProvider
+class JsInterface (private val distributor: NotificationDistributor, private val context: Context) {
+    class object {
+        private val LOG = LoggerFactory.getLogger(javaClass<JsInterface>())
+    }
+
+    private val marshaller = JsonMarshaller()
+
+    JavascriptInterface fun debug(message: String) {
+        println("XXXXXXXXXXXXXXXXXXXXXXXXXX debug(message='${message}')")
+    }
+
+    JavascriptInterface fun onOpen() {
+        LOG.debug("onOpen()")
+    }
+
+    JavascriptInterface fun onMessage(messageBody: String) {
+        LOG.debug("onMessage(messageBody)")
+        val json = JSONObject(messageBody)
+        val notificationType = json.getString("type")
+        val notification = marshaller.fromJson(messageBody, javaClass<GameStartsNotificationRto>()).toDomain()
+        distributor.distribute(notification)
+    }
+
+    JavascriptInterface fun onError(message: String) {
+        LOG.debug("onError(message={})", message)
+    }
+
+    JavascriptInterface fun onClose() {
+        LOG.debug("onClose()")
     }
 }

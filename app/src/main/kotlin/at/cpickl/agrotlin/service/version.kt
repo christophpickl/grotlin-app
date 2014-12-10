@@ -5,7 +5,6 @@ import at.cpickl.agrotlin.Logg
 import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.HttpStatus
-import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.util.EntityUtils
 import at.cpickl.agrotlin.SwirlException
 import at.cpickl.grotlin.restclient.RestClient
