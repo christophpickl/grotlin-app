@@ -14,7 +14,8 @@ app
 
 TODO
 ! black background should only apply to activity (not dialogs, toasts, etc)
-!! logging doesnt work
+! logging doesnt work, SLF4J <= DEBUG doesnt get printed in logcat
+* have a look at: https://github.com/vladlichonos/kotlinAndroidLib
 
 multi
 ---------

@@ -19,7 +19,7 @@ class ServiceModule : AbstractModule() {
         bind(javaClass<WaitingRandomGameService>()).`in`(Scopes.SINGLETON)
         bind(javaClass<RunningGameService>()).to(javaClass<InMemoryRunningGameService>()).`in`(Scopes.SINGLETON)
         bind(javaClass<AdminService>())
-        bind(javaClass<ChannelApiService>()).`in`(Scopes.SINGLETON)
+        bind(javaClass<ChannelApiService>()).to(javaClass<ChannelApiServiceImpl>()).`in`(Scopes.SINGLETON)
     }
 }
 

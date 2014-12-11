@@ -1,7 +1,6 @@
 package at.cpickl.grotlin.multi.webtests
 
 import org.testng.annotations.Test
-import at.cpickl.grotlin.multi.resource.VersionRto
 import javax.ws.rs.core.MediaType
 import org.hamcrest.MatcherAssert.*
 import org.hamcrest.Matchers.*

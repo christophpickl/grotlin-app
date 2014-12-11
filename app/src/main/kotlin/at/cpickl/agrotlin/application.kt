@@ -31,7 +31,7 @@ class SwirlModule : AbstractModule() {
         bind(javaClass<VibrateService>()).to(javaClass<AndroidVibrateService>())
         bind(javaClass<SoundPlayer>()).to(javaClass<PooledSoundPlayer>())
 
-        bind(javaClass<NotificationDistributor>())
+        bind(javaClass<NotificationDistributor>()).`in`(Scopes.SINGLETON)
         bind(javaClass<JsInterfaceProvider>()).`in`(Scopes.SINGLETON)
     }
 }

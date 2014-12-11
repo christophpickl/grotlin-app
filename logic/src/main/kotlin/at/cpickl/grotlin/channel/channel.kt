@@ -4,28 +4,32 @@ import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlAccessType
 import javax.xml.bind.annotation.XmlRootElement
 
-/** Marker interface only. */
-trait ChannelNotificationRto {
+trait ChannelNotification {
+    fun actOn(responder: AllNotificationResponder)
+    fun toRto(): NotificationRto
+}
+
+trait ChannelNotificationRto: NotificationRto {
     val type: String?
     fun toDomain(): ChannelNotification
 }
 
-trait GameStartsNotificationResponder {
-    fun onGameStarts(notification: GameStartsNotification)
-}
 
-trait NotificationResponder: GameStartsNotificationResponder {
-}
+/** Compound interface. */
+trait AllNotificationResponder : GameStartsNotificationResponder, WaitingGameNotificationResponder
 
-trait ChannelNotification {
-    fun actOn(responder: NotificationResponder)
-}
+/** Marker interface only. */
+trait NotificationRto
+
+/** Marker interface only. */
+trait NotificationResponder
 
 object NotificationRegistry {
     private val registry: Map<String, Class<out ChannelNotificationRto>>
     {
         registry = hashMapOf(
-            GameStartsNotificationRto.TYPE to javaClass<GameStartsNotificationRto>()
+            GameStartsNotificationRto.TYPE to javaClass<GameStartsNotificationRto>(),
+            WaitingGameNotificationRto.TYPE to javaClass<WaitingGameNotificationRto>()
         )
     }
 
@@ -39,8 +43,20 @@ object NotificationRegistry {
 
 }
 
-//12-10 10:10:49.586    4049-4309/at.cpickl.agrotlin E/dalvikvm﹕ Unable to resolve Lat/cpickl/grotlin/channel/GameStartsNotificationRto; annotation class 3346
-//12-10 10:10:49.586    4049-4309/at.cpickl.agrotlin E/dalvikvm﹕ Unable to resolve Lat/cpickl/grotlin/channel/GameStartsNotificationRto; annotation class 3348
+// GAME STARTS NOTIFICATION
+// =======================================================
+
+data class GameStartsNotification(val gameId: String): ChannelNotification {
+    override fun actOn(responder: AllNotificationResponder) {
+        responder.onGameStarts(this)
+    }
+
+    override fun toRto(): GameStartsNotificationRto {
+        return GameStartsNotificationRto.build(gameId)
+    }
+}
+
+// Unable to resolve Lat/cpickl/grotlin/channel/GameStartsNotificationRto; annotation class 3xxx
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class GameStartsNotificationRto (
         override var type: String? = null,
         var gameId: String? = null
@@ -54,12 +70,36 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class GameStartsNoti
     override fun toDomain(): ChannelNotification = GameStartsNotification(gameId!!)
 }
 
-data class GameStartsNotification(val gameId: String): ChannelNotification {
-    override fun actOn(responder: NotificationResponder) {
-        responder.onGameStarts(this)
+trait GameStartsNotificationResponder: NotificationResponder {
+    fun onGameStarts(notification: GameStartsNotification)
+}
+
+// WAITING GAME NOTIFICATION
+// =======================================================
+
+data class WaitingGameNotification(private val newUsersCount: Int): ChannelNotification {
+    override fun actOn(responder: AllNotificationResponder) {
+        responder.onWaitingGame(this)
     }
 
-    fun toRto(): GameStartsNotificationRto {
-        return GameStartsNotificationRto.build(gameId)
+    override fun toRto(): WaitingGameNotificationRto {
+        return WaitingGameNotificationRto.build(newUsersCount)
     }
+}
+
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class WaitingGameNotificationRto (
+        override var type: String? = null,
+        var newUsersCount: Int? = null
+) : ChannelNotificationRto {
+    class object {
+        val TYPE: String = "waitingGame"
+        fun build(newUsersCount: Int): WaitingGameNotificationRto {
+            return WaitingGameNotificationRto(TYPE, newUsersCount)
+        }
+    }
+    override fun toDomain(): ChannelNotification = WaitingGameNotification(newUsersCount!!)
+}
+
+trait WaitingGameNotificationResponder: NotificationResponder {
+    fun onWaitingGame(notification: WaitingGameNotification)
 }

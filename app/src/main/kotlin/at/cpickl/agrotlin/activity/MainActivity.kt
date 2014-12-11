@@ -65,6 +65,7 @@ public class MainActivity : SwirlActivity() {
             // val VERSION_CODE: Int = 1
             // val VERSION_NAME: String = "1.0"
             LOG.info("Starting version ${BuildConfig.VERSION_NAME} (debug=${BuildConfig.DEBUG}, build type=${BuildConfig.BUILD_TYPE})")
+            LOG.info("=======================================================================")
         }
     }
 
@@ -76,6 +77,17 @@ public class MainActivity : SwirlActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        println("===============================")
+        LOG.trace("SLF4J trace")
+        LOG.debug("SLF4J debug")
+        LOG.info("SLF4J info")
+        LOG.warn("SLF4J warn")
+        Log.v("TAG", "Android verbose")
+        Log.d("TAG", "Android debug")
+        Log.i("TAG", "Android info")
+        Log.w("TAG", "Android warn")
+        println("===============================")
+
         LOG.info("onCreate(savedInstanceState)")
         super<SwirlActivity>.onCreate(savedInstanceState)
 

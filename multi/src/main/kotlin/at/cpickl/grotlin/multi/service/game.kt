@@ -9,8 +9,13 @@ import at.cpickl.grotlin.multi.resource.NotFoundException
 import at.cpickl.grotlin.endpoints.Fault
 import at.cpickl.grotlin.endpoints.FaultCode
 import at.cpickl.grotlin.multi.resource.UserException
+import at.cpickl.grotlin.channel.GameStartsNotification
+import at.cpickl.grotlin.channel.WaitingGameNotification
 
-class WaitingRandomGameService [Inject] (private val runningGameService: RunningGameService) {
+class WaitingRandomGameService [Inject] (
+        private val runningGameService: RunningGameService,
+        private val channelApiService: ChannelApiService
+        ) {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<WaitingRandomGameService>())
     }
@@ -35,10 +40,10 @@ class WaitingRandomGameService [Inject] (private val runningGameService: Running
             return userGame
         }
         val firstGame = waitingGames.first!!
+        channelApiService.sendNotification(WaitingGameNotification(firstGame.users.size + 1), firstGame.users)
         firstGame.addWaitingUser(user)
         if (firstGame.isFull) {
             waitingGames.remove(firstGame)
-            // TODO notify players
             runningGameService.addNewGame(firstGame.toRunning())
 
         }
@@ -54,7 +59,7 @@ public trait RunningGameService {
     public fun gameByIdForUser(gameId: String, user: User): RunningGame
 }
 
-class InMemoryRunningGameService : RunningGameService {
+class InMemoryRunningGameService [Inject] (private val channelApiService: ChannelApiService) : RunningGameService {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<InMemoryRunningGameService>())
     }
@@ -65,6 +70,7 @@ class InMemoryRunningGameService : RunningGameService {
 
     override public fun addNewGame(game: RunningGame) {
         LOG.info("addNewGame(game=${game})")
+        channelApiService.sendNotification(GameStartsNotification(game.id), game.users)
         gamesById.put(game.id, game)
     }
 
@@ -82,37 +88,34 @@ class InMemoryRunningGameService : RunningGameService {
 
 }
 
-data class RunningGame(val users: Collection<User>) {
+data class RunningGame(val id: String, val users: Collection<User>) {
     {
         if (users.empty) throw IllegalArgumentException("Users must not be empty!")
     }
-    val id: String = randomUUID()
     // currentPlayer's turn
     // map
 }
 
 data class WaitingRandomGame(val usersMax: Int) {
     private val id: String = randomUUID()
-    val usersWaiting: Int
-        get() = waiting.size
     val isFull: Boolean
-        get() = waiting.size == usersMax
+        get() = users.size == usersMax
 
-    private val waiting = linkedListOf<User>()
+    val users = linkedListOf<User>()
 
     fun addWaitingUser(user: User) {
-        if (waiting.size == usersMax) {
-            throw IllegalStateException("This game is already full of waiting users (${usersMax}): ${waiting}")
+        if (users.size == usersMax) {
+            throw IllegalStateException("This game is already full of waiting users (${usersMax}): ${users}")
         }
-        waiting.add(user)
+        users.add(user)
     }
 
-    fun containsWaiting(user: User) = waiting.contains(user)
+    fun containsWaiting(user: User) = users.contains(user)
 
     override fun toString() = MoreObjects.toStringHelper(this).add("id", id).add("usersMax", usersMax).toString()
 
     fun toRunning(): RunningGame {
         if (!isFull) throw IllegalStateException("${this} is not yet full and can't be run!")
-        return RunningGame(waiting)
+        return RunningGame(randomUUID(), users)
     }
 }

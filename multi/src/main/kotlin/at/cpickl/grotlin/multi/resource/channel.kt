@@ -34,7 +34,7 @@ Path("/channel") class ChannelResource [Inject] (private val channelApiService: 
 
     Secured Path("/push") POST Produces(MediaType.APPLICATION_JSON)
     fun pushMessage(user: User): String {
-        channelApiService.sendNotification(user, GameStartsNotification("my game id"))
+        channelApiService.sendNotification(GameStartsNotification("my game id"), user)
         return """{ "sent": true }"""
     }
 

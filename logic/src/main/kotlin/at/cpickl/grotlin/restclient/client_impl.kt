@@ -38,10 +38,15 @@ public abstract class BaseRestClientImpl <T : AnyRestClient<T>, R : HttpRequestB
         val request = request()
         request.setURI(URI("${baseUrl}${endpoint}${buildQueryParams()}"))
         request.setHeader("Accept", "application/json")
-        headers.forEach { (key, value) -> run {
-            LOG.trace("Setting request header '{}' to '{}'.", key, value)
-            request.setHeader(key, value)
-        } }
+        // Caused by: java.lang.NoClassDefFoundError: at.cpickl.grotlin.restclient.BaseRestClientImpl$url$1
+//        headers.forEach { (key, value) -> run {
+//            LOG.trace("Setting request header '{}' to '{}'.", key, value)
+//            request.setHeader(key, value)
+//        } }
+        for (entry in headers.entrySet()) {
+            LOG.trace("Setting request header '{}' to '{}'.", entry.key, entry.value)
+            request.setHeader(entry.key, entry.value)
+        }
 
         LOG.info("Executing request to: {}", request.getURI())
         val response = client().execute(request)

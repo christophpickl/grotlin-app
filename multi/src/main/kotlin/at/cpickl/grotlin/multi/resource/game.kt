@@ -56,7 +56,7 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class WaitingRandomG
             { (game) ->
                 val rto = WaitingRandomGameRto()
                 rto.usersMax = game.usersMax
-                rto.usersWaiting = game.usersWaiting
+                rto.usersWaiting = game.users.size
                 rto
             }
     }
