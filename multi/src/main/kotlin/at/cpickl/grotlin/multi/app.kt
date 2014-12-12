@@ -32,7 +32,7 @@ Provider ServerInterceptor class CorsInterceptor: MessageBodyWriterInterceptor {
         }
         context.getHeaders().add("Access-Control-Allow-Origin", "*");
         context.getHeaders().add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,UPDATE,OPTIONS");
-        context.getHeaders().add("Access-Control-Allow-Headers", "x-http-method-override");
+        context.getHeaders().add("Access-Control-Allow-Headers", "x-access_token");
         context.getHeaders().add("Access-Control-Max-Age", "");
         context.proceed()
     }
@@ -43,4 +43,3 @@ open class FaultException(message: String, val status: Status, val fault: Fault)
         return "FaultException[message='${getMessage()}', status='$status', fault=${fault}]"
     }
 }
-

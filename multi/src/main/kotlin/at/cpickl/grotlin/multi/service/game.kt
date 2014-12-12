@@ -14,7 +14,8 @@ import at.cpickl.grotlin.channel.WaitingGameNotification
 
 class WaitingRandomGameService [Inject] (
         private val runningGameService: RunningGameService,
-        private val channelApiService: ChannelApiService
+        private val channelApiService: ChannelApiService,
+        private val idGenerator: IdGenerator
         ) {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<WaitingRandomGameService>())
@@ -30,7 +31,7 @@ class WaitingRandomGameService [Inject] (
         // check if user already in a waiting game
 
         if (waitingGames.empty) {
-            val game = WaitingRandomGame(maxPlayers)
+            val game = WaitingRandomGame(idGenerator.generate(), maxPlayers)
             waitingGames.add(game)
             game.addWaitingUser(user)
             return game
@@ -44,7 +45,7 @@ class WaitingRandomGameService [Inject] (
         firstGame.addWaitingUser(user)
         if (firstGame.isFull) {
             waitingGames.remove(firstGame)
-            runningGameService.addNewGame(firstGame.toRunning())
+            runningGameService.addNewGame(RunningGame(idGenerator.generate(), firstGame.users))
 
         }
         return firstGame
@@ -96,8 +97,7 @@ data class RunningGame(val id: String, val users: Collection<User>) {
     // map
 }
 
-data class WaitingRandomGame(val usersMax: Int) {
-    private val id: String = randomUUID()
+data class WaitingRandomGame(val id: String, val usersMax: Int) {
     val isFull: Boolean
         get() = users.size == usersMax
 
@@ -114,8 +114,4 @@ data class WaitingRandomGame(val usersMax: Int) {
 
     override fun toString() = MoreObjects.toStringHelper(this).add("id", id).add("usersMax", usersMax).toString()
 
-    fun toRunning(): RunningGame {
-        if (!isFull) throw IllegalStateException("${this} is not yet full and can't be run!")
-        return RunningGame(randomUUID(), users)
-    }
 }

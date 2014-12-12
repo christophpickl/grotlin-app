@@ -13,6 +13,7 @@ import at.cpickl.grotlin.multi.resource.Pagination
 import at.cpickl.grotlin.multi.resource.paginate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
 fun main(args: Array<String>) {
     println(hash("foo"))
@@ -33,7 +34,7 @@ trait UserService {
 }
 
 // https://code.google.com/p/objectify-appengine/
-class ObjectifyUserService : UserService {
+class ObjectifyUserService [Inject] (private val idGenerator: IdGenerator) : UserService {
 
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<ObjectifyUserService>());
@@ -71,7 +72,7 @@ class ObjectifyUserService : UserService {
         if (user.password != password) {
             throw LoginException("Invalid password for user '${username}'!", Fault("Invalid username/password", FaultCode.INVALID_CREDENTIALS))
         }
-        user.accessToken = randomUUID()
+        user.accessToken = idGenerator.generate()
         save(user) // update token
         return user
     }

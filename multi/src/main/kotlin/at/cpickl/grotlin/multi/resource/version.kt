@@ -20,7 +20,6 @@ Path("/version") class VersionResource [Inject] (private val versionService: Ver
         private val LOG = LoggerFactory.getLogger(javaClass<VersionResource>())
     }
 
-    // Produces(MediaType.APPLICATION_JSON, "application/vnd.swirl.version+json")
     GET Produces(MediaType.APPLICATION_JSON) fun getVersion(): VersionRto {
         LOG.debug("getVersion()")
         val version = versionService.load()

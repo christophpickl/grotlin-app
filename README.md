@@ -7,7 +7,9 @@ Target platform is (FTM) android. JavaScript (web) is in plan, maybe there will 
 
 
 TODO
+!!! find a product name!!!
 !! unify logging. logback vs log4j2? slf4j for android + app engine.
+! use a custom (vnd) accept type (instead of application/version) to support versioning
 
 app
 ---------
@@ -29,6 +31,7 @@ multi
 
 
 TODO
+! hacky hack gradle filter resources: build.dependsOn filterSwirlConfig
 ! audio (roll dices, win/lose, button clicks)
 ! improve game UI (end turn button, player list, better response messages)
 - settings (change audio settings)

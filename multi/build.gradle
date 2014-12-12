@@ -59,6 +59,7 @@ task filterSwirlConfig (type: Copy){
 //    expand(project.properties)
 }
 build.dependsOn filterSwirlConfig
+appengineUpdate.dependsOn filterSwirlConfig
 
 //tasks.whenTaskAdded { task ->
 //    if (task.name == 'build') {

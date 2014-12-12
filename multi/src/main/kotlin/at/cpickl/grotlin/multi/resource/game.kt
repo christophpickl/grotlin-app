@@ -50,19 +50,15 @@ class GameResource [Inject](
 
 }
 
-XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class WaitingRandomGameRto {
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class WaitingRandomGameRto (
+        var usersMax: Int? = null,
+        var usersWaiting: Int? = null,
+        var gameId: String? = null
+) {
     class object {
         val transform: (WaitingRandomGame) -> WaitingRandomGameRto  =
-            { (game) ->
-                val rto = WaitingRandomGameRto()
-                rto.usersMax = game.usersMax
-                rto.usersWaiting = game.users.size
-                rto
-            }
+            { (game) -> WaitingRandomGameRto(game.usersMax, game.users.size, game.id) }
     }
-    var usersMax: Int? = null
-    var usersWaiting: Int? = null
-    override fun toString() = MoreObjects.toStringHelper(this).add("usersMax", usersMax).add("usersWaiting", usersWaiting).toString()
 }
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class RunningGameRto {
