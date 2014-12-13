@@ -1,5 +1,20 @@
 
+
+Toast.makeText(this, "Input a Greeting ID", Toast.LENGTH_SHORT).show();
+
+https://cloud.google.com/appengine/docs/java/endpoints/getstarted/clients/android/connect_backend
+
+
+google app engine
+
+http://stackoverflow.com/questions/23875648/android-studio-gradle-failed-to-complete-gradle-execution
+
+
+
 * bugfix on orientation (saveInstance, ..)
 
 * zoom map
 * reset game
+
+
+https://github.com/vladlichonos/kotlinAndroidLib
