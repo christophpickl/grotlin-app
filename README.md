@@ -15,6 +15,9 @@ app
 ---------
 
 TODO
+* zoom map
+* reset game
+* bugfix on orientation (saveInstance, ..)
 ! black background should only apply to activity (not dialogs, toasts, etc)
 ! logging doesnt work, SLF4J <= DEBUG doesnt get printed in logcat
 * have a look at: https://github.com/vladlichonos/kotlinAndroidLib
@@ -37,3 +40,9 @@ TODO
 - settings (change audio settings)
 - invalidate access token after x hours
 - during build, dont cache version.properties, so buildDate is up2date
+// use http://java-websocket.org instead?
+
+links
+--------
+http://stackoverflow.com/questions/23875648/android-studio-gradle-failed-to-complete-gradle-execution
+https://cloud.google.com/appengine/docs/java/endpoints/getstarted/clients/android/connect_backend
