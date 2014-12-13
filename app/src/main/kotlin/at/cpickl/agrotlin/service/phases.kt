@@ -8,7 +8,7 @@ import android.widget.TextView
 import at.cpickl.agrotlin.view.GameView
 import at.cpickl.agrotlin.view.GameViewListener
 import at.cpickl.agrotlin.view.RegionView
-import at.cpickl.agrotlin.Logg
+import org.slf4j.LoggerFactory
 
 
 trait GamePhase : GameViewListener {
@@ -29,7 +29,7 @@ class AttackPhase(val context: Context,
                   val txtInfoMessage: TextView) : GamePhase {
 
     class object {
-        private val LOG: Logg = Logg("AttackPhase")
+        private val LOG = LoggerFactory.getLogger(javaClass<AttackPhase>())
     }
     {
         txtInfoMessage.setText("Choose source region.")

@@ -1,27 +1,25 @@
 package at.cpickl.grotlin.multi.webtests
 
-import at.cpickl.grotlin.multi.resource.VersionRto
 import org.testng.annotations.Test
-import java.util.logging.Logger
-import at.cpickl.grotlin.multi.assertThat
-import org.hamcrest.Matchers
+import org.hamcrest.Matchers.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import at.cpickl.grotlin.restclient
+import org.hamcrest.MatcherAssert.*
+import org.hamcrest.Matchers.*
+import at.cpickl.grotlin.restclient.RestClient
+import at.cpickl.grotlin.endpoints.VersionClient
 
-class VersionClient : Client() {
-    fun get(): VersionRto {
-        return get("/version", javaClass<VersionRto>()).getEntity()
-    }
-}
-
-Test(groups = array("WebTest")) public class VersionWebTest {
+Test(groups = array("WebTest")) class VersionWebTest {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG = LoggerFactory.getLogger(javaClass<VersionWebTest>())
     }
 
-    public fun getVersion() {
-        val version = VersionClient().get()
-        LOG.fine("Returned version: ${version}")
-        assertThat(version.artifactVersion, Matchers.notNullValue())
-        assertThat(version.buildDate, Matchers.notNullValue())
+    fun getVersion() {
+        val version = Clients.version().get()
+        LOG.debug("Returned version: ${version}")
+        assertThat(version.artifactVersion, notNullValue())
+        assertThat(version.buildDate, notNullValue())
     }
 
 }

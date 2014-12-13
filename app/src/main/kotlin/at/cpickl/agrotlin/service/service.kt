@@ -3,8 +3,8 @@ package at.cpickl.agrotlin.service
 import android.widget.Toast
 import javax.inject.Inject
 import android.os.Vibrator
-import at.cpickl.agrotlin.Logg
 import javax.inject.Singleton
+import org.slf4j.LoggerFactory
 
 trait LoginService {
     fun login(username: String, password: String): Boolean
@@ -12,7 +12,7 @@ trait LoginService {
 
 class HttpLoginService : LoginService {
     class object {
-        private val LOG: Logg = Logg("HttpLoginService")
+        private val LOG = LoggerFactory.getLogger(javaClass<AndroidVibrateService>())
     }
     override fun login(username: String, password: String): Boolean {
         LOG.info("login(username=${username}, password)")
@@ -28,7 +28,7 @@ trait VibrateService {
 Singleton class AndroidVibrateService [Inject] (private val vibrator: Vibrator) : VibrateService {
     // my girlfriend's one is better! peace out.
     class object {
-        private val LOG: Logg = Logg("AndroidVibrateService");
+        private val LOG = LoggerFactory.getLogger(javaClass<AndroidVibrateService>())
     }
 
     override fun vibrate(milliseconds: Long) {

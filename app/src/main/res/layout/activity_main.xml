@@ -31,11 +31,18 @@
                     a:text="Random Game"
                     a:layout_width="wrap_content"
                     a:layout_height="wrap_content"
-                    a:layout_marginBottom="4pt"
+                    a:layout_marginBottom="@dimen/button_bottom_margin"
                 />
             <Button a:id="@+id/btnLogin"
                     style="@style/MainButtonStyle"
                     a:text="Login"
+                    a:layout_width="wrap_content"
+                    a:layout_height="wrap_content"
+                    a:layout_marginBottom="@dimen/button_bottom_margin"
+                />
+            <Button a:id="@+id/btnDebug"
+                    style="@style/MainButtonStyle"
+                    a:text="Debug"
                     a:layout_width="wrap_content"
                     a:layout_height="wrap_content"
                 />

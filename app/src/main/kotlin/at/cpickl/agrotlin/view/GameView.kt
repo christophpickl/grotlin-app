@@ -12,8 +12,8 @@ import java.util.Arrays
 import at.cpickl.grotlin.Region
 import at.cpickl.grotlin.Battle
 import android.widget.Toast
-import at.cpickl.agrotlin.Logg
 import at.cpickl.agrotlin.FloatPoint
+import org.slf4j.LoggerFactory
 
 public trait GameViewListener {
     fun onSelectedView(regionView: RegionView)
@@ -26,7 +26,7 @@ public class GameView(
         private val map: MapView
 ) : LinearLayout(context) {
     class object {
-        private val LOG: Logg = Logg("MainActivity")
+        private val LOG = LoggerFactory.getLogger(javaClass<GameView>())
     }
     public var listener: GameViewListener? = null
     {

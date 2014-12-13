@@ -35,16 +35,42 @@ version = '1.0-SNAPSHOT'
 // TODO:
 // WARNING [Project: :app] variant.getProcessResources() is deprecated.
 // Call it on one of variant.getOutputs() instead.
-processResources {
-    filter ReplaceTokens, tokens: [
-            "artifact.version": project.property("version"),
-            "build.date"      : buildDate
-    ]
+//processResources {
+//    filter ReplaceTokens, tokens: [
+//            "artifact.version": project.property("version"),
+//            "build.date"      : buildDate
+//    ]
+//}
+
+// http://stackoverflow.com/questions/12813887/gradle-replace-tokens-by-finding-the-tokens-from-property-file
+
+    // http://www.gradle.org/docs/current/userguide/working_with_files.html
+// http://www.gradle.org/docs/current/javadoc/org/gradle/api/tasks/Copy.html
+
+task filterSwirlConfig (type: Copy){
+//    from("src/main/resources") {
+//        include '**/*.properties'
+//        filter(ReplaceTokens, tokens: ["artifact.version": project.properties["version"], "build.date": buildDate])
+//    }
+    from "src/main/resources/swirl.config.properties"
+    into "build/resources/main"
+    filter(ReplaceTokens, tokens: ["artifact.version": project.properties["version"], "build.date": buildDate])
+//    expand("artifact.version": project.property("version"), "build.date": buildDate)
+//    expand(project.properties)
 }
+build.dependsOn filterSwirlConfig
+appengineUpdate.dependsOn filterSwirlConfig
+
+//tasks.whenTaskAdded { task ->
+//    if (task.name == 'build') {
+//        task.dependsOn filterSwirlConfig
+//    }
+//}
 
 repositories {
     mavenLocal()
     mavenCentral()
+//    jcenter()
 }
 
 configurations {
@@ -61,6 +87,8 @@ sourceSets {
 //}
 
 dependencies {
+    compile project(':logic')
+
     compile "org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin"
 
     // GOOGLE APP ENGINE
@@ -82,28 +110,41 @@ dependencies {
     // http://howtodoinjava.com/2013/05/10/resteasy-jackson-json-example/
     compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.4.Final'
 //    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'
+    compile 'javax.servlet:servlet-api:2.5'
 
-    // MISC
+    // LOGGING
     // =============================================
-    compile 'joda-time:joda-time:2.5'
-    compile 'com.google.guava:guava:18.0'
+    compile "org.slf4j:slf4j-api:1.7.7"
+    compile "ch.qos.logback:logback-core:1.1.2"
+    compile "ch.qos.logback:logback-classic:1.1.2"
+
 
     // TEST
     // =============================================
-    testCompile 'org.testng:testng:6.8.8'
-    testCompile 'org.hamcrest:hamcrest-library:1.3'
-    testCompile 'org.mockito:mockito-core:1.10.8'
+    testCompile project(path: ':logic', configuration: 'testOutput')
+    testCompile fileTree(dir: '../logic/build/libs', include: ['*.jar'])  // HACK IT!
+
+    // testng, hamcrest, mockito... already via :logic
 
     testCompile "com.google.appengine:appengine-testing:${versionAppEngine}"
     testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
 }
 
+//configurations.testCompile.each {
+//    println "testCompile: $it"
+//}
+//configurations.testRuntime.each {
+//    println "testRuntime: $it"
+//}
+
 appengine {
     downloadSdk = true
     // via this it's possible to access it via its LAN IP address (rather localhost)
-    httpAddress = "0.0.0.0"
+    httpAddress = "localhost"
+//    httpAddress = "0.0.0.0"
     httpPort = 8888
 
+    jvmFlags = [ '-DappDebug=true' ]
 //    jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000']
 
     appcfg {

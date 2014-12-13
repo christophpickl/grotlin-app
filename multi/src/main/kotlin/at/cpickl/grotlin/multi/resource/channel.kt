@@ -1,7 +1,6 @@
 package at.cpickl.grotlin.multi.resource
 
 import javax.ws.rs.Path
-import java.util.logging.Logger
 import javax.ws.rs.POST
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
@@ -9,51 +8,59 @@ import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.api.channel.ChannelServiceFactory
 import com.google.appengine.api.channel.ChannelMessage
 import javax.ws.rs.core.Response
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import javax.inject.Inject
+import at.cpickl.grotlin.multi.service.ChannelApiService
+import javax.ws.rs.GET
+import com.google.appengine.api.channel.ChannelPresence
+import javax.ws.rs.core.Context
+import javax.servlet.http.HttpServletRequest
+import at.cpickl.grotlin.multi.service.Role
+import at.cpickl.grotlin.multi.service.User
+import at.cpickl.grotlin.channel.GameStartsNotification
+import at.cpickl.grotlin.channel.GameStartsNotificationRto
 
-Path("/channel") public class ChannelResource {
+Path("/channel") class ChannelResource [Inject] (private val channelApiService: ChannelApiService) {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG = LoggerFactory.getLogger(javaClass<ChannelResource>())
     }
 
-    private val channelKey = "useUserTokenInstead"
-
-    Path("/") POST Produces(MediaType.APPLICATION_JSON)
-    public fun createChannelToken(): String {
-        // By default, tokens expire in two hours.
-        // If a client remains connected to a channel for longer than the token duration, the socket’s onerror() and onclose()
-        // callbacks are called. At this point, the client can make an XHR request to the application to request a new token and
-        // open a new channel.
-        val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
-        val token = channelService.createChannel(channelKey)
-        return """{ "token": "${token}" }"""
+    Secured Path("/") POST Produces(MediaType.APPLICATION_JSON)
+    fun createChannelToken(user: User): String {
+        val channelToken = channelApiService.createToken(user)
+        return """{ "channelToken": "${channelToken}" }"""
     }
 
-    Path("/push") POST Produces(MediaType.APPLICATION_JSON)
-    public fun pushMessage(): String {
-        val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
-        val message = "my server message"
-        channelService.sendMessage(ChannelMessage(channelKey, message))
-        return """{ "sent": "${message}" }"""
+    Secured Path("/push") POST Produces(MediaType.APPLICATION_JSON)
+    fun pushMessage(user: User): String {
+        channelApiService.sendNotification(GameStartsNotification("my game id"), user)
+        return """{ "sent": true }"""
+    }
+
+    Secured(Role.ADMIN) Path("/connections") GET Produces(MediaType.APPLICATION_JSON)
+    fun listConnections(): String {
+        return """{ "connectionsCount": "${channelApiService.connectionsCount}" }"""
     }
 
 }
 
-Path("/_ah/channel") public class ChannelPresenceResource {
+Path("/_ah/channel") class ChannelPresenceResource [Inject] (private val channelApiService: ChannelApiService) {
     class object {
-        private val LOG: Logger = Logger.getLogger(javaClass.getSimpleName())
+        private val LOG = LoggerFactory.getLogger(javaClass<ChannelPresenceResource>())
     }
+
     Path("/connected") POST
-    public fun userConnected(): Response {
-        LOG.fine("userConnected()")
-        val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
-        //        val presence = channelService.parsePresence(request)
+    fun userConnected([Context] request: HttpServletRequest): Response {
+        LOG.debug("userConnected(request)")
+        channelApiService.onConnected(request)
         return Response.ok().build()
     }
+
     Path("/disconnected") POST
-    public fun userDisconnected(): Response {
-        LOG.fine("userDisconnected()")
-        val channelService: ChannelService  = ChannelServiceFactory.getChannelService();
-        //        val presence = channelService.parsePresence(request)
+    fun userDisconnected([Context] request: HttpServletRequest): Response {
+        LOG.debug("userDisconnected(request)")
+        channelApiService.onDisconnected(request)
         return Response.ok().build()
     }
 

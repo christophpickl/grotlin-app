@@ -2,7 +2,7 @@ package at.cpickl.grotlin.multi.service
 
 import java.util.Properties
 
-data class Version(public val artifactVersion: String, public val buildDate: String)
+data class Version(val artifactVersion: String, val buildDate: String)
 
 trait VersionService {
     fun load(): Version

@@ -5,11 +5,11 @@ import android.graphics.Canvas
 import at.cpickl.grotlin.Player
 import android.content.Context
 import at.cpickl.agrotlin.MiniMap
-import at.cpickl.agrotlin.Logg
 import android.graphics.Paint
 import android.graphics.Color
 import at.cpickl.grotlin.Region
 import java.util.Arrays
+import org.slf4j.LoggerFactory
 
 
 trait MapView {
@@ -21,7 +21,7 @@ trait MapView {
 
 public class MiniMapView(context: Context, private val map: MiniMap) : MapView {
     class object {
-        private val LOG: Logg = Logg("MiniMapView")
+        private val LOG = LoggerFactory.getLogger(javaClass<MiniMapView>())
         private val LINE_PAINT = Paint()
     }
     {

@@ -13,18 +13,18 @@ import android.view.View
 import android.os.Vibrator
 import javax.inject.Inject
 import at.cpickl.agrotlin.service.LoginService
-import at.cpickl.agrotlin.Logg
 import at.cpickl.agrotlin.R
 import android.content.Context
 import android.content.Intent
 import android.widget.TextView
 import at.cpickl.agrotlin.showToast
+import org.slf4j.LoggerFactory
 
 // good roboguice sample: https://github.com/roboguice/roboguice/tree/master/astroboy
 
 public open class LoginActivity : SwirlActivity() {
     class object {
-        private val LOG: Logg = Logg("LoginActivity")
+        private val LOG = LoggerFactory.getLogger(javaClass<LoginActivity>())
 
         public fun start(callingActivity: Activity) {
             val intent = Intent(callingActivity, javaClass<LoginActivity>())
@@ -42,8 +42,8 @@ public open class LoginActivity : SwirlActivity() {
 //    @InjectResource(R.string.app_name)  myName: String? = null
     Inject private var loginService: LoginService? = null
 
-    override fun onCreate(saved: Bundle?) {
-        super<SwirlActivity>.onCreate(saved)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super<SwirlActivity>.onCreate(savedInstanceState)
 //        getIntent().getStringExtra()
 
         setContentView(R.layout.activity_login)

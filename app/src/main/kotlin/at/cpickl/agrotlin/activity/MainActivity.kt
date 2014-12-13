@@ -26,10 +26,8 @@ import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.DefaultHttpClient
 import android.os.AsyncTask
 import org.apache.http.HttpStatus
-import org.codehaus.jackson.map.ObjectMapper
 import org.apache.http.util.EntityUtils
 import android.content.Intent
-import at.cpickl.agrotlin.Logg
 import at.cpickl.agrotlin.BuildConfig
 import at.cpickl.agrotlin.AndroidUtil
 import at.cpickl.agrotlin.R
@@ -53,11 +51,12 @@ import at.cpickl.agrotlin.service.SoundPlayer
 import at.cpickl.agrotlin.service.Sound
 import android.view.Window
 import android.view.WindowManager
+import org.slf4j.LoggerFactory
 
 // NO!!! ContentView(R.layout.activity_main)
 public class MainActivity : SwirlActivity() {
     class object {
-        private val LOG: Logg = Logg("MainActivity");
+        private val LOG = LoggerFactory.getLogger(javaClass<MainActivity>());
         {
             // val DEBUG: Boolean = java.lang.Boolean.parseBoolean("true")
             // val APPLICATION_ID: String = "at.cpickl.agrotlin"
@@ -66,16 +65,29 @@ public class MainActivity : SwirlActivity() {
             // val VERSION_CODE: Int = 1
             // val VERSION_NAME: String = "1.0"
             LOG.info("Starting version ${BuildConfig.VERSION_NAME} (debug=${BuildConfig.DEBUG}, build type=${BuildConfig.BUILD_TYPE})")
+            LOG.info("=======================================================================")
         }
     }
 
     [InjectView(R.id.btnRandomGame)] private var btnRandomGame: Button? = null
     [InjectView(R.id.btnLogin)] private var btnLogin: Button? = null
-    Inject private var vibrator: VibrateService? = null
+    [InjectView(R.id.btnDebug)] private var btnDebug: Button? = null
+
     Inject private var soundPlayer: SoundPlayer? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        println("===============================")
+        LOG.trace("SLF4J trace")
+        LOG.debug("SLF4J debug")
+        LOG.info("SLF4J info")
+        LOG.warn("SLF4J warn")
+        Log.v("TAG", "Android verbose")
+        Log.d("TAG", "Android debug")
+        Log.i("TAG", "Android info")
+        Log.w("TAG", "Android warn")
+        println("===============================")
+
         LOG.info("onCreate(savedInstanceState)")
         super<SwirlActivity>.onCreate(savedInstanceState)
 
@@ -92,8 +104,11 @@ public class MainActivity : SwirlActivity() {
         // animFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeIn);
         btnRandomGame!!.setOnClickListener { PlayGameActivity.start(this) }
         btnLogin!!.setOnClickListener { LoginActivity.start(this) }
+        btnDebug!!.setOnClickListener { DebugActivity.start(this) }
     }
 
+    /*
+    its fullscreen, so we dont see it :)
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         getMenuInflater().inflate(R.menu.menu_main, menu)
         return true
@@ -116,5 +131,6 @@ public class MainActivity : SwirlActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+    */
 
 }

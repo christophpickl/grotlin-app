@@ -7,7 +7,7 @@ import android.media.AudioManager
 import android.content.Context
 import javax.inject.Singleton
 import android.media.MediaPlayer
-import at.cpickl.agrotlin.Logg
+import org.slf4j.LoggerFactory
 
 // http://java.dzone.com/articles/playing-sounds-android
 // The general guidelines on which one to use and when, are that SoundPool is best for short sound clips
@@ -23,7 +23,7 @@ trait SoundPlayer {
 
 Singleton class PooledSoundPlayer : SoundPlayer {
     class object {
-        private val LOG: Logg = Logg("PooledSoundPlayer");
+        private val LOG = LoggerFactory.getLogger(javaClass<PooledSoundPlayer>())
     }
 
     private val pool: SoundPool = SoundPool(Sound.values().size, AudioManager.STREAM_MUSIC, /*srcQuality=*/100)

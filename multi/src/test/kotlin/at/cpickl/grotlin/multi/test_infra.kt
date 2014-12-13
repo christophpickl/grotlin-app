@@ -1,29 +1,28 @@
 package at.cpickl.grotlin.multi
 
-import org.hamcrest.MatcherAssert
-import org.hamcrest.Matcher
-import org.hamcrest.Matchers
-import org.testng.annotations.Test
-import org.testng.annotations.BeforeSuite
-import java.util.logging.Logger
-import java.util.logging.ConsoleHandler
-import java.util.logging.Level
+import at.cpickl.grotlin.multi.service.User
+import at.cpickl.grotlin.multi.service.Role
 
-Test public class EnableLogNonTest {
 
-    BeforeSuite public fun initLogging() {
-        println("EnableLogNonTest#initLogging()")
-        val root = Logger.getLogger("")
-        val handler = ConsoleHandler()
-        handler.setLevel(Level.ALL)
-        root.addHandler(handler)
+//Test class EnableLogNonTest {
+//    BeforeSuite fun initLogging() {
+//        println("EnableLogNonTest#initLogging()")
+//        val root = Logger.getLogger("")
+//        val handler = ConsoleHandler()
+//        handler.setLevel(Level.ALL)
+//        root.addHandler(handler)
+//    }
+//}
+
+
+class TestData {
+    class object {
+        val FAKE_TOKEN_ADMIN = "1"
+        val FAKE_TOKEN_USER = "2"
+
+
+        val USER1 = User("name1", "email1", "password1", Role.USER)
+        val USER2 = User("name2", "email2", "password2", Role.USER)
+        val USER3 = User("name3", "email3", "password3", Role.USER)
     }
-}
-
-public fun <T> assertThat(actual: T, matcher: Matcher<T>) {
-    MatcherAssert.assertThat(actual, matcher)
-}
-
-public fun <T> equalTo(operand: T): Matcher<T> {
-    return Matchers.equalTo(operand)
 }
