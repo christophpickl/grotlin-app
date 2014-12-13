@@ -52,6 +52,8 @@ import at.cpickl.agrotlin.service.Sound
 import android.view.Window
 import android.view.WindowManager
 import org.slf4j.LoggerFactory
+import at.cpickl.agrotlin.service.AndroidOs
+import at.cpickl.agrotlin.view.showAlertDialog
 
 // NO!!! ContentView(R.layout.activity_main)
 public class MainActivity : SwirlActivity() {
@@ -74,10 +76,11 @@ public class MainActivity : SwirlActivity() {
     [InjectView(R.id.btnDebug)] private var btnDebug: Button? = null
 
     Inject private var soundPlayer: SoundPlayer? = null
-
+    Inject private var androidOs: AndroidOs? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         println("===============================")
+        // TODO how to configure logging? slf4j is set to info ATM...
         LOG.trace("SLF4J trace")
         LOG.debug("SLF4J debug")
         LOG.info("SLF4J info")
@@ -105,6 +108,32 @@ public class MainActivity : SwirlActivity() {
         btnRandomGame!!.setOnClickListener { PlayGameActivity.start(this) }
         btnLogin!!.setOnClickListener { LoginActivity.start(this) }
         btnDebug!!.setOnClickListener { DebugActivity.start(this) }
+
+    }
+    override fun onResume() {
+        LOG.debug("onResume()")
+        super.onResume()
+
+        // TODO this check needs to be global, not just in MainActivity (e.g. if user is in login activity, need to check, and redirect here)
+        if (!androidOs!!.isNetworkAvailable(this)) {
+            enableAnyInteraction(false)
+            showAlertDialog("Network Unavailable",
+                    "This game needs a working internet connection! Please enable your network first.",
+                    positiveButton = Pair("Shame on me", { dialog -> })
+            )
+        } else {
+            enableAnyInteraction(true)
+        }
+    }
+
+
+    private fun enableAnyInteraction(enable: Boolean) {
+        LOG.info("enableAnyInteraction()")
+        array(btnRandomGame, btnLogin, btnDebug).forEach { btn ->
+            btn!!.setEnabled(enable)
+            // TODO MINOR UI - visually indicate view is not enabled (grayed out buttons)
+        }
+
     }
 
     /*

@@ -18,6 +18,7 @@ TODO
 * zoom map
 * reset game
 * bugfix on orientation (saveInstance, ..)
+! testing requires some effort (android.jar is just a stub); also how to run regular unit tests??
 ! black background should only apply to activity (not dialogs, toasts, etc)
 ! logging doesnt work, SLF4J <= DEBUG doesnt get printed in logcat
 * have a look at: https://github.com/vladlichonos/kotlinAndroidLib

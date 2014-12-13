@@ -5,6 +5,8 @@ import javax.inject.Inject
 import android.os.Vibrator
 import javax.inject.Singleton
 import org.slf4j.LoggerFactory
+import android.content.Context
+import android.net.ConnectivityManager
 
 trait LoginService {
     fun login(username: String, password: String): Boolean
@@ -34,6 +36,20 @@ Singleton class AndroidVibrateService [Inject] (private val vibrator: Vibrator) 
     override fun vibrate(milliseconds: Long) {
         LOG.debug("vibrate(milliseconds=${milliseconds})")
         vibrator.vibrate(milliseconds)
+    }
+
+}
+
+trait AndroidOs {
+    fun isNetworkAvailable(context: Context): Boolean
+}
+
+
+class AndroidOsImpl: AndroidOs {
+    override fun isNetworkAvailable(context: Context): Boolean {
+        val connectivity = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivity.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
     }
 
 }

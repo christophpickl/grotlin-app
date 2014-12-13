@@ -34,6 +34,8 @@ import android.content.DialogInterface
 import android.text.InputType
 import at.cpickl.agrotlin.service.NotificationDistributor
 import at.cpickl.grotlin.channel.GameStartsNotificationResponder
+import at.cpickl.agrotlin.view.showAlertDialog
+import at.cpickl.agrotlin.view.showAlertOkCancelDialog
 
 public open class DebugActivity: SwirlActivity(), GameStartsNotificationResponder {
 
@@ -55,6 +57,7 @@ public open class DebugActivity: SwirlActivity(), GameStartsNotificationResponde
 
     private var webView: ChannelWebView? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super<SwirlActivity>.onCreate(savedInstanceState)
 
@@ -68,21 +71,9 @@ public open class DebugActivity: SwirlActivity(), GameStartsNotificationResponde
         btnFoobar!!.setOnClickListener({
             val input = EditText(this);
             input.setInputType(InputType.TYPE_CLASS_TEXT)
-            AlertDialog.Builder(this)
-                .setTitle("Channel Connect")
-                .setMessage("Enter channel token:")
-                .setView(input)
-                    .setPositiveButton("OK", object : OnClickListener {
-                        override fun onClick(dialog: DialogInterface, which: Int) {
-                            webView!!.connectToChannel(input.getText().toString())
-                        }
-                    })
-                    .setNegativeButton("Cancel", object : OnClickListener {
-                        override fun onClick(dialog: DialogInterface, which: Int) {
-                            dialog.cancel()
-                        }
-                    })
-                .show()
+
+            showAlertOkCancelDialog("Channel Connect", "Enter channel token:", input,
+                    { dialog -> webView!!.connectToChannel(input.getText().toString()) })
         })
 
         notificationDistributor!!.register(this)
@@ -99,3 +90,4 @@ public open class DebugActivity: SwirlActivity(), GameStartsNotificationResponde
     }
 
 }
+

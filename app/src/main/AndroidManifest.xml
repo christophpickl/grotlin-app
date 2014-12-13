@@ -3,9 +3,9 @@
           package="at.cpickl.agrotlin" >
 
     <uses-permission a:name="android.permission.INTERNET" />
-
     <uses-permission a:name="android.permission.VIBRATE" />
-
+    <!-- in order to check if network is turned on -->
+    <uses-permission a:name="android.permission.ACCESS_NETWORK_STATE" />
     <application a:name=".SwirlApplication"
                  a:allowBackup="true"
                  a:icon="@drawable/ic_launcher"

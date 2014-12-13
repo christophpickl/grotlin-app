@@ -15,6 +15,8 @@ import com.google.inject.Scopes
 import at.cpickl.agrotlin.activity.JsInterfaceProvider
 import at.cpickl.agrotlin.activity.JsInterface
 import at.cpickl.agrotlin.service.NotificationDistributor
+import at.cpickl.agrotlin.service.AndroidOs
+import at.cpickl.agrotlin.service.AndroidOsImpl
 
 // roboguice.application.RoboApplication
 public class SwirlApplication : Application() {
@@ -30,12 +32,11 @@ class SwirlModule : AbstractModule() {
         bind(javaClass<LoginService>()).toInstance(HttpLoginService())
         bind(javaClass<VibrateService>()).to(javaClass<AndroidVibrateService>())
         bind(javaClass<SoundPlayer>()).to(javaClass<PooledSoundPlayer>())
+        bind(javaClass<AndroidOs>()).to(javaClass<AndroidOsImpl>())
 
         bind(javaClass<NotificationDistributor>()).`in`(Scopes.SINGLETON)
         bind(javaClass<JsInterfaceProvider>()).`in`(Scopes.SINGLETON)
     }
 }
 
-open class SwirlException(message: String) : RuntimeException(message) {
-
-}
+open class SwirlException(message: String) : RuntimeException(message)
