@@ -74,6 +74,7 @@ public class MainActivity : SwirlActivity() {
     [InjectView(R.id.btnRandomGame)] private var btnRandomGame: Button? = null
     [InjectView(R.id.btnLogin)] private var btnLogin: Button? = null
     [InjectView(R.id.btnDebug)] private var btnDebug: Button? = null
+    [InjectView(R.id.btnSettings)] private var btnSettings: Button? = null
 
     Inject private var soundPlayer: SoundPlayer? = null
     Inject private var androidOs: AndroidOs? = null
@@ -94,7 +95,8 @@ public class MainActivity : SwirlActivity() {
         LOG.info("onCreate(savedInstanceState)")
         super<SwirlActivity>.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main)
+
 
         if (!soundPlayer!!.isInit()) {
             LOG.debug("One time initialising sound player")
@@ -108,6 +110,7 @@ public class MainActivity : SwirlActivity() {
         btnRandomGame!!.setOnClickListener { PlayGameActivity.start(this) }
         btnLogin!!.setOnClickListener { LoginActivity.start(this) }
         btnDebug!!.setOnClickListener { DebugActivity.start(this) }
+        btnSettings!!.setOnClickListener { SettingsActivity.start(this) }
 
     }
     override fun onResume() {

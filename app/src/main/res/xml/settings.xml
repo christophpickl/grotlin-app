@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- http://viralpatel.net/blogs/android-preferences-activity-example/ -->
+
+    <!-- we are in fullscreen, so this will be the top title ;) -->
+    <PreferenceCategory android:title="Settings" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="prefEnableAudio"
+            android:summary="You will hear beautiful sounds"
+            android:title="Enable Audio" >
+        </CheckBoxPreference>
+
+        <!--<EditTextPreference-->
+            <!--android:title="@string/pref_user_name"-->
+            <!--android:summary="@string/pref_user_name_summary"-->
+            <!--android:key="prefUsername"/>-->
+        <Preference android:title="Clear Cache"
+                    android:key="prefClearCacheButton"
+                    android:summary="This will clear some locally stored data."/>
+    </PreferenceCategory>
+
+    <!--<PreferenceCategory android:title="@string/pref_update_setting" >-->
+        <!---->
+        <!--<ListPreference-->
+            <!--android:key="prefSyncFrequency"-->
+            <!--android:entries="@array/syncFrequency"-->
+            <!--android:summary="@string/pref_sync_frequency_summary"-->
+            <!--android:entryValues="@array/syncFrequencyValues"-->
+            <!--android:title="@string/pref_sync_frequency" />-->
+    <!--</PreferenceCategory>-->
+
+</PreferenceScreen>

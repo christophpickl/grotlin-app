@@ -7,6 +7,8 @@ import javax.inject.Singleton
 import org.slf4j.LoggerFactory
 import android.content.Context
 import android.net.ConnectivityManager
+import android.preference.PreferenceManager
+import android.content.SharedPreferences
 
 trait LoginService {
     fun login(username: String, password: String): Boolean
@@ -53,3 +55,23 @@ class AndroidOsImpl: AndroidOs {
     }
 
 }
+trait SettingsManager {
+    // actually this is a weird API, requiring any context. i dont care which context, it just needs to be one (MainActivity to init this thing)
+    fun isAudioEnabled(context: Context): Boolean
+}
+
+class SettingsManagerViaSharedPreferences : SettingsManager {
+    override fun isAudioEnabled(context: Context): Boolean {
+        return PreferenceManager.getDefaultSharedPreferences(context).isAudioEnabled()
+    }
+}
+
+class PreferencesKeys {
+    class object {
+        val ENABLE_AUDIO: String = "prefEnableAudio"
+
+        // does not hold a value, but is clickable
+        val CLEAR_CACHE_BUTTON: String = "prefClearCacheButton"
+    }
+}
+fun SharedPreferences.isAudioEnabled(): Boolean = getBoolean(PreferencesKeys.ENABLE_AUDIO, true)

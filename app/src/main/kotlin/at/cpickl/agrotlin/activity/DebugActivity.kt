@@ -36,6 +36,8 @@ import at.cpickl.agrotlin.service.NotificationDistributor
 import at.cpickl.grotlin.channel.GameStartsNotificationResponder
 import at.cpickl.agrotlin.view.showAlertDialog
 import at.cpickl.agrotlin.view.showAlertOkCancelDialog
+import at.cpickl.agrotlin.service.SettingsManagerViaSharedPreferences
+import android.graphics.Color
 
 public open class DebugActivity: SwirlActivity(), GameStartsNotificationResponder {
 

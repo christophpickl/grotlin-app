@@ -8,6 +8,7 @@ import android.content.Context
 import javax.inject.Singleton
 import android.media.MediaPlayer
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
 // http://java.dzone.com/articles/playing-sounds-android
 // The general guidelines on which one to use and when, are that SoundPool is best for short sound clips
@@ -21,13 +22,14 @@ trait SoundPlayer {
     fun play(sound: Sound, volume: Float = 1.0F)
 }
 
-Singleton class PooledSoundPlayer : SoundPlayer {
+Singleton class PooledSoundPlayer [Inject] (private val settingsManager: SettingsManager) : SoundPlayer {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<PooledSoundPlayer>())
     }
 
     private val pool: SoundPool = SoundPool(Sound.values().size, AudioManager.STREAM_MUSIC, /*srcQuality=*/100)
     private var sounds: Map<Sound, Int>? = null
+    private var context: Context? = null
 
     override fun init(context: Context) {
         LOG.debug("init(context=${context})")
@@ -35,19 +37,24 @@ Singleton class PooledSoundPlayer : SoundPlayer {
             throw IllegalStateException("Already initialized!")
         }
         sounds = initMap(context)
+        this.context = context // just store the very first one and reuse for getting preferences ;)
     }
     override fun isInit(): Boolean = sounds != null
 
     override fun play(sound: Sound, volume: Float) {
         LOG.debug("play(sound=${sound}, volume=${volume})")
-        if (sounds == null) {
+        if (sounds == null) { // means context also == null
             throw IllegalStateException("Not yet initialized!")
         }
+        if (!settingsManager.isAudioEnabled(context!!)) {
+            LOG.trace("Audio is disabled by user settings.")
+            return
+        }
+
         // old style
 //        val player = MediaPlayer.create(context, R.raw.roll)
 //        player.setOnCompletionListener { it.release() }
 //        player.start()
-
         pool.play(sounds!!.get(sound)!!, volume, volume, 1, 0, 1.0F);
     }
 
@@ -63,4 +70,7 @@ Singleton class PooledSoundPlayer : SoundPlayer {
 
 enum class Sound(val id: Int) {
     ROLL : Sound(R.raw.roll)
+    // ATTACK_WIN
+    // ATTACK_LOSE
+    // DISTRIBUTE_UNIT
 }

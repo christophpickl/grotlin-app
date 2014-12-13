@@ -45,6 +45,13 @@
                     a:text="Debug"
                     a:layout_width="wrap_content"
                     a:layout_height="wrap_content"
+                    a:layout_marginBottom="@dimen/button_bottom_margin"
+                />
+            <Button a:id="@+id/btnSettings"
+                    style="@style/MainButtonStyle"
+                    a:text="Settings"
+                    a:layout_width="wrap_content"
+                    a:layout_height="wrap_content"
                 />
             </LinearLayout>
     </LinearLayout>

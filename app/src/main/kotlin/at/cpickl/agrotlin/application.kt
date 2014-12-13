@@ -17,6 +17,8 @@ import at.cpickl.agrotlin.activity.JsInterface
 import at.cpickl.agrotlin.service.NotificationDistributor
 import at.cpickl.agrotlin.service.AndroidOs
 import at.cpickl.agrotlin.service.AndroidOsImpl
+import at.cpickl.agrotlin.service.SettingsManager
+import at.cpickl.agrotlin.service.SettingsManagerViaSharedPreferences
 
 // roboguice.application.RoboApplication
 public class SwirlApplication : Application() {
@@ -33,6 +35,7 @@ class SwirlModule : AbstractModule() {
         bind(javaClass<VibrateService>()).to(javaClass<AndroidVibrateService>())
         bind(javaClass<SoundPlayer>()).to(javaClass<PooledSoundPlayer>())
         bind(javaClass<AndroidOs>()).to(javaClass<AndroidOsImpl>())
+        bind(javaClass<SettingsManager>()).to(javaClass<SettingsManagerViaSharedPreferences>())
 
         bind(javaClass<NotificationDistributor>()).`in`(Scopes.SINGLETON)
         bind(javaClass<JsInterfaceProvider>()).`in`(Scopes.SINGLETON)
