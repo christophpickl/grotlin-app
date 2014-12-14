@@ -12,13 +12,14 @@ import android.widget.Toast
 import android.view.View
 import android.os.Vibrator
 import javax.inject.Inject
-import at.cpickl.agrotlin.service.LoginService
+import at.cpickl.agrotlin.service.server.LoginService
 import at.cpickl.agrotlin.R
 import android.content.Context
 import android.content.Intent
 import android.widget.TextView
 import at.cpickl.agrotlin.showToast
 import org.slf4j.LoggerFactory
+import at.cpickl.agrotlin.service.server.LoginException
 
 // good roboguice sample: https://github.com/roboguice/roboguice/tree/master/astroboy
 
@@ -61,9 +62,16 @@ public open class LoginActivity : SwirlActivity() {
         LOG.info("onLogin()")
         val username = inpUsername!!.getText().toString()
         val password = inpPassword!!.getText().toString()
-        val loggedIn = loginService!!.login(username, password)
-        val message = if(loggedIn) "Successfully logged in as ${username}." else "Login failed!"
-        Toast.makeText(this, message, 5000).show()
+
+        try {
+            val token = loginService!!.login(username, password)
+            // store token in global data storage
+            // request /user/profile endpoint
+            showToast("Successfully logged in as ${username}.")
+        } catch (e: LoginException) {
+            LOG.error("Ups!", e)
+            showToast("Login failed!")
+        }
     }
 
 }

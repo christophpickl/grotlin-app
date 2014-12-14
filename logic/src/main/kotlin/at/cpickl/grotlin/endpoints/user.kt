@@ -11,6 +11,7 @@ import at.cpickl.grotlin.restclient.Status
 
 class UserClient(private val baseUrl: String) {
 
+    /** Throws ClientFaultException if status code != 200 */
     fun login(request: LoginRequestRto): LoginResponseRto {
         return RestClient(baseUrl).post().body(request).url("/users/login").verifyStatusCode().unmarshallTo(javaClass<LoginResponseRto>())
     }

@@ -11,13 +11,13 @@ import android.widget.Toast
 import android.view.View
 import android.os.Vibrator
 import javax.inject.Inject
-import at.cpickl.agrotlin.service.LoginService
+import at.cpickl.agrotlin.service.server.LoginService
 import at.cpickl.agrotlin.R
 import android.content.Context
 import android.content.Intent
 import android.widget.TextView
 import at.cpickl.agrotlin.showToast
-import at.cpickl.agrotlin.service.VersionHttpRequest
+import at.cpickl.agrotlin.service.server.VersionHttpRequest
 import android.widget.LinearLayout
 import android.webkit.WebView
 import at.cpickl.agrotlin.service.VibrateService
@@ -38,6 +38,7 @@ import at.cpickl.agrotlin.view.showAlertDialog
 import at.cpickl.agrotlin.view.showAlertOkCancelDialog
 import at.cpickl.agrotlin.service.SettingsManagerViaSharedPreferences
 import android.graphics.Color
+import at.cpickl.agrotlin.service.server.VersionRequestor
 
 public open class DebugActivity: SwirlActivity(), GameStartsNotificationResponder {
 
@@ -56,6 +57,7 @@ public open class DebugActivity: SwirlActivity(), GameStartsNotificationResponde
     [InjectView(R.id.myContainer)] private var myContainer: LinearLayout? = null
     Inject private var jsInterfaceProvider: JsInterfaceProvider? = null
     Inject private var notificationDistributor: NotificationDistributor? = null
+    Inject private var versionRequestor: VersionRequestor? = null
 
     private var webView: ChannelWebView? = null
 
@@ -67,7 +69,8 @@ public open class DebugActivity: SwirlActivity(), GameStartsNotificationResponde
 
         btnLoadVersion!!.setOnClickListener({
             LOG.info("onLoadVersion()")
-            VersionHttpRequest({ showToast("Version received: ${it}")}, { showToast("Fail: ${it}"); it.printStackTrace(); }).execute()
+            versionRequestor!!.request({ showToast("Version received: ${it}")}, { showToast("Fail: ${it}"); it.printStackTrace(); })
+//            VersionHttpRequest({ showToast("Version received: ${it}")}, { showToast("Fail: ${it}"); it.printStackTrace(); }).execute()
         })
 
         btnFoobar!!.setOnClickListener({

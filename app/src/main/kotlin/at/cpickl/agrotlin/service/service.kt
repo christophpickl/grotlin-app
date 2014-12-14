@@ -10,20 +10,6 @@ import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import android.content.SharedPreferences
 
-trait LoginService {
-    fun login(username: String, password: String): Boolean
-}
-
-class HttpLoginService : LoginService {
-    class object {
-        private val LOG = LoggerFactory.getLogger(javaClass<AndroidVibrateService>())
-    }
-    override fun login(username: String, password: String): Boolean {
-        LOG.info("login(username=${username}, password)")
-        return true
-    }
-}
-
 
 trait VibrateService {
     fun vibrate(milliseconds: Long = 500)

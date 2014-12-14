@@ -1,36 +1,26 @@
-package at.cpickl.agrotlin.service
+package at.cpickl.agrotlin.service.server
 
+import javax.inject.Inject
 import android.os.AsyncTask
-import org.apache.http.impl.client.DefaultHttpClient
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.HttpStatus
-import org.apache.http.util.EntityUtils
-import at.cpickl.agrotlin.SwirlException
-import at.cpickl.grotlin.restclient.RestClient
-import com.google.common.base.MoreObjects
-import at.cpickl.grotlin.endpoints.VersionClient
-import at.cpickl.grotlin.endpoints.VersionRto
 import org.slf4j.LoggerFactory
+import at.cpickl.grotlin.endpoints.VersionRto
+import at.cpickl.grotlin.endpoints.VersionClient
 
+
+/** Is actually a provider factory. */
+class VersionRequestor [Inject] (private val versionClient: VersionClient) {
+    fun request(resultHandler: (VersionRto) -> Unit, exceptionHandler: (Exception) -> Unit) {
+        VersionHttpRequest(versionClient, resultHandler, exceptionHandler).execute()
+    }
+}
 
 // class Params, class Progress, class Result
-class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
+class VersionHttpRequest(private val versionClient: VersionClient,
+                         private val resultHandler: (VersionRto) -> Unit,
                          private val exceptionHandler: (Exception) -> Unit)
 : AsyncTask<Void, Void, VersionRto>() {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<VersionHttpRequest>())
-    }
-
-    // TODO inject that thing! make it configurable. inject provider
-    private val swirlEngineUrl: String;
-    {
-        val user = System.getProperty("user.name")
-//        if (user == "s6917") {
-//            swirlEngineUrl = "http://10.18.101.204:8888"
-            swirlEngineUrl = "http://swirl-engine.appspot.com"
-//        } else {
-//            swirlEngineUrl = "http://10.0.1.12:8888"
-//        }
     }
 
     private var thrown: Exception? = null
@@ -40,7 +30,7 @@ class VersionHttpRequest(private val resultHandler: (VersionRto) -> Unit,
         LOG.debug("doInBackground()")
         try {
             // TODO do not instantiate manually, let inject (requires factory)
-            val version = VersionClient(swirlEngineUrl).get()
+            val version = versionClient.get()
             LOG.debug("Got version: ${version}")
             return version
         } catch (e: Exception) {

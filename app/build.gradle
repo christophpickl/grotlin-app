@@ -25,6 +25,8 @@ dependencies {
     compile (project(':logic')) {
         exclude group: 'ch.qos.logback', module: 'logback-classic'
 //        exclude group: 'ch.qos.logback', module: 'logback-core'
+        exclude group: 'javax.inject', module: 'javax.inject'
+        exclude group: 'com.google.inject', module: 'guice'
     }
 
     // https://hc.apache.org/httpcomponents-client-4.3.x/android-port.html
