@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory
 import org.mockito.Mockito
 import org.mockito.ArgumentMatcher
 import at.cpickl.grotlin.multi.TestData
+import at.cpickl.grotlin.multi.TestableIdGenerator
 
 Test class PropertiesVersionServiceTest {
     fun loadTestPropertiesFileShouldReturnContent() {
@@ -28,12 +29,15 @@ Test class ObjectifyUserServiceTest {
         private val LOG = LoggerFactory.getLogger(javaClass<ObjectifyUserServiceTest>())
     }
 
-    private var testee: ObjectifyUserService = ObjectifyUserService()
+
+    private var idGenerator: IdGenerator = TestableIdGenerator()
+    private var testee: ObjectifyUserService = ObjectifyUserService(idGenerator)
     private var engineHelper: LocalServiceTestHelper? = null
+
 
     BeforeMethod fun setUp() {
         LOG.debug("setUp()")
-        testee = ObjectifyUserService()
+        testee = ObjectifyUserService(idGenerator)
         engineHelper = LocalServiceTestHelper(LocalDatastoreServiceTestConfig())
         engineHelper!!.setUp()
     }
@@ -64,12 +68,12 @@ Test class GameServiceTest {
 
     private var runningGameService: RunningGameService = Mockito.mock(javaClass<RunningGameService>())
     private var channelApiService: ChannelApiService = Mockito.mock(javaClass<ChannelApiService>())
-    private var testee = WaitingRandomGameService(runningGameService, channelApiService)
+    private var testee = WaitingRandomGameService(runningGameService, channelApiService, TestableIdGenerator())
 
     BeforeMethod fun init() {
         runningGameService: RunningGameService = Mockito.mock(javaClass<RunningGameService>())
         channelApiService: ChannelApiService = Mockito.mock(javaClass<ChannelApiService>())
-        testee = WaitingRandomGameService(runningGameService, channelApiService)
+        testee = WaitingRandomGameService(runningGameService, channelApiService, TestableIdGenerator())
     }
     AfterMethod fun verifyMocks() {
 //        Mockito.verifyNoMoreInteractions(runningGameService)

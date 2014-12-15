@@ -25,7 +25,8 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:1.3.9' // for the optional Nullable annotation
 
     compile "org.roboguice:roboguice:${versionRoboguice}"
-    compile "org.roboguice:roboblender:${versionRoboguice}" // should be provided ... :-/
+    compile "org.roboguice:roboblender:${versionRoboguice}"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // should be provided ... :-/
     // test 'org.robolectric:robolectric:3.0.1'
 
 }
@@ -64,10 +65,11 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
     buildTypes {
-        release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+        // did not work after upgrading to android studio 1.0
+//        release {
+//            runProguard false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
     }
     lintOptions {
         // logback references some JMS, servlet, stuff (javax.management, javax.servlet, ...)
@@ -81,13 +83,13 @@ android {
 }
 
 buildscript {
-    ext.kotlin_version = '0.9.206'
+    ext.kotlin_version = '0.9.976'
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.android.tools.build:gradle:0.13.+'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
 

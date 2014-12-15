@@ -52,7 +52,7 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 buildscript {
-    ext.kotlin_version = '0.9.206'
+    ext.kotlin_version = '0.9.976'
     repositories {
         mavenCentral()
         maven {
