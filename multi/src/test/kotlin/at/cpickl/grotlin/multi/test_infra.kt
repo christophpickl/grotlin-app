@@ -2,6 +2,8 @@ package at.cpickl.grotlin.multi
 
 import at.cpickl.grotlin.multi.service.User
 import at.cpickl.grotlin.multi.service.Role
+import at.cpickl.grotlin.multi.service.IdGenerator
+import java.util.UUID
 
 
 //Test class EnableLogNonTest {
@@ -25,4 +27,8 @@ class TestData {
         val USER2 = User("name2", "email2", "password2", Role.USER)
         val USER3 = User("name3", "email3", "password3", Role.USER)
     }
+}
+
+class TestableIdGenerator : IdGenerator {
+    override fun generate(): String = "testId"
 }
