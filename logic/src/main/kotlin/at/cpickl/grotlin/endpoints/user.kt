@@ -8,12 +8,28 @@ import at.cpickl.grotlin.restclient.RestClient
 import at.cpickl.grotlin.restclient.RestResponse
 import com.google.common.base.MoreObjects
 import at.cpickl.grotlin.restclient.Status
+import javax.inject.Inject
 
-class UserClient(private val baseUrl: String) {
+class UserClient [Inject] (ServerUrl private val baseUrl: String) {
 
-    /** Throws ClientFaultException if status code != 200 */
+    /**
+     * @throws LoginClientException on invalid login (403 FORBIDDEN)
+     */
     fun login(request: LoginRequestRto): LoginResponseRto {
-        return RestClient(baseUrl).post().body(request).url("/users/login").verifyStatusCode().unmarshallTo(javaClass<LoginResponseRto>())
+        val response = RestClient(baseUrl).post().body(request).url("/users/login")
+        // response.onStatusUnmarshall<LoginResponseRto>(Status._200_OK, { return rto } )
+        // response.onStatusWithFault(Status._403_FORBIDDEN, { throw LoginClientException ... })
+        // somehow let the response object itself throw ClientException if no status was matched (?)
+        if (response.status == Status._200_OK) {
+            return response.unmarshallTo(javaClass<LoginResponseRto>())
+        }
+        if (response.status == Status._403_FORBIDDEN) {
+            val fault = response.unmarshallTo(javaClass<FaultRto>()).toDomain()
+            if (FaultCode.INVALID_CREDENTIALS == fault.code) {
+                throw LoginClientException("Login failed for user '${request.username}'!")
+            }
+        }
+        throw ClientException("Invalid login response status = ${response.status} (${response})")
     }
 
     fun logout(token: String): RestResponse {
@@ -26,13 +42,12 @@ class UserClient(private val baseUrl: String) {
 
 }
 
-class ClientFaultException(message: String, val response: RestResponse, val fault: FaultRto) : RuntimeException(message) {
-    override fun toString(): String {
-        return "Fault was thrown: ${fault} (status code = ${response.status}) with message: ${getMessage()}"
-    }
-}
+class LoginClientException(message: String) : ClientException(message)
 
-XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginRequestRto {
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginRequestRto(
+        XmlElement(required = true, nillable = false) var username: String? = null,
+        XmlElement(required = true, nillable = false) var password: String? = null
+) {
     class object {
         fun build(username: String, password: String): LoginRequestRto {
             val rto = LoginRequestRto()
@@ -41,12 +56,6 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginRequestRt
             return rto
         }
     }
-    XmlElement(required = true, nillable = false)
-    var username: String? = null
-    XmlElement(required = true, nillable = false)
-    var password: String? = null
-
-    override fun toString() = "LoginRto[username='${username}']"
 }
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginResponseRto {

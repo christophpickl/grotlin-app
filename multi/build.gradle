@@ -7,6 +7,7 @@ def versionKotlin = "0.9.206"
 def buildDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
 
 buildscript {
+    ext.kotlin_version = '0.9.976'
     ext.kotlin_version = '0.9.206'
     repositories {
         mavenCentral()
@@ -126,6 +127,7 @@ dependencies {
 
     testCompile "com.google.appengine:appengine-testing:${versionAppEngine}"
     testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 //configurations.testCompile.each {
@@ -171,4 +173,9 @@ task testWeb(type: Test) {
     }
     reports.junitXml.destination = file("${reporting.baseDir}/webtest")
     reports.html.destination = file("${reporting.baseDir}/webtest")
+}
+android {
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }

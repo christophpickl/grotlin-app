@@ -42,7 +42,6 @@ import roboguice.inject.ContentView
 import roboguice.activity.RoboActivity
 import roboguice.inject.InjectView
 import android.widget.EditText
-import at.cpickl.agrotlin.service.server.VersionHttpRequest
 import org.slf4j.LoggerFactory
 
 public class PlayGameActivity : SwirlActivity() {

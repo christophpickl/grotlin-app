@@ -42,7 +42,6 @@ import roboguice.inject.ContentView
 import roboguice.activity.RoboActivity
 import roboguice.inject.InjectView
 import android.widget.EditText
-import at.cpickl.agrotlin.service.server.VersionHttpRequest
 import javax.inject.Inject
 import at.cpickl.agrotlin.service.VibrateService
 import at.cpickl.agrotlin.showToast

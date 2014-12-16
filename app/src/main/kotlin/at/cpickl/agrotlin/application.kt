@@ -4,8 +4,8 @@ import android.app.Application
 import roboguice.RoboGuice
 import roboguice.AnnotationDatabaseImpl
 import com.google.inject.AbstractModule
-import at.cpickl.agrotlin.service.server.LoginService
-import at.cpickl.agrotlin.service.server.HttpLoginService
+import at.cpickl.agrotlin.service.engine.UserEngine
+import at.cpickl.agrotlin.service.engine.RestfulUserEngine
 import at.cpickl.agrotlin.service.AndroidVibrateService
 import at.cpickl.agrotlin.service.VibrateService
 import at.cpickl.agrotlin.service.PooledSoundPlayer
@@ -19,11 +19,11 @@ import at.cpickl.agrotlin.service.AndroidOs
 import at.cpickl.agrotlin.service.AndroidOsImpl
 import at.cpickl.agrotlin.service.SettingsManager
 import at.cpickl.agrotlin.service.SettingsManagerViaSharedPreferences
-import at.cpickl.agrotlin.service.server.VersionRequestor
+import at.cpickl.agrotlin.service.engine.VersionEngine
 import at.cpickl.grotlin.endpoints.VersionClient
 import at.cpickl.grotlin.endpoints.ServerUrl
 import org.slf4j.LoggerFactory
-import at.cpickl.agrotlin.service.server.VersionHttpRequest
+import at.cpickl.grotlin.endpoints.UserClient
 
 // roboguice.application.RoboApplication
 public class SwirlApplication : Application() {
@@ -40,16 +40,19 @@ class SwirlModule : AbstractModule() {
     }
 
     override fun configure() {
-        bind(javaClass<LoginService>()).toInstance(HttpLoginService())
+        bind(javaClass<UserEngine>()).to(javaClass<RestfulUserEngine>())
         bind(javaClass<VibrateService>()).to(javaClass<AndroidVibrateService>())
         bind(javaClass<SoundPlayer>()).to(javaClass<PooledSoundPlayer>())
         bind(javaClass<AndroidOs>()).to(javaClass<AndroidOsImpl>())
         bind(javaClass<SettingsManager>()).to(javaClass<SettingsManagerViaSharedPreferences>())
-        bind(javaClass<VersionRequestor>())
+        bind(javaClass<VersionEngine>())
 
         val baseUrl = "http://swirl-engine.appspot.com" // TODO make runtime changeable via settings
         bind(javaClass<String>()).annotatedWith(javaClass<ServerUrl>()).toInstance(baseUrl)
-        bind(javaClass<VersionClient>()) // comes from logic module
+
+        // comes from logic module
+        bind(javaClass<VersionClient>())
+        bind(javaClass<UserClient>())
 
         bind(javaClass<NotificationDistributor>()).`in`(Scopes.SINGLETON)
         bind(javaClass<JsInterfaceProvider>()).`in`(Scopes.SINGLETON)

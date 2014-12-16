@@ -12,14 +12,14 @@ import android.widget.Toast
 import android.view.View
 import android.os.Vibrator
 import javax.inject.Inject
-import at.cpickl.agrotlin.service.server.LoginService
+import at.cpickl.agrotlin.service.engine.UserEngine
 import at.cpickl.agrotlin.R
 import android.content.Context
 import android.content.Intent
 import android.widget.TextView
 import at.cpickl.agrotlin.showToast
 import org.slf4j.LoggerFactory
-import at.cpickl.agrotlin.service.server.LoginException
+import at.cpickl.grotlin.endpoints.LoginClientException
 
 // good roboguice sample: https://github.com/roboguice/roboguice/tree/master/astroboy
 
@@ -41,7 +41,7 @@ public open class LoginActivity : SwirlActivity() {
 //    @InjectView(R.id.thumbnail)         thumbnail: ImageView? = null
 //    @InjectResource(R.drawable.icon)    icon: Drawable? = null
 //    @InjectResource(R.string.app_name)  myName: String? = null
-    Inject private var loginService: LoginService? = null
+    Inject private var userEngine: UserEngine? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super<SwirlActivity>.onCreate(savedInstanceState)
@@ -63,15 +63,20 @@ public open class LoginActivity : SwirlActivity() {
         val username = inpUsername!!.getText().toString()
         val password = inpPassword!!.getText().toString()
 
-        try {
-            val token = loginService!!.login(username, password)
-            // store token in global data storage
-            // request /user/profile endpoint
-            showToast("Successfully logged in as ${username}.")
-        } catch (e: LoginException) {
-            LOG.error("Ups!", e)
-            showToast("Login failed!")
-        }
+        // FIXME catch exception doesnt work, needs passing a custom exception handler and check via instanceof for LoginClientException
+//        try {
+            userEngine!!.login(username, password, {
+                token ->
+                LOG.debug("Logged in as 'username' and got token '${token}'.")
+                // store token in global data storage
+                // request /user/profile_justMyOwnBecauseRegularProfileIsThePubliclyVisible endpoint
+
+                showToast("Successfully logged in as ${username}.")
+            })
+//        } catch (e: LoginClientException) {
+//            LOG.error("Ups!", e)
+//            showToast("Login failed!")
+//        }
     }
 
 }

@@ -43,6 +43,7 @@ class UserResource [Inject] (private val userService: UserService) {
         return userService.loadAll(pagination).map(userTransformer)
     }
 
+    // on invalid login: returns FORBIDDEN(403), FaultCode.INVALID_CREDENTIALS
     POST Path("/login")
     Consumes(MediaType.APPLICATION_JSON) Produces(MediaType.APPLICATION_JSON)
     fun login(login: LoginRequestRto): LoginResponseRto {

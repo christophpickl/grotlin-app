@@ -12,7 +12,6 @@ import org.apache.http.util.EntityUtils
 import java.net.URI
 import org.codehaus.jackson.JsonProcessingException
 import at.cpickl.grotlin.endpoints.FaultRto
-import at.cpickl.grotlin.endpoints.ClientFaultException
 import at.cpickl.grotlin.JsonMarshaller
 
 val ACCESS_TOKEN_HEADER_NAME = "X-access_token"
@@ -51,6 +50,13 @@ public class RestResponse(private val response: CloseableHttpResponse, private v
 //    override fun toString() = MoreObjec
 
 }
+
+class ClientFaultException(message: String, val response: RestResponse, val fault: FaultRto) : RuntimeException(message) {
+    override fun toString(): String {
+        return "Fault was thrown: ${fault} (status code = ${response.status}) with message: ${getMessage()}"
+    }
+}
+
 
 public trait AnyRestClient<T : AnyRestClient<T>> {
     public fun header(name: String, value: String): T
