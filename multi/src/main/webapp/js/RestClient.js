@@ -1,4 +1,5 @@
 
+
 var RestClient = function(baseUrl) {
 	this.LOG = new Log("RestClient");
 	this.baseUrl = baseUrl;
@@ -26,6 +27,12 @@ RestClient.prototype.getVersion = function (onSuccessFunction) {
     this.LOG.debug("getVersion()");
     this._get("/version", onSuccessFunction);
 };
+
+RestClient.prototype.getProfile = function (onSuccessFunction) {
+    this.LOG.debug("getProfile()");
+    this._get("/users/profile", onSuccessFunction);
+};
+
 RestClient.prototype.joinGame = function (onSuccessFunction) {
     this.LOG.debug("joinGame()");
     this._post("/game/random", {}, onSuccessFunction);
@@ -49,6 +56,9 @@ RestClient.prototype._get = function(urlPart, onSuccessFunction) {
 	$.ajax({
         type: "GET",
         url: this._fullUrl(urlPart),
+        headers: {
+            "X-access_token": this.accessToken
+        },
         success: onSuccessFunction
     });
 };
@@ -72,8 +82,11 @@ RestClient.prototype._fullUrl = function(urlPart) {
 };
 
 RestClient.prototype._onAjaxError = function(request, status, error) {
-	this.LOG.error("ERROR: " + error + " (status=" + status + ") request=" + request);
-    alert("ERROR: " + error + " (status=" + status + ") request=" + request);
+	console.log("RestClient.prototype._onAjaxError");
+	// this.LOG == undefined?!?!?
+	
+	// this.LOG.debug("ERROR: " + error + " (status=" + status + ") request=" + request);
+    // alert("ERROR: " + error + " (status=" + status + ") request=" + request);
     // request.responseJSON.message ... how to access those? seen in debugger, but not accessible this way.
     // request.responseJSON.code
 };

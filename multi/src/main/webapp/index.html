@@ -51,12 +51,17 @@
         	/*width: auto;
         	display: table-cell;*/
         }
-        #outputText {
+        #outputText, #logText {
         	font-family: monospace;
         	width: 100%;
-        	height: 400px;
         	background-color: #4A4A4A;
         	color: #EDCE05;
+        }
+        #outputText {
+        	height: 400px;
+        }
+        #logText {
+        	height: 250px;
         }
         #configuration li {
         	list-style: none;
@@ -91,6 +96,7 @@
 				<ul>
 					<li>
 		    			Environment:
+		    			<!-- TODO init those values from within javascript, in order to have access to it programmatically -->
 		    			<input type="radio" id="inp_environment_local" name="inp_environment" value="http://localhost:8888" checked /><label for="inp_environment_local">Local</label>
 		                <input type="radio" id="inp_environment_prod" name="inp_environment" value="http://swirl-engine.appspot.com"><label for="inp_environment_prod">Production</label>
 					</li>
@@ -123,7 +129,10 @@
 		</div>
 		
 		<div id="outputArea">
+			<font>ReST RESULT</font>
 			<textarea id="outputText"></textarea>
+			<font>LOG</font>
+			<textarea id="logText"></textarea>
 		</div>
 	</div>
     <script src="js/main.js" type="text/javascript"></script>

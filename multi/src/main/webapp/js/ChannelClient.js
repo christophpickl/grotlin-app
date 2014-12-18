@@ -3,13 +3,14 @@
 var ChannelClient = function() {
 	this.LOG = new Log("ChannelClient");
 	this.socket = null;
+	this.channel = null;
 };
 
 ChannelClient.prototype.connect = function(token, onMessageFunction) {
     this.LOG.debug("connectChannel(token=" + token + ")");
-    channel = new goog.appengine.Channel(token);
+    this.channel = new goog.appengine.Channel(token);
     // channel.send_message(token, "hi from JS")
-
+	
     this.socket = channel.open();
     var self = this;
     this.socket.onopen = function () {

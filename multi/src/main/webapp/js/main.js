@@ -14,9 +14,32 @@ var Log = function(source) {
 		_log("ERROR", message);
 	};
 	var _log = function (level, message) {
-		console.log("[" + level + "] " + source + " - " + message);
+		var fullMessage = nowFormatted() + " [" + level + "] " + source + " - " + message;
+		$("#logText").val(fullMessage + "\n" + $("#logText").val());
+		console.log(fullMessage);
 	};
 };
+
+function nowFormatted() {
+	var now = new Date();
+	var hour = now.getHours();
+	if (hour < 10) {
+		hour = "0" + hour;
+	}
+	var min = now.getMinutes();
+	if (min < 10) {
+		min = "0" + min;
+	}
+	var sec = now.getSeconds();
+	if (sec < 10) {
+		sec = "0" + sec;
+	}
+	var ms = now.getMilliseconds();
+	if (ms < 100) {
+		ms = "0" + ms;
+	}
+	return hour + ":" + min + ":" + sec + "." + ms;
+}
 
 
 $(document).ready(function() {
