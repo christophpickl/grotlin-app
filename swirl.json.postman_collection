@@ -33,7 +33,8 @@
 			"description": "",
 			"order": [
 				"36ac9b91-382f-7e2f-e879-c807fc78293d",
-				"a58b692c-3bd4-94a7-b4f5-ad478b5b3acb"
+				"a58b692c-3bd4-94a7-b4f5-ad478b5b3acb",
+				"2b2a171e-2067-de79-e3e1-fd482fd15bd0"
 			],
 			"collection_name": "swirl",
 			"collection_id": "7c79fadc-3410-7002-0d46-90c163d4c7b0"
@@ -67,6 +68,7 @@
 	],
 	"timestamp": 1416932606490,
 	"synced": false,
+	"remoteLink": "",
 	"requests": [
 		{
 			"id": "1083c8e0-417a-dd3c-89fd-b18c408586e6",
@@ -121,6 +123,25 @@
 			"rawModeData": "{\n  \"username\": \"user1\",\n  \"password\": \"0BEEC7B5EA3F0FDBC95D0DD47F3C5BC275DA8A33\"\n}"
 		},
 		{
+			"id": "2b2a171e-2067-de79-e3e1-fd482fd15bd0",
+			"headers": "Accept: application/json\nX-access_token: {{token}}\n",
+			"url": "{{host}}/channel/connections",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1417781766708,
+			"name": "/connections ... list",
+			"description": "",
+			"collectionId": "7c79fadc-3410-7002-0d46-90c163d4c7b0",
+			"synced": false
+		},
+		{
 			"id": "2bcada67-5e3c-95a1-7347-889ffd639d9a",
 			"headers": "Accept: application/json\nX-access_token: {{token}}\n",
 			"url": "{{host}}/users",
@@ -156,7 +177,7 @@
 		},
 		{
 			"id": "36ac9b91-382f-7e2f-e879-c807fc78293d",
-			"headers": "Accept: application/json\n",
+			"headers": "Accept: application/json\nX-access_token: {{token}}\n",
 			"url": "{{host}}/channel",
 			"preRequestScript": "",
 			"pathVariables": {},
@@ -165,7 +186,9 @@
 			"dataMode": "params",
 			"version": 2,
 			"tests": "",
-			"time": 1417094271773,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1418133711693,
 			"name": "/ ... create token",
 			"description": "",
 			"collectionId": "7c79fadc-3410-7002-0d46-90c163d4c7b0",
@@ -242,7 +265,7 @@
 		},
 		{
 			"id": "a58b692c-3bd4-94a7-b4f5-ad478b5b3acb",
-			"headers": "Accept: application/json\n",
+			"headers": "Accept: application/json\nX-access_token: {{token}}\n",
 			"url": "{{host}}/channel/push",
 			"preRequestScript": "",
 			"pathVariables": {},
@@ -251,7 +274,9 @@
 			"dataMode": "params",
 			"version": 2,
 			"tests": "",
-			"time": 1417094714195,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1417794087897,
 			"name": "/channel/push message",
 			"description": "",
 			"collectionId": "7c79fadc-3410-7002-0d46-90c163d4c7b0",
