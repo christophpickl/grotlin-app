@@ -117,7 +117,7 @@ class ObjectifyUserService [Inject] (private val idGenerator: IdGenerator) : Use
 class LoginException(message: String, fault: Fault) : FaultException(message, Status.FORBIDDEN, fault)
 
 data class User(
-        val name: String,
+        val name: String, // primary key
         val email: String,
         val password: String,
         val role: Role,

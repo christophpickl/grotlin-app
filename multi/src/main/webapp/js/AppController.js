@@ -41,14 +41,19 @@ var AppController = function() {
 			var newToken = $(this).val();
 			localStorage.setItem('channelToken', newToken); 
 		});
-		
-	    $("#btn_get_version").click(function() {
-	    	self._logOutput("Loading ...");
-	        restClient.getVersion(function(data) {
-	            LOG.debug("SUCCESS version");
-	            self._logOutput(JSON.stringify(data, null, "\t"));
-	        });
-	    });
+
+        $("#btn_get_version").click(function() {
+            self._logOutput("Loading ...");
+            restClient.getVersion(function(data) {
+                LOG.debug("SUCCESS version");
+                self._logOutput(JSON.stringify(data, null, "\t"));
+            });
+        });
+        $("#btn_shutdown").click(function() {
+            restClient.shutdown(function() {
+                LOG.debug("SUCCESS shutdown");
+            });
+        });
 	    $("#btn_join_game").click(function() {
 	    	self._logOutput("Loading ...");
 	        restClient.joinGame(function(data) {
@@ -60,7 +65,7 @@ var AppController = function() {
 	    $("#btn_get_channel_token").click(function() {
 	    	self._logOutput("Loading ...");
 	        restClient.createChannelToken(function(data) {
-	            LOG.debug("SUCCESS: channel token = " + data.channelToken);
+	            LOG.debug("createChannelToken() SUCCESS result: channel token = " + data.channelToken);
 	            $("#txt_channel_token").val(data.channelToken);
 	            localStorage.setItem('channelToken', data.channelToken);
 	            self._logOutput(JSON.stringify(data, null, "\t"));
@@ -82,7 +87,9 @@ var AppController = function() {
 
 	    });
         $("#btn_send_message").click(function() {
-            channelClient.sendMessage($("#sendMessageText").val());
+            restClient.pushMessage($("#sendMessageText").val(), function (data) {
+                LOG.debug("pushMessage() SUCCESS");
+            });
         });
 
 	};

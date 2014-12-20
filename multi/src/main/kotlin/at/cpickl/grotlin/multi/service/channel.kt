@@ -27,7 +27,7 @@ trait ChannelApiService {
 
 class ChannelApiServiceImpl : ChannelApiService {
     class object {
-        private val LOG = LoggerFactory.getLogger(javaClass<ChannelResource>())
+        private val LOG = LoggerFactory.getLogger(javaClass<ChannelApiServiceImpl>())
     }
 
     private val channelService: ChannelService  = ChannelServiceFactory.getChannelService()
@@ -44,6 +44,7 @@ class ChannelApiServiceImpl : ChannelApiService {
         // callbacks are called. At this point, the client can make an XHR request to the application to request a new token and
         // open a new channel.
         val token = channelService.createChannel(user.accessToken!!)
+        LOG.debug("Created new channel token {} for user {}.", token, user.name)
         return token
     }
 

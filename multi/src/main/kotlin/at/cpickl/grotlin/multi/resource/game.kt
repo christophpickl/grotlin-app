@@ -18,7 +18,9 @@ import javax.ws.rs.GET
 import com.google.common.base.MoreObjects
 import at.cpickl.grotlin.multi.service.RunningGame
 import javax.ws.rs.PathParam
-
+import javax.ws.rs.Consumes
+import at.cpickl.grotlin.multi.service.AttackOrder
+import at.cpickl.grotlin.Map as Mapp
 
 Path("/game")
 Produces(MediaType.APPLICATION_JSON)
@@ -48,12 +50,30 @@ class GameResource [Inject](
         return RunningGameRto.transform(runningGameService.gameByIdForUser(gameId, user))
     }
 
+    Secured POST Path("/runningGames/{gameId}/attack") Consumes(MediaType.APPLICATION_JSON)
+    fun attackRegion(
+            PathParam("gameId") gameId: String,
+            attackRto: AttackOrderRto,
+            user: User): Response {
+        val game = runningGameService.gameByIdForUser(gameId, user)
+        runningGameService.attackRegion(AttackOrder(user, game,
+                game.regionById(attackRto.sourceRegionId!!),
+                game.regionById(attackRto.targetRegionId!!)))
+        // result will be pushed via channel API
+        return Response.ok().build()
+    }
+
 }
+
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class AttackOrderRto (
+        var sourceRegionId: String? = null,
+        var targetRegionId: String? = null
+)
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class WaitingRandomGameRto (
         var usersMax: Int? = null,
         var usersWaiting: Int? = null,
-        var gameId: String? = null
+        var waitingGameId: String? = null // running game will have different ID, pushed via Channel API
 ) {
     class object {
         val transform: (WaitingRandomGame) -> WaitingRandomGameRto  =
@@ -61,15 +81,40 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class WaitingRandomG
     }
 }
 
-XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class RunningGameRto {
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class RunningGameRto(
+        var users: Collection<User>? = null,
+        var map: MappRto? = null
+) {
     class object {
         val transform: (RunningGame) -> RunningGameRto  =
                 { (game) ->
                     val rto = RunningGameRto()
                     rto.users = game.users
+                    rto.map = MappRto.transform(game.map)
                     rto
                 }
     }
-    var users: Collection<User>? = null
-    override fun toString() = MoreObjects.toStringHelper(this).add("users", users).toString()
+
+}
+
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class MappRto (
+        var regions: Collection<RegionRto>? = null
+) {
+    class object {
+        val transform: (Mapp) -> MappRto  =
+                { (map) ->
+                    val rto = MappRto()
+                    rto.regions = map.regions.map { RegionRto(it.id, it.armies, it.owner?.name) }
+                    rto
+                }
+    }
+}
+
+
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class RegionRto(
+        var id: String? = null,
+        var armies: Int? = 0,
+        var ownerName: String? = null // could be really null, if not owned by anyone
+) {
+
 }

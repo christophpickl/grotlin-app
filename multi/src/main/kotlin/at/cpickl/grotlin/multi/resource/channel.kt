@@ -20,6 +20,9 @@ import at.cpickl.grotlin.multi.service.Role
 import at.cpickl.grotlin.multi.service.User
 import at.cpickl.grotlin.channel.GameStartsNotification
 import at.cpickl.grotlin.channel.GameStartsNotificationRto
+import javax.ws.rs.Consumes
+import com.google.common.io.CharStreams
+import java.io.InputStreamReader
 
 Path("/channel") class ChannelResource [Inject] (private val channelApiService: ChannelApiService) {
     class object {
@@ -32,10 +35,18 @@ Path("/channel") class ChannelResource [Inject] (private val channelApiService: 
         return """{ "channelToken": "${channelToken}" }"""
     }
 
-    Secured Path("/push") POST Produces(MediaType.APPLICATION_JSON)
-    fun pushMessage(user: User): String {
+    Secured Path("/push") POST Produces(MediaType.APPLICATION_JSON) Consumes(MediaType.APPLICATION_JSON)
+    fun pushMessage(Context request: HttpServletRequest, user: User): String {
+//        request.getReader()
+        val requestBody = CharStreams.toString(InputStreamReader(request.getInputStream()))
+        println("XXXXXXXXXXXXXXX requestBody ='${requestBody}'")
         channelApiService.sendNotification(GameStartsNotification("my game id"), user)
+        // TODO consumes Rto containing: targetUser, clientBody==notification instance
         return """{ "sent": true }"""
+    }
+
+    private fun transformPushRequest() {
+
     }
 
     Secured(Role.ADMIN) Path("/connections") GET Produces(MediaType.APPLICATION_JSON)

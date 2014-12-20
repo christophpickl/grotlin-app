@@ -109,7 +109,7 @@ trait GameListener {
 }
 
 
-data class Player(val name: String, public val color: Int = 0) {
+data class Player(val name: String, public val color: Int = 0) { // TODO make non-optional!
 
     var isAlive: Boolean = true // dirty design
         get() = $isAlive

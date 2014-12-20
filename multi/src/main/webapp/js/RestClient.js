@@ -43,9 +43,13 @@ RestClient.prototype.createChannelToken = function(onSuccessFunction) {
     this._post("/channel", {}, onSuccessFunction);
 };
 
-RestClient.prototype.sendMessage = function() {
-    this.LOG.debug("sendMessage()");
-    this._post("/channel/push", {}, onSuccessFunction);
+RestClient.prototype.pushMessage = function(body, onSuccessFunction) {
+    this.LOG.debug("pushMessage()");
+    this._post("/channel/push", { text: body }, onSuccessFunction);
+};
+RestClient.prototype.shutdown = function(onSuccessFunction) {
+    this.LOG.debug("shutdown()");
+    this._post("/_ah/admin/quit", { }, onSuccessFunction);
 };
 
 RestClient.prototype._executeAny = function(urlPart, onSuccessFunction, ajaxCall) {
@@ -62,7 +66,9 @@ RestClient.prototype._get = function(urlPart, onSuccessFunction) {
         success: onSuccessFunction
     });
 };
-RestClient.prototype._post = function(urlPart, payload, onSuccessFunction) {
+RestClient.prototype._post = function(urlPart, payloadAsJson, onSuccessFunction /*onErrorFunction = null*/) {
+    var payloadAsString = JSON.stringify(payloadAsJson, null, 2);
+    this.LOG.debug("post() ... payloadAsString='" + payloadAsString + "'");
 	$.ajax({
         type: "POST",
         url: this._fullUrl(urlPart),
@@ -70,8 +76,9 @@ RestClient.prototype._post = function(urlPart, payload, onSuccessFunction) {
             "X-access_token": this.accessToken
         },
         // contentType : 'application/json',
-        data: JSON.stringify(payload),
+        data: payloadAsString,
         success: onSuccessFunction
+        // TODO error: onErrorFunction ? onErrorFunction : this._onAjaxError (and remove global setting from above)
     });
 };
 
@@ -82,7 +89,7 @@ RestClient.prototype._fullUrl = function(urlPart) {
 };
 
 RestClient.prototype._onAjaxError = function(request, status, error) {
-	console.log("RestClient.prototype._onAjaxError");
+	console.log("RestClient.prototype._onAjaxError(request="+request+", status="+status+", error="+error+")");
 	// this.LOG == undefined?!?!?
 	
 	// this.LOG.debug("ERROR: " + error + " (status=" + status + ") request=" + request);

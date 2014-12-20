@@ -63,7 +63,7 @@ class App(private val game: Game) : GameListener {
     }
 
     private fun printRegions(regions: Collection<Region>) {
-        println(regions.fold("  ", {(pre, source) -> pre + " - " + source.label }))
+        println(regions.fold("  ", {(pre, source) -> pre + " - " + source.id }))
     }
 
     private fun prompt(): String {
@@ -75,11 +75,11 @@ class App(private val game: Game) : GameListener {
 }
 
 private fun Map.regionByLabel(label: String): Region {
-    return regions.first { it.label == label }
+    return regions.first { it.id == label }
 }
 
 private fun Region.toPrettyString(): String =
-        label + "=" + if (owner == null) "----" else "${owner!!.name}/${armies}"
+        id + "=" + if (owner == null) "----" else "${owner!!.name}/${armies}"
 
 
 

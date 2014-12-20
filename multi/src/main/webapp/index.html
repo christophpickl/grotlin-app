@@ -3,7 +3,9 @@
 <head lang="en">
     <meta charset="UTF-8" />
 	<title>swirl webapp</title>
-    <script src="http://swirl-engine.appspot.com/_ah/channel/jsapi" type="text/javascript"></script>
+    <!--<script src="http://swirl-engine.appspot.com/_ah/channel/jsapi" type="text/javascript"></script>-->
+    <script src="http://localhost:8888/_ah/channel/jsapi" type="text/javascript"></script>
+    <!--<script src="/_ah/channel/jsapi" type="text/javascript"></script>-->
     <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
     <script src="js/RestClient.js" type="text/javascript"></script>
     <script src="js/ChannelClient.js" type="text/javascript"></script>
@@ -39,8 +41,9 @@
 				<h2>Endpoints</h2>
 				<ul>
 					<li>
-						<h3>Version</h3>
-						<input type="submit" id="btn_get_version" value="GET /version" />
+						<h3>General</h3>
+                        <input type="submit" id="btn_get_version" value="GET /version" />&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="submit" id="btn_shutdown" value="Shutdown" />
 					</li>
 					<li>
 						<h3>Game</h3>

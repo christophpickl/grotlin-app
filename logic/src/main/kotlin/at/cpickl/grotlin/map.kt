@@ -5,7 +5,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.Arrays
 
-
+// TODO rename Map class as of name clash with kotlin stdlib Map<X, Y> datastructure :(
 data open class Map(val regions: List<Region>) {
 
     fun attackSourceRegionsFor(player: Player): Collection<Region> {
@@ -21,10 +21,10 @@ data open class Map(val regions: List<Region>) {
 
 }
 
-class Simple4RegionsMap(val r1: Region = Region(label = "r1"),
-                        val r2: Region = Region(label = "r2"),
-                        val r3: Region = Region(label = "r3"),
-                        val r4: Region = Region(label = "r4")) :
+class Simple4RegionsMap(val r1: Region = Region(id = "r1"),
+                        val r2: Region = Region(id = "r2"),
+                        val r3: Region = Region(id = "r3"),
+                        val r4: Region = Region(id = "r4")) :
         Map(listOf(r1, r2, r3, r4)) {
     {
         r1.addBidirectional(r2, r3)
@@ -49,7 +49,7 @@ class Simple4RegionsMap(val r1: Region = Region(label = "r1"),
     }
 }
 
-data class Region(public var owner: Player? = null, var armies: Int = 0, var label: String = "?") {
+data class Region(public var owner: Player? = null, var armies: Int = 0, var id: String = "?") { // TODO make non-optional
 
 //    public var owner: Player? = _owner
 //        public get() = $owner

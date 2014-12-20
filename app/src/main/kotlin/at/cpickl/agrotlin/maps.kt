@@ -9,10 +9,10 @@ import android.graphics.Color
 import at.cpickl.grotlin.Player
 
 public class MiniMap {
-    public val region1: Region = Region(label = "r1")
-    public val region2: Region = Region(label = "r2")
-    public val region3: Region = Region(label = "r3")
-    public val region4: Region = Region(label = "r4")
+    public val region1: Region = Region(id = "r1")
+    public val region2: Region = Region(id = "r2")
+    public val region3: Region = Region(id = "r3")
+    public val region4: Region = Region(id = "r4")
     public val map: at.cpickl.grotlin.Map
 
     {

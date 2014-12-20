@@ -13,14 +13,14 @@ class MapTest {
 
     val p1 = Player("p1")
     val p2 = Player("p2")
-    var r1 = Region(label = "r1")
-    var r2 = Region(label = "r2")
-    var r3 = Region(label = "r3")
+    var r1 = Region(id = "r1")
+    var r2 = Region(id = "r2")
+    var r3 = Region(id = "r3")
 
     BeforeMethod fun init() {
-        r1 = Region(label = "r1")
-        r2 = Region(label = "r2")
-        r3 = Region(label = "r3")
+        r1 = Region(id = "r1")
+        r2 = Region(id = "r2")
+        r3 = Region(id = "r3")
     }
 
 
