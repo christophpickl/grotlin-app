@@ -8,80 +8,7 @@
     <script src="js/RestClient.js" type="text/javascript"></script>
     <script src="js/ChannelClient.js" type="text/javascript"></script>
     <script src="js/AppController.js" type="text/javascript"></script>
-
-    <style type="text/css">
-        body {
-        	font-family: Arial;
-            background-color: #97ABD1;
-            padding: 0px;
-            margin: 0px;
-        }
-        #header, #header h1 {
-            padding: 10px 10px 0px 15px;
-            margin: 0px 0px 30px 0px;
-        	background-color: #2D65CC;
-        }
-        #txt_access_token, #txt_channel_token {
-            width: 250px;
-        }
-        #container {
-        	width: 100%;
-        	position: relative;
-        	margin: 0px 30px 20px 30px;
-        	
-        	/*display: table;*/
-        }
-        #controlArea {
-        	position: absolute;
-        	left: 0;
-        	float: left;
-        	background-color: #A8BCE0;
-        	width: 40%;
-        	
-        	/*width: 500px;
-        	display: table-cell;*/
-        }
-        #outputArea {
-        	width: 60%;
-        	position: absolute;
-        	right: 0;
-        	/*overflow: auto;*/
-        	/*height: 400px;*/
-        	
-        	/*width: auto;
-        	display: table-cell;*/
-        }
-        #outputText, #logText {
-        	font-family: monospace;
-        	width: 100%;
-        	background-color: #4A4A4A;
-        	color: #EDCE05;
-        }
-        #outputText {
-        	height: 400px;
-        }
-        #logText {
-        	height: 250px;
-        }
-        #configuration li {
-        	list-style: none;
-        	margin-left: -40px;
-        	margin-bottom: 10px;
-        }
-        #endpoints li {
-        	list-style: none;
-        	background-color: #7A9DC4;
-        	border: 2px solid black;
-        	border-radius: 10px;
-        	padding: 5px;
-        	margin-left: -38px;
-        	margin-bottom: 10px;
-        }
-        h3 {
-        	padding: 0px 0px 10px 0px;
-        	margin: 0px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
     <div id="header">
@@ -123,6 +50,8 @@
 						<h3>Channel</h3>
 						Create channel token: <input type="submit" id="btn_get_channel_token" value="POST /channel" /><br/>
 						<input type="submit" id="btn_connect_channel" value="Connect to Channel" />
+                        <textarea id="sendMessageText"></textarea>
+                        <input type="submit" id="btn_send_message" value="Send Message" />
 					</li>
 				</ul>
 			</div>

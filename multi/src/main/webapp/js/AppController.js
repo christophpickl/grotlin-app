@@ -79,7 +79,12 @@ var AppController = function() {
 	        		break;
 	        	}
 	    	});
+
 	    });
+        $("#btn_send_message").click(function() {
+            channelClient.sendMessage($("#sendMessageText").val());
+        });
+
 	};
 	
 	this.init = function() {

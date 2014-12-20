@@ -4,13 +4,13 @@ var ChannelClient = function() {
 	this.LOG = new Log("ChannelClient");
 	this.socket = null;
 	this.channel = null;
+    this.token = null;
 };
 
 ChannelClient.prototype.connect = function(token, onMessageFunction) {
     this.LOG.debug("connectChannel(token=" + token + ")");
     this.channel = new goog.appengine.Channel(token);
-    // channel.send_message(token, "hi from JS")
-	
+
     this.socket = channel.open();
     var self = this;
     this.socket.onopen = function () {
@@ -27,4 +27,10 @@ ChannelClient.prototype.connect = function(token, onMessageFunction) {
         self.LOG.debug("onClose()");
     };
     console.log("connectChannel(token=" + token + ") ... DONE");
+};
+
+ChannelClient.prototype.sendMessage = function(body) {
+    this.LOG.debug("sendMessage(body=" + body + ")");
+    
+    this.channel.send_message(this.token, body);
 };
