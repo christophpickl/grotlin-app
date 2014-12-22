@@ -9,6 +9,7 @@ import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
 import javax.ws.rs.ext.Provider;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterContext
 import at.cpickl.grotlin.endpoints.Fault
+import org.slf4j.bridge.SLF4JBridgeHandler
 
 
 fun isDebugApp(): Boolean = System.getProperty("appDebug", "false").equals("true")

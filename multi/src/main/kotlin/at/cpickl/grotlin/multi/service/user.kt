@@ -4,14 +4,12 @@ import com.googlecode.objectify.ObjectifyService
 import com.googlecode.objectify.annotation.Entity
 import com.googlecode.objectify.annotation.Id
 import java.security.MessageDigest
-import java.util.UUID
 import at.cpickl.grotlin.endpoints.Fault
 import at.cpickl.grotlin.endpoints.FaultCode
 import at.cpickl.grotlin.multi.FaultException
 import javax.ws.rs.core.Response.Status
 import at.cpickl.grotlin.multi.resource.Pagination
 import at.cpickl.grotlin.multi.resource.paginate
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -121,7 +119,7 @@ data class User(
         val email: String,
         val password: String,
         val role: Role,
-        var accessToken: String? = null)
+        var accessToken: String? = null) // TODO create two different types of User impls in order to get rid of null
 
 enum class Role(val label: String, private val level: Int) {
     USER: Role("User", 40)

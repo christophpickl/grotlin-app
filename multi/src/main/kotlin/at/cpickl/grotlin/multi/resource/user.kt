@@ -7,17 +7,10 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.POST
 import javax.ws.rs.Consumes
-import javax.xml.bind.annotation.XmlAccessorType
-import javax.xml.bind.annotation.XmlAccessType
-import javax.xml.bind.annotation.XmlRootElement
-import javax.xml.bind.annotation.XmlElement
 import at.cpickl.grotlin.multi.service.User
 import javax.ws.rs.core.Response
 import javax.inject.Inject
-import java.lang.annotation.Retention
-import java.lang.annotation.Target
 import at.cpickl.grotlin.multi.service.Role
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.LoginRequestRto
 import at.cpickl.grotlin.endpoints.UserResponseRto
@@ -36,32 +29,35 @@ class UserResource [Inject] (private val userService: UserService) {
         rto
     }
 
+    /** Lists all user profiles (admin only). */
     Secured(Role.ADMIN) GET Path("/")
     Produces(MediaType.APPLICATION_JSON)
     fun getUsers(pagination: Pagination): Collection<UserResponseRto> {
-        LOG.debug("getUsers(pagination=${pagination})")
+        LOG.info("getUsers(pagination=${pagination})")
         return userService.loadAll(pagination).map(userTransformer)
     }
 
     // on invalid login: returns FORBIDDEN(403), FaultCode.INVALID_CREDENTIALS
     POST Path("/login")
     Consumes(MediaType.APPLICATION_JSON) Produces(MediaType.APPLICATION_JSON)
-    fun login(login: LoginRequestRto): LoginResponseRto {
-        val user = userService.login(login.username!!, login.password!!)
-        val rto = LoginResponseRto()
-        rto.accessToken = user.accessToken
-        return rto
+    fun login(loginRequest: LoginRequestRto): LoginResponseRto {
+        LOG.info("login(loginRequest=${loginRequest})")
+        val user = userService.login(loginRequest.username!!, loginRequest.password!!)
+        return LoginResponseRto.build(user.accessToken!!)
     }
 
     Secured POST Path("/logout")
     fun logout(user: User): Response {
+        LOG.info("logout(user=${user})")
         userService.logout(user)
         return Response.status(Response.Status.NO_CONTENT).build()
     }
 
+    /** Returns the private profile for "this" user. */
     Secured GET Path("/profile")
     Produces(MediaType.APPLICATION_JSON)
     fun getProfile(user: User): UserResponseRto {
+        LOG.info("getProfile(user=${user})")
         return userTransformer(user)
     }
 

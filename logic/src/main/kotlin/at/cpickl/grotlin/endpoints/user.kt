@@ -6,7 +6,6 @@ import javax.xml.bind.annotation.XmlRootElement
 import javax.xml.bind.annotation.XmlElement
 import at.cpickl.grotlin.restclient.RestClient
 import at.cpickl.grotlin.restclient.RestResponse
-import com.google.common.base.MoreObjects
 import at.cpickl.grotlin.restclient.Status
 import javax.inject.Inject
 
@@ -70,6 +69,7 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginResponseR
     override fun toString() = "LoginResultRto[accessToken='${accessToken}']"
 }
 
+// TODO rename to UserPrivateProfileResponseRto
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class UserResponseRto(var name: String? = null, var role: String? = null) {
     class object {
         fun build(name: String, role: String): UserResponseRto = UserResponseRto(name, role)

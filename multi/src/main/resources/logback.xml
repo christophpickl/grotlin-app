@@ -3,7 +3,10 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%file:%line] - %msg%n</pattern>
+            <!-- %logger{36} -->
+            <!-- [%file:%line] -->
+            <pattern>%-41(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{38} - %msg%n</pattern>
+
         </encoder>
     </appender>
 
@@ -12,16 +15,17 @@
         <file>swirl-multi.log</file>
 
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} [%file:%line] - %msg%n</pattern>
-            <!--<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>-->
+            <pattern>%-41(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
 
 
     <logger name="com.googlecode.objectify" level="WARN" />
-    <!-- FINE: Exception getting module instance
-         com.google.appengine.api.modules.ModulesException: Instance id unavailable -->
-    <logger name="com.google.appengine.tools.development." level="WARN" />
+    <logger name="com.google.appengine" level="WARN"/>
+    <logger name="com.google.apphosting" level="WARN"/>
+    <logger name="com.google.inject" level="WARN"/>
+    <logger name="org.jboss.resteasy" level="WARN"/>
+    <logger name="org.apache.jasper" level="WARN"/>
 
     <root level="TRACE">
         <appender-ref ref="STDOUT" />

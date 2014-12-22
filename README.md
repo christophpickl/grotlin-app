@@ -22,14 +22,20 @@ TODO
 ! black background should only apply to activity (not dialogs, toasts, etc)
 ! logging doesnt work, SLF4J <= DEBUG doesnt get printed in logcat
 * have a look at: https://github.com/vladlichonos/kotlinAndroidLib
+? gauge vs jbehave vs ... bdd?
 
 multi
 ---------
+!! implement google analytics:
+  https://cloud.google.com/appengine/docs/google-analytics#app_engine_server-side_analytics_collection
+  https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#event
+* add swagger
 
-* for local startup execute "gradle appengineRun"
+
+NOTE for local startup execute "gradle appengineRun"
   - http://localhost:8888/_ah/admin
   - http://localhost:8888/version
-* deploy via "gradle appengineUpdate"
+NOTE  deploy via "gradle appengineUpdate"
   - http://swirl-engine.appspot.com/version
 
 
