@@ -14,6 +14,13 @@ import at.cpickl.grotlin.endpoints.Fault
 fun isDebugApp(): Boolean = System.getProperty("appDebug", "false").equals("true")
 
 class AppModule : AbstractModule() {
+    class object {
+        {
+            println("Bridging java.util.logging to slf4j")
+            SLF4JBridgeHandler.removeHandlersForRootLogger()
+            SLF4JBridgeHandler.install()
+        }
+    }
     override fun configure() {
         install(ResourceModule())
         install(ServiceModule())

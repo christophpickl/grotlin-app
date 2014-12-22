@@ -7,6 +7,7 @@
         </encoder>
     </appender>
 
+    <!-- TODO for work with chainsaw, need to log in log4j xml format! -->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>swirl-multi.log</file>
 
@@ -18,6 +19,9 @@
 
 
     <logger name="com.googlecode.objectify" level="WARN" />
+    <!-- FINE: Exception getting module instance
+         com.google.appengine.api.modules.ModulesException: Instance id unavailable -->
+    <logger name="com.google.appengine.tools.development." level="WARN" />
 
     <root level="TRACE">
         <appender-ref ref="STDOUT" />

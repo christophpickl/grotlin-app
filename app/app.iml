@@ -95,13 +95,13 @@
     <orderEntry type="library" exported="" name="httpclient-android-4.3.5" level="project" />
     <orderEntry type="library" exported="" name="commons-collections-3.2.1" level="project" />
     <orderEntry type="library" exported="" name="guava-18.0" level="project" />
-    <orderEntry type="library" exported="" name="slf4j-api-1.7.7" level="project" />
     <orderEntry type="library" exported="" name="jackson-core-asl-1.9.13" level="project" />
     <orderEntry type="library" exported="" name="roboblender-3.0.1" level="project" />
     <orderEntry type="library" exported="" name="jackson-mapper-asl-1.9.13" level="project" />
     <orderEntry type="library" exported="" name="commons-lang-2.4" level="project" />
     <orderEntry type="library" exported="" name="joda-time-2.5" level="project" />
     <orderEntry type="library" exported="" name="velocity-1.7" level="project" />
+    <orderEntry type="library" exported="" name="slf4j-api-1.7.9" level="project" />
     <orderEntry type="library" exported="" name="logback-core-1.1.2" level="project" />
     <orderEntry type="library" exported="" name="slf4j-android-1.7.7" level="project" />
     <orderEntry type="module" module-name="logic" exported="" />
