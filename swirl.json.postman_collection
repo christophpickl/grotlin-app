@@ -46,7 +46,9 @@
 			"order": [
 				"36aa2088-1ac6-1818-d08f-b5e6f04c5383",
 				"12799900-fe26-010e-8f2b-2c96a6c1c28f",
-				"c2e9b89d-b4d5-cb2e-f0d9-a9df79a65143"
+				"c2e9b89d-b4d5-cb2e-f0d9-a9df79a65143",
+				"63d1f188-585c-4234-9a57-ae6c35f44e16",
+				"8ab5e7ee-09da-7245-71e4-83409b0126f9"
 			],
 			"collection_name": "swirl",
 			"collection_id": "7c79fadc-3410-7002-0d46-90c163d4c7b0"
@@ -230,6 +232,25 @@
 			"rawModeData": "{\n  \"userToken\": \"602aec85-850f-4d7a-9206-523fff5d0201\"\n}"
 		},
 		{
+			"id": "63d1f188-585c-4234-9a57-ae6c35f44e16",
+			"headers": "Accept: application/json\nX-access_token: {{token}}\n",
+			"url": "{{host}}/game/runningGames/{{rGameId}}",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1419091512607,
+			"name": "/runningGames/{gameId}",
+			"description": "",
+			"collectionId": "7c79fadc-3410-7002-0d46-90c163d4c7b0",
+			"synced": false
+		},
+		{
 			"id": "7be03717-6341-b1fd-b789-bb894115b03f",
 			"headers": "Accept: application/json\n",
 			"url": "{{host}}/_ah/admin/",
@@ -262,6 +283,26 @@
 			"description": "",
 			"collectionId": "7c79fadc-3410-7002-0d46-90c163d4c7b0",
 			"synced": false
+		},
+		{
+			"id": "8ab5e7ee-09da-7245-71e4-83409b0126f9",
+			"headers": "Accept: application/json\nX-access_token: {{token}}\nContent-Type: application/json\n",
+			"url": "{{host}}/game/runningGames/{{rGameId}}/attack",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1419091519598,
+			"name": "/runningGames/{gameId}/attack",
+			"description": "",
+			"collectionId": "7c79fadc-3410-7002-0d46-90c163d4c7b0",
+			"synced": false,
+			"rawModeData": "{\n  \"sourceRegionId\": \"r1\",\n  \"targetRegionId\": \"r2\"\n}"
 		},
 		{
 			"id": "a58b692c-3bd4-94a7-b4f5-ad478b5b3acb",
