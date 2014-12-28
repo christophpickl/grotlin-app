@@ -21,5 +21,5 @@ class Battle(val attacker: Region, val defender: Region, private val dice: Dice)
 }
 
 data class BattleResult(val winner: Player) {
-
+    // MINOR store dice numbers
 }

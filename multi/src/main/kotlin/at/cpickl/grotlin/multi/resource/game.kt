@@ -15,12 +15,11 @@ import at.cpickl.grotlin.multi.service.WaitingRandomGame
 import at.cpickl.grotlin.multi.service.RunningGameService
 import at.cpickl.grotlin.multi.service.Role
 import javax.ws.rs.GET
-import com.google.common.base.MoreObjects
-import at.cpickl.grotlin.multi.service.RunningGame
 import javax.ws.rs.PathParam
 import javax.ws.rs.Consumes
 import at.cpickl.grotlin.multi.service.AttackOrder
 import at.cpickl.grotlin.Map as Mapp
+import at.cpickl.grotlin.multi.service.UserGame
 
 Path("/game")
 Produces(MediaType.APPLICATION_JSON)
@@ -86,7 +85,7 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class RunningGameRto
         var map: MappRto? = null
 ) {
     class object {
-        val transform: (RunningGame) -> RunningGameRto  =
+        val transform: (UserGame) -> RunningGameRto =
                 { (game) ->
                     val rto = RunningGameRto()
                     rto.users = game.users

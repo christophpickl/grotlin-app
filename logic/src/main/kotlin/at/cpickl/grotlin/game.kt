@@ -4,7 +4,20 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 
-class Game(val map: Map, val players: List<Player>, val dice: Dice = RealDice()) {
+//data class RunningGame(val id: String, val users: Collection<Player>, val map: Map) {
+
+//
+//    fun asPlayer(user: User): Player {
+//        val found = playersByName.get(user.name)
+//        if (found != null) {
+//            return found
+//        }
+//        throw IllegalArgumentException("Not found player by user instance: {$user}! Registered players: ${playersByName.values()}")
+//    }
+// currentPlayer's turn
+//}
+
+open class Game(val id: String, val map: Map, val players: List<Player>, val dice: Dice = RealDice()) {
 
     private val playersIterator = PlayerIterator(players)
 
@@ -18,7 +31,7 @@ class Game(val map: Map, val players: List<Player>, val dice: Dice = RealDice())
 
     public fun attack(source: Region, target: Region): BattleResult {
         LOG.info("attack(source: {}, target: {})", source, target)
-        println("source: ${source}")
+
         verifyAttackable(source, target)
         if (!target.isOwned()) {
             source.attackAndOwn(target)
@@ -30,6 +43,14 @@ class Game(val map: Map, val players: List<Player>, val dice: Dice = RealDice())
         }
         source.armies = 1 // in any case it's reduced to 1 ;)
         return battleResult
+    }
+
+    fun regionById(id: String): Region {
+        val found = map.regions.firstOrNull { it.id == id }
+        if (found != null) {
+            return found
+        }
+        throw IllegalArgumentException("Not found region by ID '${id}' with regions: ${map.regions}!")
     }
 
     public fun nextPlayer() {

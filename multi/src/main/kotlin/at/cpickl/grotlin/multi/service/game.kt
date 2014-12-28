@@ -10,9 +10,12 @@ import at.cpickl.grotlin.multi.resource.UserException
 import at.cpickl.grotlin.channel.GameStartsNotification
 import at.cpickl.grotlin.channel.WaitingGameNotification
 import at.cpickl.grotlin.Simple4RegionsMap
-import at.cpickl.grotlin.Map as Mapp
 import at.cpickl.grotlin.Region
+import at.cpickl.grotlin.Game
+import at.cpickl.grotlin.Map as Mapp
 import at.cpickl.grotlin.Player
+import at.cpickl.grotlin.Dice
+import at.cpickl.grotlin.RealDice
 
 class WaitingRandomGameService [Inject] (
         private val runningGameService: RunningGameService,
@@ -48,7 +51,7 @@ class WaitingRandomGameService [Inject] (
         firstGame.addWaitingUser(user)
         if (firstGame.isFull) {
             waitingGames.remove(firstGame)
-            runningGameService.addNewGame(RunningGame(idGenerator.generate(), firstGame.users, firstGame.map))
+            runningGameService.addNewGame(UserGame.build(idGenerator.generate(), firstGame.map, firstGame.users))
 
         }
         return firstGame
@@ -56,11 +59,12 @@ class WaitingRandomGameService [Inject] (
 
 }
 
-public trait RunningGameService {
-    public val runningGames: Collection<RunningGame>
 
-    public fun addNewGame(game: RunningGame)
-    public fun gameByIdForUser(gameId: String, user: User): RunningGame
+public trait RunningGameService {
+    public val runningGames: Collection<UserGame>
+
+    public fun addNewGame(game: UserGame)
+    public fun gameByIdForUser(gameId: String, user: User): UserGame
 
     public fun attackRegion(attack: AttackOrder)
 }
@@ -71,17 +75,17 @@ class InMemoryRunningGameService [Inject] (private val channelApiService: Channe
         private val LOG = LoggerFactory.getLogger(javaClass<InMemoryRunningGameService>())
     }
 
-    private val gamesById = hashMapOf<String, RunningGame>()
-    override public val runningGames: Collection<RunningGame>
+    private val gamesById = hashMapOf<String, UserGame>()
+    override public val runningGames: Collection<UserGame>
         get() = gamesById.values()
 
-    override public fun addNewGame(game: RunningGame) {
+    override public fun addNewGame(game: UserGame) {
         LOG.info("addNewGame(game=${game})")
         channelApiService.sendNotification(GameStartsNotification(game.id), game.users)
         gamesById.put(game.id, game)
     }
 
-    override public fun gameByIdForUser(gameId: String, user: User): RunningGame {
+    override public fun gameByIdForUser(gameId: String, user: User): UserGame {
         LOG.debug("gameByIdForUser(gameId='${gameId}', user=${user})")
         val game = gamesById.get(gameId)
         if (game == null) {
@@ -100,41 +104,32 @@ class InMemoryRunningGameService [Inject] (private val channelApiService: Channe
         // TODO verify is attackable
 
         val player = attack.game.asPlayer(attack.user)
-        attack.targetRegion.owner = player
-        attack.targetRegion.armies = 1
+        val result = attack.game.attack(attack.sourceRegion, attack.targetRegion)
+        val battleWon = player == result.winner
+        // send user result directly, not via channel!
         // channelApiService.sendNotification(AttackNotification(battleResult), game.users)
     }
 
 }
 
-data class AttackOrder(val user: User, val game: RunningGame, val sourceRegion: Region, val targetRegion: Region)
+data class AttackOrder(val user: User, val game: UserGame, val sourceRegion: Region, val targetRegion: Region)
 
 
-data class RunningGame(val id: String, val users: Collection<User>, val map: Mapp) {
-    private val playersByName: Map<String, Player>
+class UserGame(id: String, map: Mapp, val users: List<User>, players: List<Player>, dice: Dice) : Game(id, map, players, dice) {
+    class object {
+        fun build(id: String, map: Mapp, users: List<User>, dice: Dice = RealDice()): UserGame {
+            if (users.empty) throw IllegalArgumentException("Users must not be empty!")
+            val color = 1 // TODO static color for player :-/
+            return UserGame(id, map, users, users.map({ Player(it.name, color) }), dice)
+        }
+    }
+    private val playerByName: Map<String, Player>
     {
-        if (users.empty) throw IllegalArgumentException("Users must not be empty!")
-        val color = 1
-        playersByName = users.map({ Player(it.name, color ) }).toMap { it -> it.name }
+        playerByName = players.toMap { it.name }
     }
 
+    fun asPlayer(user: User) = playerByName.get(user.name)!!
 
-    fun asPlayer(user: User): Player {
-        val found = playersByName.get(user.name)
-        if (found != null) {
-            return found
-        }
-        throw IllegalArgumentException("Not found player by user instance: {$user}! Registered players: ${playersByName.values()}")
-    }
-
-    // currentPlayer's turn
-    fun regionById(id: String): Region {
-        val found = map.regions.firstOrNull { it.id == id }
-        if (found != null) {
-            return found
-        }
-        throw IllegalArgumentException("Not found region by ID '${id}' with regions: ${map.regions}!")
-    }
 }
 
 data class WaitingRandomGame(val id: String, val usersMax: Int, val map: Mapp) {

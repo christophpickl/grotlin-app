@@ -6,7 +6,7 @@ fun main(args: Array<String>) {
     val p2 = Player("p2")
     map.r1.ownedBy(p1, 2)
     map.r4.ownedBy(p2, 2)
-    App(Game(map, linkedListOf(p1, p2))).play()
+    App(Game("ID", map, linkedListOf(p1, p2))).play()
 
     println("==================================")
     println("END")
