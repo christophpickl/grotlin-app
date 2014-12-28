@@ -10,6 +10,7 @@ import javax.ws.rs.ext.Provider;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterContext
 import at.cpickl.grotlin.endpoints.Fault
 import org.slf4j.bridge.SLF4JBridgeHandler
+import com.google.appengine.api.utils.SystemProperty
 
 
 fun isDebugApp(): Boolean = System.getProperty("appDebug", "false").equals("true")
@@ -17,9 +18,12 @@ fun isDebugApp(): Boolean = System.getProperty("appDebug", "false").equals("true
 class AppModule : AbstractModule() {
     class object {
         {
-            println("Bridging java.util.logging to slf4j")
-            SLF4JBridgeHandler.removeHandlersForRootLogger()
-            SLF4JBridgeHandler.install()
+            val environment = SystemProperty.environment.value()
+            if (environment != SystemProperty.Environment.Value.Production) {
+                println("Bridging java.util.logging to slf4j")
+                SLF4JBridgeHandler.removeHandlersForRootLogger()
+                SLF4JBridgeHandler.install()
+            }
         }
     }
     override fun configure() {

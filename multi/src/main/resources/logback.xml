@@ -10,15 +10,17 @@
         </encoder>
     </appender>
 
-    <!-- TODO for work with chainsaw, need to log in log4j xml format! -->
+    <!-- TODO MINOR for work with chainsaw, need to log in log4j xml format! -->
+    <!--
+    java.security.AccessControlException: access denied ("java.io.FilePermission" "/var/log/app_engine/custom_logs" "read")
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>swirl-multi.log</file>
+        <file>/var/log/app_engine/custom_logs/swirl-multi.log</file>
 
         <encoder>
             <pattern>%-41(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger - %msg%n</pattern>
         </encoder>
     </appender>
-
+    -->
 
     <logger name="com.googlecode.objectify" level="WARN" />
     <logger name="com.google.appengine" level="WARN"/>
@@ -29,7 +31,19 @@
 
     <root level="TRACE">
         <appender-ref ref="STDOUT" />
-        <appender-ref ref="FILE" />
+        <!-- https://cloud.google.com/appengine/docs/java/tools/uploadinganapp#Downloading_Logs -->
+        <!-- ./appengine-java-sdk/bin/appcfg.sh request_logs myapp/war mylogs.txt -->
+        <!-- TODO temporarily disabled log file ... <appender-ref ref="FILE" />-->
+        <!--
+        Caused by: java.security.AccessControlException: access denied ("java.lang.RuntimePermission" "createSecurityManager")
+	at java.security.AccessControlContext.checkPermission(AccessControlContext.java:375)
+	at java.security.AccessController.checkPermission(AccessController.java:565)
+	at java.lang.SecurityManager.checkPermission(SecurityManager.java:549)
+	at java.lang.SecurityManager.<init>(SecurityManager.java:299)
+	at org.slf4j.helpers.Util$ClassContextSecurityManager.<init>(Util.java:43)
+	at org.slf4j.helpers.Util$ClassContextSecurityManager.<init>(Util.java:43)
+	at org.slf4j.helpers.Util.<clinit>(Util.java:49)
+        -->
     </root>
 
 </configuration>
