@@ -75,6 +75,7 @@ var AppController = function() {
 	        channelClient.connect($("#txt_channel_token").val(), function (message) {
 	        	// TODO do something with the received message.data
 	        	LOG.debug("Received channel message of type '" + message.type + "'.");
+                $("#txt_channel_messages").val("Message: " + message.type + "\n" + $("#txt_channel_messages").val());
 	        	switch (message.type) {
 	        		case "waitingGame":
 	        			LOG.debug("Waiting game new users count: " + message.newUsersCount);
@@ -86,11 +87,6 @@ var AppController = function() {
 	    	});
 
 	    });
-        $("#btn_send_message").click(function() {
-            restClient.pushMessage($("#sendMessageText").val(), function (data) {
-                LOG.debug("pushMessage() SUCCESS");
-            });
-        });
 
 	};
 	
