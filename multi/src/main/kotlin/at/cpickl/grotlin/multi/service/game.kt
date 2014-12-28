@@ -1,8 +1,6 @@
 package at.cpickl.grotlin.multi.service
 
 import org.slf4j.LoggerFactory
-import at.cpickl.grotlin.multi.resource.AdminResource
-import com.google.common.base.Objects
 import com.google.common.base.MoreObjects
 import javax.inject.Inject
 import at.cpickl.grotlin.multi.resource.NotFoundException
@@ -131,7 +129,7 @@ data class RunningGame(val id: String, val users: Collection<User>, val map: Map
 
     // currentPlayer's turn
     fun regionById(id: String): Region {
-        val found = map.regions.first { it.id == id }
+        val found = map.regions.firstOrNull { it.id == id }
         if (found != null) {
             return found
         }

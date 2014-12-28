@@ -7,8 +7,12 @@ import at.cpickl.grotlin.multi.FaultException
 import javax.ws.rs.core.Response.Status
 import com.google.inject.Scopes
 import java.util.UUID
+import com.google.appengine.api.urlfetch.URLFetchServiceFactory
 
 class ServiceModule : AbstractModule() {
+
+    private val trackingId: String = "UA-58057234-2"
+
     override fun configure() {
         bind(javaClass<VersionService>()).toInstance(PropertiesVersionService("/swirl.config.properties"))
         bind(javaClass<UserService>()).to(javaClass<ObjectifyUserService>())
@@ -20,6 +24,9 @@ class ServiceModule : AbstractModule() {
         bind(javaClass<ChannelApiService>()).to(javaClass<ChannelApiServiceImpl>()).`in`(Scopes.SINGLETON)
 
         bind(javaClass<IdGenerator>()).to(javaClass<UuidGenerator>()).`in`(Scopes.SINGLETON)
+
+
+        bind(javaClass<TrackingService>()).toInstance(GoogleAnalyticsTrackingService(trackingId, URLFetchServiceFactory.getURLFetchService()))
     }
 }
 

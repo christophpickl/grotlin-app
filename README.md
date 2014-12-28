@@ -26,9 +26,7 @@ TODO
 
 multi
 ---------
-!! implement google analytics:
-  https://cloud.google.com/appengine/docs/google-analytics#app_engine_server-side_analytics_collection
-  https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide#event
+
 * add swagger
 
 
