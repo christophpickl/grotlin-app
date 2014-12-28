@@ -4,7 +4,6 @@ import javax.ws.rs.ext.Provider
 import javax.ws.rs.Consumes
 import javax.ws.rs.core.MediaType
 import javax.inject.Inject
-import at.cpickl.grotlin.multi.service.UserService
 import javax.ws.rs.ext.MessageBodyReader
 import at.cpickl.grotlin.multi.service.User
 import java.lang.reflect.Type
@@ -16,9 +15,7 @@ import org.jboss.resteasy.core.ResourceMethodInvoker
 import org.jboss.resteasy.core.ServerResponse
 import at.cpickl.grotlin.endpoints.FaultCode
 import org.jboss.resteasy.core.Headers
-import at.cpickl.grotlin.multi.isDebugApp
 import at.cpickl.grotlin.multi.service.AuthUserService
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.FaultRto
 import at.cpickl.grotlin.restclient.ACCESS_TOKEN_HEADER_NAME
@@ -51,7 +48,7 @@ Provider Secured class SecuredFilter [Inject] (private val authUserService: Auth
     }
 
     override fun filter(requestContext: ContainerRequestContext) {
-        LOG.debug("secured working for context: method=${requestContext.getMethod()} URI=${requestContext.getUriInfo()}")
+        LOG.debug("secured working for context: method=${requestContext.getMethod()} URI=${requestContext.getUriInfo().getPath()}")
         var token: String? = requestContext.getHeaderString(ACCESS_TOKEN_HEADER_NAME)
         LOG.debug("Token from header '{}' has value: '{}'", ACCESS_TOKEN_HEADER_NAME, token)
         if (token == null) {

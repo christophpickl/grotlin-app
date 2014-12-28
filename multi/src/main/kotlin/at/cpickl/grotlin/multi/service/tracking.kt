@@ -10,9 +10,15 @@ import com.google.appengine.api.urlfetch.HTTPMethod
 import org.slf4j.LoggerFactory
 
 trait TrackingService {
-    public fun track()
+    public fun track(page: PageTrack)
 }
 
+data class PageTrack (
+        // e.g.: "/version"
+        val url: String,
+        // either "GET", "POST", ...
+        val method: String
+)
 
 /**
  * @param trackingId Tracking ID / Web property / Property ID
@@ -39,12 +45,9 @@ class GoogleAnalyticsTrackingService (
      */
     private val clientId = "555"  // Anonymous Client ID.
 
-    override public fun track() {
-        LOG.info("track()")
+    override public fun track(page: PageTrack) {
+        LOG.debug("track(page={})", page)
 
-        val hostname = "swirl-engine.appspot.com"
-        val page = "/version"
-        val title = "my title"
         val payload = linkedMapOf(
                 "v" to ANALYTICS_VERSION, // The protocol version.
                 "tid" to trackingId, // The ID that distinguishes to which Google Analytics property to send data.
@@ -52,9 +55,9 @@ class GoogleAnalyticsTrackingService (
                 // "uid" ... This is intended to be a known identifier for a user provided by the site owner/tracking library user. It may not itself be PII (personally identifiable information).
 
                 "t" to "pageview", // Hit type: Must be one of 'pageview', 'screenview', 'event', 'transaction', 'item', 'social', 'exception', 'timing'.
-                //            "dh" to hostname,  // Document hostname.
-                "dp" to page
-                //            "dt" to title
+                //            "dh" to hostname,  // Document hostname. ?"swirl-engine.appspot.com"?
+                "dp" to page.url,
+                "dt" to page.method // misuse page title for displaying HTTP method
                 // https://developers.google.com/analytics/devguides/collection/analyticsjs/events
                 //                "t" to "event",
                 //                "ec" to encode("category ?"), // Typically the object that was interacted with (e.g. button)
@@ -68,7 +71,7 @@ class GoogleAnalyticsTrackingService (
         val payloadEncoded = payloadToString(payload)
         request.setPayload(payloadEncoded.toByteArray(StandardCharsets.UTF_8))
 
-        LOG.debug("Requesting Google Analytics: {}. payloadEncoded='{}'", request.getURL(), payloadEncoded)
+        LOG.trace("Requesting Google Analytics: {}. payloadEncoded='{}'", request.getURL(), payloadEncoded)
         val response = urlFetchService.fetch(request)
         if (response.getResponseCode() != 200) {
             throw RuntimeException("Request to Google Analytics failed! (Response Code was: ${response.getResponseCode()})\n" +

@@ -8,11 +8,9 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.VersionRto
-import at.cpickl.grotlin.multi.service.TrackingService
 
 Path("/version") class VersionResource [Inject] (
-        private val versionService: VersionService,
-        private val trackingService: TrackingService
+        private val versionService: VersionService
 ) {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<VersionResource>())
@@ -20,10 +18,8 @@ Path("/version") class VersionResource [Inject] (
 
     GET Produces(MediaType.APPLICATION_JSON) fun getVersion(): VersionRto {
         LOG.debug("getVersion()")
-        trackingService.track()
 
         val version = versionService.load()
         return VersionRto.build(version.artifactVersion, version.buildDate)
-        //        return Response.status(200).entity("version=${repo.save("guice")}").build();
     }
 }

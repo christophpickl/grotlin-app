@@ -18,8 +18,8 @@ fun isDebugApp(): Boolean = System.getProperty("appDebug", "false").equals("true
 class AppModule : AbstractModule() {
     class object {
         {
-            val environment = SystemProperty.environment.value()
-            if (environment != SystemProperty.Environment.Value.Production) {
+            println("SystemProperty.environment.value() = " + SystemProperty.environment.value())
+            if (SystemProperty.environment.value() != SystemProperty.Environment.Value.Production) {
                 println("Bridging java.util.logging to slf4j")
                 SLF4JBridgeHandler.removeHandlersForRootLogger()
                 SLF4JBridgeHandler.install()

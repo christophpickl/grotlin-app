@@ -4,37 +4,11 @@ import com.google.inject.AbstractModule
 import javax.ws.rs.Path
 import javax.ws.rs.GET
 import javax.ws.rs.Produces
-import javax.ws.rs.QueryParam
 import javax.ws.rs.core.MediaType
-import at.cpickl.grotlin.multi.service.UserService
-import at.cpickl.grotlin.multi.service.User
-import at.cpickl.grotlin.endpoints.Fault
-import at.cpickl.grotlin.endpoints.FaultCode
-import at.cpickl.grotlin.multi.FaultException
-import javax.ws.rs.core.Response.Status
-import javax.ws.rs.ext.ContextResolver
-import javax.ws.rs.ext.Provider
-import javax.ws.rs.core.Context
-import javax.servlet.http.HttpServletRequest
-import javax.inject.Inject
-import org.jboss.resteasy.spi.interception.PreProcessInterceptor
-import javax.ws.rs.container.ContainerRequestFilter
-import javax.ws.rs.container.ContainerRequestContext
-import org.jboss.resteasy.core.ServerResponse
-import org.jboss.resteasy.core.Headers
 import at.cpickl.grotlin.multi.service.Role
-import org.jboss.resteasy.core.ResourceMethodInvoker
-import javax.ws.rs.Consumes
-import javax.ws.rs.ext.MessageBodyReader
-import java.lang.reflect.Type
-import javax.ws.rs.core.MultivaluedMap
-import java.io.InputStream
 import javax.ws.rs.core.Response
 import at.cpickl.grotlin.multi.isDebugApp
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import javax.ws.rs.POST
-import at.cpickl.grotlin.multi.service.WaitingRandomGameService
 
 //import javax.inject.Inject
 
@@ -53,6 +27,15 @@ class ResourceModule : AbstractModule() {
 
         bind(javaClass<PaginationReader>())
         bind(javaClass<UserReader>())
+
+        installFilters()
+    }
+
+    private fun installFilters() {
+        // TODO tracking disabled, as i seem to be too dumb for google analytics report UI :-/
+        //        if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+        //            bind(javaClass<TrackingFilter>()) // first track, then secure ;)
+        //        }
         bind(javaClass<SecuredFilter>())
     }
 
