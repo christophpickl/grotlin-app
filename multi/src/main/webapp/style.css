@@ -13,6 +13,9 @@ body {
 #txt_access_token, #txt_channel_token {
     width: 250px;
 }
+#txt_channel_messages {
+    height: 80px;
+}
 #container {
     width: 100%;
     position: relative;
