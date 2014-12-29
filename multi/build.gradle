@@ -165,6 +165,7 @@ test {
     useTestNG({
         excludeGroups 'WebTest'
     })
+    // jvmArgs += [ "-XX:MaxPermSize=256m" ]
 }
 
 // http://stackoverflow.com/questions/21009125/including-not-excluding-groups-in-testng-and-gradle
