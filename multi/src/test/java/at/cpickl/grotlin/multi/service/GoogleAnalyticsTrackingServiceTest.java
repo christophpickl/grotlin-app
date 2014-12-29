@@ -28,7 +28,9 @@ public class GoogleAnalyticsTrackingServiceTest {
         Mockito.verify(mockedFetcher).fetch(argumentCaptor.capture());
         HTTPRequest actualRequest = argumentCaptor.getValue();
         String actualPayload = new String(actualRequest.getPayload());
-        assertThat(actualPayload, equalTo("dt=" + page.getMethod() + "&t=pageview&v=1&dp=" + page.getUrl() + "&tid=" + trackingId + "&cid=555"));
+        assertThat(actualPayload, equalTo(
+                "v=1&tid=" + trackingId + "&cid=555&t=pageview&dp=" + page.getUrl() + "&dt=" + page.getMethod()
+                ));
         Mockito.verifyNoMoreInteractions(mockedFetcher);
     }
 }
