@@ -17,7 +17,14 @@ task wrapper(type: Wrapper) {
 }
 
 allprojects {
+    group = 'at.cpickl.grotlin'
+    version = '1.0'
+
     repositories {
         jcenter()
     }
+}
+
+subprojects {
+    // apply plugin? add dependencies?
 }
