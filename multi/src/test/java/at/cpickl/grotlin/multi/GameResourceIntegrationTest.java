@@ -17,8 +17,8 @@ import at.cpickl.grotlin.channel.WaitingGameNotification;
 import at.cpickl.grotlin.multi.resource.GameResource;
 import at.cpickl.grotlin.multi.resource.WaitingRandomGameRto;
 import at.cpickl.grotlin.multi.service.ChannelApiService;
-import at.cpickl.grotlin.multi.service.RunningGame;
 import at.cpickl.grotlin.multi.service.RunningGameService;
+import at.cpickl.grotlin.multi.service.UserGame;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -51,7 +51,7 @@ public class GameResourceIntegrationTest {
 
         testee.getExistingOrCreateNewRandomGame(TestData.USER2);
 
-        Mockito.verify(mockedRunningService).addNewGame(Matchers.any(RunningGame.class));
+        Mockito.verify(mockedRunningService).addNewGame(Matchers.any(UserGame.class));
         Mockito.verifyNoMoreInteractions(mockedRunningService);
         // channelApiService.sendNotification(WaitingGameNotification(firstGame.users.size + 1), firstGame.users)
         Mockito.verify(mockedChannelApiService).sendNotification(new WaitingGameNotification(2), Arrays.asList(TestData.USER1, TestData.USER2));

@@ -68,6 +68,6 @@ class GameTest : GameableTest() {
         assertThat(target.armies, equalTo(sourceArmies - 1))
     }
 
-    private fun game(vararg players: Player) = Game(map, players.toLinkedList(), dice)
+    private fun game(vararg players: Player) = Game("testId", map, players.toLinkedList(), dice)
 
 }
