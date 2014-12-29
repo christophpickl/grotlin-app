@@ -1,8 +1,8 @@
 
 if (System.properties['swirlApp']) {
-    println('swirlApp property is defined, going to include android module app ...')
+    println('[settings.gradle] swirlApp property is defined, going to include android module app ...')
     include ':app', ':logic', ':multi'
 } else {
-    println('swirlApp property is NOT defined, going to exclude android module app ...')
+    println('[settings.gradle] swirlApp property is NOT defined, going to exclude android module app ...')
     include ':logic', ':multi'
 }
