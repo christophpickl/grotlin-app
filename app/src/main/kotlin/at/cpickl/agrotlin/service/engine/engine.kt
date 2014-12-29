@@ -5,7 +5,7 @@ import javax.inject.Inject
 import at.cpickl.grotlin.endpoints.VersionClient
 import android.os.AsyncTask
 import at.cpickl.grotlin.endpoints.VersionRto
-import at.cpickl.grotlin.endpoints.ClientFaultException
+import at.cpickl.grotlin.restclient.ClientFaultException
 import at.cpickl.grotlin.endpoints.UserClient
 import at.cpickl.grotlin.endpoints.LoginRequestRto
 import at.cpickl.agrotlin.SwirlException

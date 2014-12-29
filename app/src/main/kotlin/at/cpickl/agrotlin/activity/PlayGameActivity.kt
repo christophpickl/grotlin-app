@@ -139,7 +139,7 @@ class PlayGamePseudoActivity(private val context: Context,
         val map = MiniMap()
         map.region1.ownedBy(player1, 2)
         map.region4.ownedBy(player2, 2)
-        game = Game(map.map, listOf(player1, player2))
+        game = Game("localFakeId", map.map, listOf(player1, player2))
         mapView = MiniMapView(context, map)
         gameView = GameView(context, game, mapView)
         attackPhase = AttackPhase(context, game, gameView, txtInfoMessage)
