@@ -21,14 +21,17 @@ class ResourceModule : AbstractModule() {
 
     override fun configure() {
         installResources()
-
-        bind(javaClass<FaultExceptionMapper>())
-        bind(javaClass<UnrecognizedPropertyExceptionMapper>())
-
+        installExceptionMappers()
         bind(javaClass<PaginationReader>())
         bind(javaClass<UserReader>())
 
         installFilters()
+    }
+
+    private fun installExceptionMappers() {
+        bind(javaClass<FaultExceptionMapper>())
+        bind(javaClass<UnrecognizedPropertyExceptionMapper>())
+        bind(javaClass<GeneralExceptionMapper>()) // has to be last
     }
 
     private fun installFilters() {

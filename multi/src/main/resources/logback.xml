@@ -5,7 +5,7 @@
         <encoder>
             <!-- %logger{36} -->
             <!-- [%file:%line] -->
-            <pattern>%-41(%d{HH:mm:ss.SSS} [%thread]) %-5level %logger{38} - %msg%n</pattern>
+            <pattern>%-41(%d{HH:mm:ss.SSS} [%thread]) [%-5level] %logger{38} - %msg%n</pattern>
 
         </encoder>
     </appender>

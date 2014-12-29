@@ -28,7 +28,9 @@ enum class FaultCode(val label: String) {
     GAME_NOT_FOUND: FaultCode("GAME_NOT_FOUND")
 }
 
-XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement class FaultRto {
+data XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement class FaultRto(
+        var message: String? = null,
+        var code: String? = null) {
     class object {
         fun build(message: String, code: FaultCode): FaultRto {
             val rto = FaultRto()
@@ -37,19 +39,7 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement class FaultRto {
             return rto
         }
     }
-    var message: String? = null
-    var code: String? = null
 
     fun toDomain(): Fault = Fault(message!!, FaultCode.valueOf(code!!))
 
-    override fun equals(other: Any?): Boolean {
-        if (other is FaultRto) {
-            return message == other.message && code == other.code
-        }
-        return false
-    }
-
-    override fun toString(): String {
-        return "FaultRto[message='${message}', code='${code}']"
-    }
 }

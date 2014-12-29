@@ -1,19 +1,28 @@
 package at.cpickl.grotlin.multi.resource
 
 import javax.ws.rs.core.Response
-import javax.xml.bind.annotation.XmlAccessorType
-import javax.xml.bind.annotation.XmlAccessType
-import javax.xml.bind.annotation.XmlRootElement
 import javax.ws.rs.ext.Provider
 import at.cpickl.grotlin.multi.FaultException
 import javax.ws.rs.core.Response.Status
 import javax.ws.rs.ext.ExceptionMapper
 import org.codehaus.jackson.map.exc.UnrecognizedPropertyException
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import at.cpickl.grotlin.endpoints.FaultRto
 import at.cpickl.grotlin.endpoints.Fault
 import at.cpickl.grotlin.endpoints.FaultCode
+import at.cpickl.grotlin.multi.isDebugApp
+
+Provider class GeneralExceptionMapper : ExceptionMapper<Exception> {
+    class object {
+        private val LOG = LoggerFactory.getLogger(javaClass<GeneralExceptionMapper>())
+    }
+    override fun toResponse(exception: Exception): Response {
+        // TODO MINOR: enhance FaultRto for debug stuff, exception message + stacktrace
+        val additionalMessage = if (isDebugApp()) " (exception: ${exception.getMessage()})" else " (please contact admin/review logs)"
+        LOG.warn("Unhandled generic exception!", exception)
+        return Response.status(Status.INTERNAL_SERVER_ERROR)
+                .entity(Fault("Server could not process request!${additionalMessage}", FaultCode.INTERNAL_ERROR).toRto()).build()
+    }
+}
 
 Provider class FaultExceptionMapper : ExceptionMapper<FaultException> {
     class object {
