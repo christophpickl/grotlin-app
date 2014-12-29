@@ -1,4 +1,8 @@
 language: java
 cache:
   directories:
-  - .gradle/
+  - ~/.gradle
+  # $HOME/.gradle/caches/
+
+#script:
+#- ./gradlew build
