@@ -65,8 +65,8 @@ Provider Secured class SecuredFilter [Inject] (private val authUserService: Auth
             throw RuntimeException("Expected property to be of type ResourceMethodInvoker but was: ${methodInvoker.javaClass.getName()}")
         }
         val annotation = methodInvoker.getMethod().getAnnotation(javaClass<Secured>())
-        if (!maybeUser.role.isAtLeast(annotation.role())) {
-            LOG.debug("User has role '${maybeUser.role}' but role '${annotation.role()}' was required!")
+        if (!maybeUser.role.isAtLeast(annotation.role)) {
+            LOG.debug("User has role '${maybeUser.role}' but role '${annotation.role}' was required!")
             requestContext.abortWithForbidden()
             return
         }
