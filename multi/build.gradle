@@ -29,7 +29,6 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 version = '1.0-SNAPSHOT'
 
-
 // http://java.dzone.com/articles/resource-filtering-gradle
 
 // TODO:
@@ -44,10 +43,10 @@ version = '1.0-SNAPSHOT'
 
 // http://stackoverflow.com/questions/12813887/gradle-replace-tokens-by-finding-the-tokens-from-property-file
 
-    // http://www.gradle.org/docs/current/userguide/working_with_files.html
+// http://www.gradle.org/docs/current/userguide/working_with_files.html
 // http://www.gradle.org/docs/current/javadoc/org/gradle/api/tasks/Copy.html
 
-task filterSwirlConfig (type: Copy){
+task filterSwirlConfig(type: Copy) {
 //    from("src/main/resources") {
 //        include '**/*.properties'
 //        filter(ReplaceTokens, tokens: ["artifact.version": project.properties["version"], "build.date": buildDate])
@@ -95,16 +94,22 @@ dependencies {
 
     // REST EASY
     // =============================================
+    def versionRestEasy = '3.0.10.Final'
     // http://repository.jboss.org/nexus/content/groups/public
     // https://github.com/szymex/Embedded-Jetty-RESTEasy-Guice-Example
     // https://github.com/resteasy/Resteasy/tree/master/jaxrs/examples/guice-hello
-    compile 'org.jboss.resteasy:resteasy-guice:3.0.10.Final'
+    compile "org.jboss.resteasy:resteasy-guice:$versionRestEasy"
     compile 'javax.inject:javax.inject:1'
     compile 'com.google.inject:guice:3.0'
     // http://howtodoinjava.com/2013/05/10/resteasy-jackson-json-example/
     compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.4.Final'
 //    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.3'
     compile 'javax.servlet:servlet-api:2.5'
+
+    // http://howtodoinjava.com/2013/05/30/resteasy-bean-validation-using-hibernate-validator-provider/
+    // use provider-11 ... https://issues.jboss.org/browse/RESTEASY-1056
+    compile "org.jboss.resteasy:resteasy-validator-provider-11:$versionRestEasy"
+//    compile "org.jboss.resteasy:resteasy-hibernatevalidator-provider:$versionRestEasy"
 
     // LOGGING
     // =============================================
@@ -114,7 +119,6 @@ dependencies {
     compile "org.slf4j:jul-to-slf4j:$versionSlf4j"
     compile "ch.qos.logback:logback-core:1.1.2"
     compile "ch.qos.logback:logback-classic:1.1.2"
-
 
     // TEST
     // =============================================
@@ -145,7 +149,7 @@ appengine {
 //    httpAddress = "0.0.0.0"
     httpPort = 8888
 
-    jvmFlags = [ '-DappDebug=true' ]
+    jvmFlags = ['-DappDebug=true']
 //    jvmFlags = ['-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000']
 
     appcfg {

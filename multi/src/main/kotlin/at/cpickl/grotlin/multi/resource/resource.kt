@@ -34,6 +34,7 @@ class ResourceModule : AbstractModule() {
     }
 
     private fun installExceptionMappers() {
+        bind(javaClass<ResteasyViolationExceptionMapper>())
         bind(javaClass<FaultExceptionMapper>())
         bind(javaClass<UnrecognizedPropertyExceptionMapper>())
         bind(javaClass<GeneralExceptionMapper>()) // has to be last

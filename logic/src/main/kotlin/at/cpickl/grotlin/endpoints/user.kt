@@ -8,6 +8,9 @@ import at.cpickl.grotlin.restclient.RestClient
 import at.cpickl.grotlin.restclient.RestResponse
 import at.cpickl.grotlin.restclient.Status
 import javax.inject.Inject
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
+import javax.validation.Valid
 
 class UserClient [Inject] (ServerUrl private val baseUrl: String) {
 
@@ -44,8 +47,8 @@ class UserClient [Inject] (ServerUrl private val baseUrl: String) {
 class LoginClientException(message: String) : ClientException(message)
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginRequestRto(
-        XmlElement(required = true, nillable = false) var username: String? = null,
-        XmlElement(required = true, nillable = false) var password: String? = null
+        XmlElement(required = true, nillable = false) NotNull Size(min = 1) var username: String? = null,
+        XmlElement(required = true, nillable = false) NotNull(message = "Password must not be null") Size(min = 1) var password: String? = null
 ) {
     class object {
         fun build(username: String, password: String): LoginRequestRto {

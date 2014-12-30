@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.Fault
 import at.cpickl.grotlin.endpoints.FaultCode
 import at.cpickl.grotlin.multi.isDebugApp
+import javax.validation.ConstraintViolationException
+import org.jboss.resteasy.api.validation.ResteasyViolationException
 
 Provider class GeneralExceptionMapper : ExceptionMapper<Exception> {
     class object {
@@ -21,6 +23,28 @@ Provider class GeneralExceptionMapper : ExceptionMapper<Exception> {
         LOG.warn("Unhandled generic exception!", exception)
         return Response.status(Status.INTERNAL_SERVER_ERROR)
                 .entity(Fault("Server could not process request!${additionalMessage}", FaultCode.INTERNAL_ERROR).toRto()).build()
+    }
+}
+
+// TODO how to hook into the default violation exception mapper?!
+//Provider class ConstraintViolationExceptionMapper : ExceptionMapper<ConstraintViolationException> {
+Provider class ResteasyViolationExceptionMapper : ExceptionMapper<ResteasyViolationException> {
+
+    class object {
+        private val LOG = LoggerFactory.getLogger(javaClass<ResteasyViolationExceptionMapper>())
+    }
+    override fun toResponse(exception: ResteasyViolationException): Response {
+        LOG.warn("Validation failed!!", exception)
+        exception.getParameterViolations().forEach { println("Violation: ${it}"); }
+        return Response.status(Status.BAD_REQUEST)
+                .entity(Fault("Validation failed", FaultCode.INVALID_PAYLOAD).toRto()).build()
+    }
+}
+
+class ViolationMapper {
+    fun foo(exception: ResteasyViolationException): Fault {
+
+        return Fault("", FaultCode.INVALID_PAYLOAD)
     }
 }
 

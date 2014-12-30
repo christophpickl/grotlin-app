@@ -28,6 +28,7 @@
     <logger name="com.google.inject" level="WARN"/>
     <logger name="org.jboss.resteasy" level="WARN"/>
     <logger name="org.apache.jasper" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
 
     <root level="TRACE">
         <appender-ref ref="STDOUT" />
