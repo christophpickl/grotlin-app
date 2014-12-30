@@ -67,12 +67,6 @@ appengineUpdate.dependsOn filterSwirlConfig
 //    }
 //}
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-//    jcenter()
-}
-
 configurations {
     provided
 }

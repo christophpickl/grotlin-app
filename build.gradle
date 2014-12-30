@@ -21,8 +21,12 @@ allprojects {
     version = '1.0'
 
     repositories {
+        mavenLocal()
         mavenCentral()
         jcenter()
+        maven {
+            url 'http://repository.jetbrains.com/all'
+        }
     }
 }
 

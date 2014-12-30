@@ -66,13 +66,6 @@ buildscript {
     }
 }
 
-repositories {
-    mavenCentral()
-    maven {
-        url 'http://repository.jetbrains.com/all'
-    }
-}
-
 //android {
 //    sourceSets {
 //        main.java.srcDirs += 'src/main/kotlin'
