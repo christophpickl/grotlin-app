@@ -91,3 +91,49 @@ object Contract {
         return value
     }
 }
+
+
+class GameEngine(private val game: Game, private val listener: GameListener) {
+    fun start() {
+        while (true) {
+            listener.onPlayersTurn(game.currentPlayer)
+            attackPhase()
+            if (game.isGameOver()) {
+                break;
+            }
+            distributionPhase()
+            game.nextPlayer()
+        }
+    }
+
+    private fun attackPhase() {
+        while (!game.sourceRegionsForCurrentPlayer().empty &&
+                listener.continueAttacking(game.currentPlayer)) {
+            val result = attackPhaseStep()
+            listener.onBattleResult(result)
+        }
+    }
+
+    private fun attackPhaseStep(): BattleResult {
+        val (source, target) = listener.doAttack(game.currentPlayer)
+        return game.attack(source, target)
+    }
+
+    private fun distributionPhase() {
+        val spawn = game.biggestConnectedEmpireSize(game.currentPlayer)
+        val target = listener.doDistribute(game.currentPlayer, spawn)
+        if (target.owner != game.currentPlayer) throw IllegalArgumentException("target.owner != currentPlayer")
+        target.armies += spawn
+    }
+}
+
+trait GameListener {
+    fun onPlayersTurn(player: Player)
+    fun doAttack(player: Player): Pair<Region, Region>
+    fun continueAttacking(player: Player): Boolean
+    // only distributing all at once into one region supported right now ;)
+    fun doDistribute(player: Player, biggestConnectedEmpireSize: Int): Region
+
+    fun onBattleResult(result: BattleResult)
+
+}

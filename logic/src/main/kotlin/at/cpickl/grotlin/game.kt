@@ -4,19 +4,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 
-//data class RunningGame(val id: String, val users: Collection<Player>, val map: Map) {
-
-//
-//    fun asPlayer(user: User): Player {
-//        val found = playersByName.get(user.name)
-//        if (found != null) {
-//            return found
-//        }
-//        throw IllegalArgumentException("Not found player by user instance: {$user}! Registered players: ${playersByName.values()}")
-//    }
-// currentPlayer's turn
-//}
-
 open class Game(val id: String, val map: Map, val players: List<Player>, val dice: Dice = RealDice()) {
 
     private val playersIterator = PlayerIterator(players)
@@ -75,60 +62,13 @@ open class Game(val id: String, val map: Map, val players: List<Player>, val dic
     }
 
     fun biggestConnectedEmpireSize(currentPlayer: Player): Int {
-        // FIXME test & implement
-        return 1
+        return EmpireFinder().biggestEmpire(currentPlayer, map).size()
     }
 
     fun distributableRegionsFor(player: Player): Collection<Region> = map.regions.filter { it.owner == player }
 
     override public fun toString() = "Game[map=${map}, players, dice]"
 }
-
-class GameEngine(private val game: Game, private val listener: GameListener) {
-    fun start() {
-        while (true) {
-            listener.onPlayersTurn(game.currentPlayer)
-            attackPhase()
-            if (game.isGameOver()) {
-                break;
-            }
-            distributionPhase()
-            game.nextPlayer()
-        }
-    }
-
-    private fun attackPhase() {
-        while (!game.sourceRegionsForCurrentPlayer().empty &&
-                listener.continueAttacking(game.currentPlayer)) {
-            val result = attackPhaseStep()
-            listener.onBattleResult(result)
-        }
-    }
-
-    private fun attackPhaseStep(): BattleResult {
-        val (source, target) = listener.doAttack(game.currentPlayer)
-        return game.attack(source, target)
-    }
-
-    private fun distributionPhase() {
-        val spawn = game.biggestConnectedEmpireSize(game.currentPlayer)
-        val target = listener.doDistribute(game.currentPlayer, spawn)
-        if (target.owner != game.currentPlayer) throw IllegalArgumentException("target.owner != currentPlayer")
-        target.armies += spawn
-    }
-}
-
-trait GameListener {
-    fun onPlayersTurn(player: Player)
-    fun doAttack(player: Player): Pair<Region, Region>
-    fun continueAttacking(player: Player): Boolean
-    // only distributing all at once into one region supported right now ;)
-    fun doDistribute(player: Player, biggestConnectedEmpireSize: Int): Region
-
-    fun onBattleResult(result: BattleResult)
-
-}
-
 
 data class Player(val name: String, public val color: Int = 0) { // TODO make non-optional!
 
