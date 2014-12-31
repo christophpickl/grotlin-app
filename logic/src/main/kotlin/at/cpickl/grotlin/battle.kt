@@ -9,7 +9,7 @@ class Battle(val attacker: Region, val defender: Region, private val dice: Dice)
         val rollAttacker = rollDicesTimes(attacker.armies);
         val rollDefender = rollDicesTimes(defender.armies);
         val winner: Player = if (rollAttacker > rollDefender) attacker.owner!! else defender.owner!!
-        return BattleResult(winner)
+        return BattleResult(winner, attacker, defender, rollAttacker, rollDefender)
     }
 
     private fun rollDicesTimes(rollCount: Int): Int {
@@ -20,6 +20,7 @@ class Battle(val attacker: Region, val defender: Region, private val dice: Dice)
 
 }
 
-data class BattleResult(val winner: Player) {
-    // MINOR store dice numbers
+data class BattleResult(val winner: Player,
+                        val attackerRegion: Region, val defenderRegion: Region,
+                        val attackerDiceRoll: Int, val defenderDiceRoll: Int) {
 }

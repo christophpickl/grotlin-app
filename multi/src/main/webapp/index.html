@@ -3,9 +3,9 @@
 <head lang="en">
     <meta charset="UTF-8" />
 	<title>swirl webapp</title>
-    <script src="http://swirl-engine.appspot.com/_ah/channel/jsapi" type="text/javascript"></script>
+	<!--<script src="http://swirl-engine.appspot.com/_ah/channel/jsapi" type="text/javascript"></script>-->
     <!--<script src="http://localhost:8888/_ah/channel/jsapi" type="text/javascript"></script>-->
-    <!--<script src="/_ah/channel/jsapi" type="text/javascript"></script>-->
+	<script src="/_ah/channel/jsapi" type="text/javascript"></script>
     <script src="js/jquery-2.1.1.min.js" type="text/javascript"></script>
     <script src="js/RestClient.js" type="text/javascript"></script>
     <script src="js/ChannelClient.js" type="text/javascript"></script>
@@ -32,9 +32,7 @@
 					<li>
 						Access Token: <input type="text" id="txt_access_token" value="1" />
 					</li>
-					<li>
-						Channel Token: <input type="text" id="txt_channel_token" />
-					</li>
+
 				</ul>
 			</div>
 			<div id="endpoints">
@@ -43,18 +41,26 @@
 					<li>
 						<h3>General</h3>
                         <input type="submit" id="btn_get_version" value="GET /version" />&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="submit" id="btn_resetDB" value="Reset DB"/>&nbsp;&nbsp;&nbsp;&nbsp;
                         <input type="submit" id="btn_shutdown" value="Shutdown" />
 					</li>
 					<li>
-						<h3>Game</h3>
-						Join Random Game: <input type="submit" id="btn_join_game" value="POST /game/random" /><br/>
-                        Attack: ...
+						<h3>Channel</h3>
+						<input type="submit" id="btn_channel_token_and_connect" value="Connect to Channel"/><br/>
+						Channel Token: <input type="text" id="txt_channel_token"/><br/>
+						<!--Create channel token: <input type="submit" id="btn_get_channel_token" value="POST /channel" /><br/>-->
+						<!--<input type="submit" id="btn_connect_channel" value="Connect to Channel" />-->
+						<textarea id="txt_channel_messages"></textarea>
 					</li>
 					<li>
-						<h3>Channel</h3>
-						Create channel token: <input type="submit" id="btn_get_channel_token" value="POST /channel" /><br/>
-						<input type="submit" id="btn_connect_channel" value="Connect to Channel" />
-                        <textarea id="txt_channel_messages"></textarea>
+						<h3>Game</h3>
+						<input type="submit" id="btn_join_game" value="Join Random Game"/><br/>
+						Game ID: <input type="text" id="txt_gameId"/><br/>
+						<input type="submit" id="btn_show_game" value="Show Game"/><br/>
+						<input type="text" id="txt_attack_source" value="r"/>
+						<input type="text" id="txt_attack_target" value="r"/>
+						<input type="submit" id="btn_attack" value="Attack!"/><br/>
+						<input type="submit" id="btn_end_turn" value="End Turn"/>
 					</li>
 				</ul>
 			</div>

@@ -16,6 +16,7 @@ import at.cpickl.grotlin.Map as Mapp
 import at.cpickl.grotlin.Player
 import at.cpickl.grotlin.Dice
 import at.cpickl.grotlin.RealDice
+import at.cpickl.grotlin.channel.AttackNotification
 
 class WaitingRandomGameService [Inject] (
         private val runningGameService: RunningGameService,
@@ -36,11 +37,7 @@ class WaitingRandomGameService [Inject] (
         // check if user already in a waiting game
 
         if (waitingGames.empty) {
-            val map = Simple4RegionsMap() // for now only this map is supported
-            val game = WaitingRandomGame(idGenerator.generate(), maxPlayers, map)
-            waitingGames.add(game)
-            game.addWaitingUser(user)
-            return game
+            return startNewWaitingGame(user)
         }
         val userGame = waitingGames.firstOrNull { it.containsWaiting(user) }
         if (userGame != null) {
@@ -51,10 +48,26 @@ class WaitingRandomGameService [Inject] (
         firstGame.addWaitingUser(user)
         if (firstGame.isFull) {
             waitingGames.remove(firstGame)
-            runningGameService.addNewGame(UserGame.build(idGenerator.generate(), firstGame.map, firstGame.users))
-
+            val runningGame = UserGame.build(idGenerator.generate(), firstGame.map, firstGame.users)
+            pseudoInitGame(runningGame)
+            runningGameService.addNewGame(runningGame)
         }
         return firstGame
+    }
+
+    private fun pseudoInitGame(game: UserGame) {
+        LOG.trace("pseudoInitGame(game) ... r1.ownedBy=u1, r4.ownedBy=u2")
+        val map = game.map as Simple4RegionsMap
+        map.r1.ownedBy(game.asPlayer(game.users.get(0)), 2)
+        map.r4.ownedBy(game.asPlayer(game.users.get(1)), 2)
+    }
+
+    private fun startNewWaitingGame(user: User): WaitingRandomGame {
+        val map = Simple4RegionsMap() // for now only this map is supported
+        val game = WaitingRandomGame(idGenerator.generate(), maxPlayers, map)
+        waitingGames.add(game)
+        game.addWaitingUser(user)
+        return game
     }
 
 }
@@ -66,11 +79,12 @@ public trait RunningGameService {
     public fun addNewGame(game: UserGame)
     public fun gameByIdForUser(gameId: String, user: User): UserGame
 
-    public fun attackRegion(attack: AttackOrder)
+    public fun attackRegion(attack: AttackOrder): AttackNotification
+
+    public fun endTurn(game: UserGame, user: User)
 }
 
 class InMemoryRunningGameService [Inject] (private val channelApiService: ChannelApiService) : RunningGameService {
-
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<InMemoryRunningGameService>())
     }
@@ -99,15 +113,23 @@ class InMemoryRunningGameService [Inject] (private val channelApiService: Channe
         return game
     }
 
-    override fun attackRegion(attack: AttackOrder) {
+    override fun attackRegion(attack: AttackOrder): AttackNotification {
         LOG.debug("attackRegion(attack=${attack})")
+        //        val player = attack.game.asPlayer(attack.user)
         // TODO verify is attackable
+        val battleResult = attack.game.attack(attack.sourceRegion, attack.targetRegion)
+        val notification = AttackNotification.transform(battleResult)
+        channelApiService.sendNotification(notification, attack.game.usersExcept(attack.user))
+        return notification
+    }
 
-        val player = attack.game.asPlayer(attack.user)
-        val result = attack.game.attack(attack.sourceRegion, attack.targetRegion)
-        val battleWon = player == result.winner
-        // send user result directly, not via channel!
-        // channelApiService.sendNotification(AttackNotification(battleResult), game.users)
+    override fun endTurn(game: UserGame, user: User) {
+        LOG.debug("endTurn(game={}, user={})", game, user)
+        if (!game.isCurrentUser(user)) {
+            throw RuntimeException("Nope, you are not the current user!") // TODO proper error handling
+        }
+        // FIXME init distribution phase
+        game.nextPlayer()
     }
 
 }
@@ -115,9 +137,9 @@ class InMemoryRunningGameService [Inject] (private val channelApiService: Channe
 data class AttackOrder(val user: User, val game: UserGame, val sourceRegion: Region, val targetRegion: Region)
 
 
-class UserGame(id: String, map: Mapp, val users: List<User>, players: List<Player>, dice: Dice) : Game(id, map, players, dice) {
-    class object {
-        fun build(id: String, map: Mapp, users: List<User>, dice: Dice = RealDice()): UserGame {
+public class UserGame(id: String, map: Mapp, val users: List<User>, players: List<Player>, dice: Dice) : Game(id, map, players, dice) {
+    public class object {
+        public fun build(id: String, map: Mapp, users: List<User>, dice: Dice = RealDice()): UserGame {
             if (users.empty) throw IllegalArgumentException("Users must not be empty!")
             val color = 1 // TODO static color for player :-/
             return UserGame(id, map, users, users.map({ Player(it.name, color) }), dice)
@@ -128,7 +150,13 @@ class UserGame(id: String, map: Mapp, val users: List<User>, players: List<Playe
         playerByName = players.toMap { it.name }
     }
 
+    fun isCurrentUser(user: User): Boolean = currentPlayer == asPlayer(user)
+
     fun asPlayer(user: User) = playerByName.get(user.name)!!
+
+    fun usersExcept(except: User): Collection<User> {
+        return users.filter { it != except }
+    }
 
 }
 

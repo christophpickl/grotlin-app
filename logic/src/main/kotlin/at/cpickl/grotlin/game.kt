@@ -22,7 +22,7 @@ open class Game(val id: String, val map: Map, val players: List<Player>, val dic
     private val playersIterator = PlayerIterator(players)
 
     class object {
-        val LOG: Logger = LoggerFactory.getLogger(javaClass)
+        private val LOG: Logger = LoggerFactory.getLogger(javaClass)
     }
 
     public var currentPlayer: Player = playersIterator.currentPlayer
@@ -35,7 +35,7 @@ open class Game(val id: String, val map: Map, val players: List<Player>, val dic
         verifyAttackable(source, target)
         if (!target.isOwned()) {
             source.attackAndOwn(target)
-            return BattleResult(source.owner!!)
+            return BattleResult(source.owner!!, source, target, -1, -1)
         }
         val battleResult = Battle(source, target, dice).fight()
         if (battleResult.winner == source.owner) {

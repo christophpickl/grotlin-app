@@ -32,10 +32,22 @@ RestClient.prototype.getProfile = function (onSuccessFunction) {
     this.LOG.debug("getProfile()");
     this._get("/users/profile", onSuccessFunction);
 };
+RestClient.prototype.resetDB = function (onSuccessFunction) {
+    this.LOG.debug("resetDB()");
+    this._get("/admin/resetDB?secret=hans", onSuccessFunction);
+};
 
 RestClient.prototype.joinGame = function (onSuccessFunction) {
     this.LOG.debug("joinGame()");
     this._post("/game/random", {}, onSuccessFunction);
+};
+
+RestClient.prototype.attack = function (gameId, regionIdSource, regionIdTarget, onSuccessFunction) {
+    this.LOG.debug("attack(..)");
+    this._post("/game/runningGames/" + gameId + "/attack", {
+        sourceRegionId: regionIdSource,
+        targetRegionId: regionIdTarget
+    }, onSuccessFunction);
 };
 
 RestClient.prototype.createChannelToken = function(onSuccessFunction) {
@@ -51,6 +63,15 @@ RestClient.prototype.shutdown = function(onSuccessFunction) {
     this.LOG.debug("shutdown()");
     this._post("/_ah/admin/quit", { }, onSuccessFunction);
 };
+RestClient.prototype.showGame = function(gameId, onSuccessFunction) {
+    this.LOG.debug("shutdown()");
+    this._get("/game/runningGames/" + gameId, onSuccessFunction);
+};
+RestClient.prototype.endTurn = function(gameId, onSuccessFunction) {
+    this.LOG.debug("endTurn()");
+    this._post("/game/runningGames/" + gameId + "/endTurn", {}, onSuccessFunction);
+};
+
 
 RestClient.prototype._executeAny = function(urlPart, onSuccessFunction, ajaxCall) {
 	$.ajax(ajaxCall);
@@ -75,7 +96,7 @@ RestClient.prototype._post = function(urlPart, payloadAsJson, onSuccessFunction 
         headers: {
             "X-access_token": this.accessToken
         },
-        // contentType : 'application/json',
+        contentType : 'application/json',
         data: payloadAsString,
         success: onSuccessFunction
         // TODO error: onErrorFunction ? onErrorFunction : this._onAjaxError (and remove global setting from above)

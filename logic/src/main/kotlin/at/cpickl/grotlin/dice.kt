@@ -10,11 +10,13 @@ trait Dice {
 }
 
 class RealDice : Dice {
-    private val log: Logger = LoggerFactory.getLogger(javaClass)
+    class object {
+        val LOG: Logger = LoggerFactory.getLogger(javaClass)
+    }
 
     override fun roll(): Int {
         val number = (Math.random() * 6).toInt() + 1
-        log.trace("rolled: {}", number)
+        LOG.trace("rolled: {}", number)
         return number
     }
 }

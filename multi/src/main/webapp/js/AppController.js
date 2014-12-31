@@ -8,6 +8,9 @@ var AppController = function() {
 	this._logOutput = function(message) {
 		$("#outputText").val(message);
 	};
+    this._gameId = function () {
+        return $("#txt_gameId").val();
+    };
 
 	this._initByLocalStorage = function() {
 		LOG.debug("initByLocalStorage()");
@@ -26,7 +29,7 @@ var AppController = function() {
 		}
 		LOG.debug("initByLocalStorage() DONE");
 	};
-	
+
 	this._registerHandlers = function() {
 		$("input:radio[name=inp_environment]").change(function() {
 			localStorage.setItem('environment', $(this).attr("id"));
@@ -49,44 +52,72 @@ var AppController = function() {
                 self._logOutput(JSON.stringify(data, null, "\t"));
             });
         });
+        $("#btn_resetDB").click(function() {
+            restClient.resetDB(function() {
+                LOG.debug("SUCCESS reset DB");
+            });
+        });
         $("#btn_shutdown").click(function() {
             restClient.shutdown(function() {
                 LOG.debug("SUCCESS shutdown");
             });
         });
-	    $("#btn_join_game").click(function() {
-	    	self._logOutput("Loading ...");
-	        restClient.joinGame(function(data) {
-	            LOG.debug("SUCCESS random game");
-	            self._logOutput(JSON.stringify(data, null, "\t"));
-	        });
-	    });
-	    
-	    $("#btn_get_channel_token").click(function() {
-	    	self._logOutput("Loading ...");
-	        restClient.createChannelToken(function(data) {
-	            LOG.debug("createChannelToken() SUCCESS result: channel token = " + data.channelToken);
-	            $("#txt_channel_token").val(data.channelToken);
-	            localStorage.setItem('channelToken', data.channelToken);
-	            self._logOutput(JSON.stringify(data, null, "\t"));
-	        });
-	    });
-	    $("#btn_connect_channel").click(function() {
-	        channelClient.connect($("#txt_channel_token").val(), function (message) {
-	        	// TODO do something with the received message.data
-	        	LOG.debug("Received channel message of type '" + message.type + "'.");
-                $("#txt_channel_messages").val("Message: " + message.type + "\n" + $("#txt_channel_messages").val());
-	        	switch (message.type) {
-	        		case "waitingGame":
-	        			LOG.debug("Waiting game new users count: " + message.newUsersCount);
-	        		break;
-	        		case "gameStarts":
-	        			LOG.debug("Game is starting! Game ID: " + message.gameId);
-	        		break;
-	        	}
-	    	});
+        $("#btn_join_game").click(function() {
+            self._logOutput("Loading ...");
+            restClient.joinGame(function(data) {
+                LOG.debug("SUCCESS random game");
+                self._logResponseData(data);
+            });
+        });
+        $("#btn_attack").click(function() {
+            self._logOutput("Attacking ...");
+            var regionIdSource = $("#txt_attack_source").val();
+            var regionIdTarget = $("#txt_attack_target").val();
+            restClient.attack(self._gameId(), regionIdSource, regionIdTarget, function(data) {
+                LOG.debug("SUCCESS attacking");
+                self._logResponseData(data);
+            });
+        });
 
-	    });
+        $("#btn_show_game").click(function() {
+            restClient.showGame(self._gameId(), function(data) {
+                self._logResponseData(data);
+            });
+        });
+        $("#btn_end_turn").click(function() {
+            restClient.endTurn(self._gameId(), function(data) {
+                self._logOutput("Next player's turn. (actually distribution phase should start. response should contain units to deploy)")
+            });
+        });
+
+        $("#btn_channel_token_and_connect").click(function() {
+            self._logOutput("Establishing channel... creating token.");
+            restClient.createChannelToken(function(data) {
+
+                LOG.debug("createChannelToken() SUCCESS result: channel token = " + data.channelToken);
+                $("#txt_channel_token").val(data.channelToken);
+                localStorage.setItem('channelToken', data.channelToken);
+                self._logResponseData(data);
+                channelClient.connect($("#txt_channel_token").val(), function (message) {
+
+                    LOG.debug("Received channel message of type '" + message.type + "'.");
+                    $("#txt_channel_messages").val("Message: " + message.type + "\n" + $("#txt_channel_messages").val());
+                    switch (message.type) {
+                        case "waitingGame":
+                            LOG.debug("Waiting game new users count: " + message.newUsersCount);
+                            break;
+                        case "gameStarts":
+                            LOG.debug("Game is starting! Game ID: " + message.gameId);
+                            $("#txt_gameId").val(message.gameId);
+                            break;
+                        case "attack":
+                            LOG.debug("Attacked! Player won: " + message.wonUserName);
+                            // regionIdAttacker, regionIdDefender, diceAttacker, diceDefender
+                            break;
+                    }
+                });
+            });
+        });
 
 	};
 	
@@ -98,4 +129,8 @@ var AppController = function() {
 		
 		this._registerHandlers();
 	};
+
+    this._logResponseData = function(data) {
+        this._logOutput(JSON.stringify(data, null, "\t"));
+    };
 };

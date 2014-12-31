@@ -17,11 +17,13 @@ import org.hamcrest.Matchers.*
 //    return Matchers.equalTo(operand)
 //}
 
-
-
+// For now Kotlin supports only primary constructors (secondary constructors may be supported later).
+// http://stackoverflow.com/questions/19299525/kotlin-secondary-constructor
 //fun testDice(vararg rolls: Int): Dice = TestDice(rolls)
 class TestDice(_rolls: IntArray) : Dice {
-
+    class object {
+        fun byRolls(vararg rolls: Int) = TestDice(rolls)
+    }
     private val rolls: IntArray = _rolls
     private var current: Int = 0
 
@@ -31,14 +33,14 @@ class TestDice(_rolls: IntArray) : Dice {
     }
 
     override fun roll(): Int {
-        assertThat("Already consumed all rolls: ${rolls.toString()}", current, lessThan(rolls.size))
+        assertThat("Already consumed all rolls: ${rolls.toString()}", current, lessThan(rolls.size()))
         return rolls[current++]
     }
 
     fun verify() {
         // TODO how to format IntArray to pretty string?
         assertThat("Not all rolls have been consumed, only ${current} out of ${rolls.size}: ${rolls}",
-                current, equalTo(rolls.size))
+                current, equalTo(rolls.size()))
     }
 
 }

@@ -3,6 +3,7 @@ package at.cpickl.grotlin.channel
 import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlAccessType
 import javax.xml.bind.annotation.XmlRootElement
+import at.cpickl.grotlin.BattleResult
 
 trait ChannelNotification {
     fun actOn(responder: AllNotificationResponder)
@@ -16,7 +17,10 @@ trait ChannelNotificationRto: NotificationRto {
 
 
 /** Compound interface. */
-trait AllNotificationResponder : GameStartsNotificationResponder, WaitingGameNotificationResponder
+trait AllNotificationResponder :
+        GameStartsNotificationResponder,
+        WaitingGameNotificationResponder,
+        AttackNotificationResponder
 
 /** Marker interface only. */
 trait NotificationRto
@@ -29,7 +33,8 @@ object NotificationRegistry {
     {
         registry = hashMapOf(
             GameStartsNotificationRto.TYPE to javaClass<GameStartsNotificationRto>(),
-            WaitingGameNotificationRto.TYPE to javaClass<WaitingGameNotificationRto>()
+                WaitingGameNotificationRto.TYPE to javaClass<WaitingGameNotificationRto>(),
+                AttackNotificationRto.TYPE to javaClass<AttackNotificationRto>()
         )
     }
 
@@ -102,4 +107,56 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class WaitingGameNot
 
 trait WaitingGameNotificationResponder: NotificationResponder {
     fun onWaitingGame(notification: WaitingGameNotification)
+}
+
+// ATTACK NOTIFICATION
+// =======================================================
+
+data class AttackNotification(
+        val wonUserName: String,
+        val regionIdAttacker: String, // TODO MINOR should be of type Region, but would need complex toDomain transformer (from Id to Region)
+        val regionIdDefender: String,
+        val diceRollAttacker: Int,
+        val diceRollDefender: Int
+) : ChannelNotification {
+    class object {
+        val transform: (BattleResult) -> AttackNotification =
+                {(result) ->
+                    AttackNotification(result.winner.name,
+                            result.attackerRegion.id, result.defenderRegion.id,
+                            result.attackerDiceRoll, result.defenderDiceRoll)
+                }
+    }
+    override fun actOn(responder: AllNotificationResponder) {
+        responder.onAttacked(this)
+    }
+
+    override fun toRto(): AttackNotificationRto {
+        return AttackNotificationRto.build(wonUserName, regionIdAttacker, regionIdDefender,
+                diceRollAttacker, diceRollDefender)
+    }
+}
+
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class AttackNotificationRto (
+        override var type: String? = null,
+        var wonUserName: String? = null,
+        var regionIdAttacker: String? = null,
+        var regionIdDefender: String? = null,
+        var diceAttacker: Int? = null,
+        var diceDefender: Int? = null
+) : ChannelNotificationRto {
+    class object {
+        val TYPE: String = "attack"
+        fun build(wonUserName: String, regionIdAttacker: String, regionIdDefender: String,
+                  diceAttacker: Int, diceDefender: Int): AttackNotificationRto {
+            return AttackNotificationRto(TYPE, wonUserName, regionIdAttacker, regionIdDefender,
+                    diceAttacker, diceDefender)
+        }
+    }
+    override fun toDomain(): ChannelNotification = AttackNotification(wonUserName!!,
+            regionIdAttacker!!, regionIdDefender!!, diceAttacker!!, diceDefender!!)
+}
+
+trait AttackNotificationResponder : NotificationResponder {
+    fun onAttacked(notification: AttackNotification)
 }

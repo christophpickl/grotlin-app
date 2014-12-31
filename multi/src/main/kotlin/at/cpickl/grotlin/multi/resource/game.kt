@@ -6,7 +6,6 @@ import javax.ws.rs.core.MediaType
 import javax.inject.Inject
 import at.cpickl.grotlin.multi.service.WaitingRandomGameService
 import javax.ws.rs.POST
-import javax.ws.rs.core.Response
 import at.cpickl.grotlin.multi.service.User
 import javax.xml.bind.annotation.XmlAccessorType
 import javax.xml.bind.annotation.XmlAccessType
@@ -20,6 +19,8 @@ import javax.ws.rs.Consumes
 import at.cpickl.grotlin.multi.service.AttackOrder
 import at.cpickl.grotlin.Map as Mapp
 import at.cpickl.grotlin.multi.service.UserGame
+import at.cpickl.grotlin.channel.AttackNotificationRto
+import javax.ws.rs.core.Response
 
 Path("/game")
 Produces(MediaType.APPLICATION_JSON)
@@ -53,12 +54,19 @@ class GameResource [Inject](
     fun attackRegion(
             PathParam("gameId") gameId: String,
             attackRto: AttackOrderRto,
-            user: User): Response {
+            user: User): AttackNotificationRto {
         val game = runningGameService.gameByIdForUser(gameId, user)
-        runningGameService.attackRegion(AttackOrder(user, game,
+        val notification = runningGameService.attackRegion(AttackOrder(user, game,
                 game.regionById(attackRto.sourceRegionId!!),
                 game.regionById(attackRto.targetRegionId!!)))
-        // result will be pushed via channel API
+        // result to other players will be pushed via channel API
+        return notification.toRto()
+    }
+
+    // TODO create own resource which has a field property $gameId
+    Secured POST Path("/runningGames/{gameId}/endTurn")
+    fun endTurn(PathParam("gameId") gameId: String, user: User): Response {
+        runningGameService.endTurn(runningGameService.gameByIdForUser(gameId, user), user)
         return Response.ok().build()
     }
 
@@ -67,7 +75,14 @@ class GameResource [Inject](
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class AttackOrderRto (
         var sourceRegionId: String? = null,
         var targetRegionId: String? = null
-)
+) {
+    class object {
+        //        val transform: (String, String) -> AttackOrderRto =
+        //            { (sourceRegionId, targetRegionId) -> AttackOrderRto(sourceRegionId, targetRegionId)}
+        fun build(sourceRegionId: String, targetRegionId: String): AttackOrderRto =
+                AttackOrderRto(sourceRegionId, targetRegionId)
+    }
+}
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class WaitingRandomGameRto (
         var usersMax: Int? = null,
@@ -81,19 +96,28 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class WaitingRandomG
 }
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class RunningGameRto(
-        var users: Collection<User>? = null,
+        var players: Collection<PlayerRto>? = null,
         var map: MappRto? = null
 ) {
     class object {
         val transform: (UserGame) -> RunningGameRto =
                 { (game) ->
                     val rto = RunningGameRto()
-                    rto.users = game.users
+                    rto.players = game.users.map(PlayerRto.transform)
                     rto.map = MappRto.transform(game.map)
                     rto
                 }
     }
 
+}
+
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class PlayerRto (
+        var name: String? = null
+) {
+    class object {
+        val transform: (User) -> PlayerRto =
+                {(user) -> PlayerRto(user.name) }
+    }
 }
 
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class MappRto (

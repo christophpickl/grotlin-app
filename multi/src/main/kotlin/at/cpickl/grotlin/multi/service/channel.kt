@@ -2,15 +2,11 @@
 package at.cpickl.grotlin.multi.service
 
 import org.slf4j.LoggerFactory
-import at.cpickl.grotlin.multi.resource.ChannelResource
 import com.google.appengine.api.channel.ChannelService
 import com.google.appengine.api.channel.ChannelServiceFactory
 import com.google.appengine.api.channel.ChannelMessage
 import javax.servlet.http.HttpServletRequest
-import at.cpickl.grotlin.channel.ChannelNotificationRto
 import at.cpickl.grotlin.JsonMarshaller
-import at.cpickl.grotlin.channel.GameStartsNotification
-import at.cpickl.grotlin.channel.GameStartsNotificationRto
 import at.cpickl.grotlin.channel.ChannelNotification
 
 trait ChannelApiService {
@@ -65,9 +61,8 @@ class ChannelApiServiceImpl : ChannelApiService {
         connectionsCount++
         val presence = channelService.parsePresence(request) // isConnected:Boolean, clientId:String
         val message = channelService.parseMessage(request) // message:String, clientId:String
-        println("presence=${presence}")
-        println("message=${message}")
-
+        println("ChannelApiServiceImpl ... presence=${presence}")
+        println("ChannelApiServiceImpl ... message=${message}")
     }
 
     override fun onDisconnected(request: HttpServletRequest) {

@@ -43,6 +43,9 @@ body {
     /*width: auto;
     display: table-cell;*/
 }
+#txt_attack_source, #txt_attack_target {
+    width: 30px;
+}
 textarea {
     font-family: monospace;
     width: 100%;
