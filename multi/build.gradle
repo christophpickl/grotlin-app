@@ -27,44 +27,18 @@ apply plugin: 'appengine'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
-version = '1.0-SNAPSHOT'
 
 // http://java.dzone.com/articles/resource-filtering-gradle
 
-// TODO:
-// WARNING [Project: :app] variant.getProcessResources() is deprecated.
-// Call it on one of variant.getOutputs() instead.
-//processResources {
-//    filter ReplaceTokens, tokens: [
-//            "artifact.version": project.property("version"),
-//            "build.date"      : buildDate
-//    ]
-//}
-
-// http://stackoverflow.com/questions/12813887/gradle-replace-tokens-by-finding-the-tokens-from-property-file
-
-// http://www.gradle.org/docs/current/userguide/working_with_files.html
-// http://www.gradle.org/docs/current/javadoc/org/gradle/api/tasks/Copy.html
-
-task filterSwirlConfig(type: Copy) {
-//    from("src/main/resources") {
-//        include '**/*.properties'
-//        filter(ReplaceTokens, tokens: ["artifact.version": project.properties["version"], "build.date": buildDate])
-//    }
-    from "src/main/resources/swirl.config.properties"
-    into "build/resources/main"
-    filter(ReplaceTokens, tokens: ["artifact.version": project.properties["version"], "build.date": buildDate])
-//    expand("artifact.version": project.property("version"), "build.date": buildDate)
-//    expand(project.properties)
+//for Ant filter
+// TODO MINOR build thingy: WARNING [Project: :app] variant.getProcessResources() is deprecated. Call it on one of variant.getOutputs() instead.
+processResources {
+    filter ReplaceTokens, tokens: [
+            "artifact.version": project.property("version"),
+            "build.date"      : buildDate
+    ]
 }
-build.dependsOn filterSwirlConfig
-appengineUpdate.dependsOn filterSwirlConfig
 
-//tasks.whenTaskAdded { task ->
-//    if (task.name == 'build') {
-//        task.dependsOn filterSwirlConfig
-//    }
-//}
 
 configurations {
     provided

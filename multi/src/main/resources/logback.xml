@@ -26,7 +26,8 @@
     <logger name="com.google.appengine" level="WARN"/>
     <logger name="com.google.apphosting" level="WARN"/>
     <logger name="com.google.inject" level="WARN"/>
-    <logger name="org.jboss.resteasy" level="WARN"/>
+    <!--<logger name="org.jboss.resteasy" level="WARN"/>-->
+    <logger name="org.jboss" level="WARN"/>
     <logger name="org.apache.jasper" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
 
