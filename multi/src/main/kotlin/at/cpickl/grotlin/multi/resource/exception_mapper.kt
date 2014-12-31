@@ -1,3 +1,5 @@
+// resteasy integration to map uncaught exceptions
+
 package at.cpickl.grotlin.multi.resource
 
 import javax.ws.rs.core.Response
@@ -10,7 +12,6 @@ import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.Fault
 import at.cpickl.grotlin.endpoints.FaultCode
 import at.cpickl.grotlin.multi.isDebugApp
-import javax.validation.ConstraintViolationException
 import org.jboss.resteasy.api.validation.ResteasyViolationException
 
 Provider class GeneralExceptionMapper : ExceptionMapper<Exception> {
@@ -41,13 +42,6 @@ Provider class ResteasyViolationExceptionMapper : ExceptionMapper<ResteasyViolat
     }
 }
 
-class ViolationMapper {
-    fun foo(exception: ResteasyViolationException): Fault {
-
-        return Fault("", FaultCode.INVALID_PAYLOAD)
-    }
-}
-
 Provider class FaultExceptionMapper : ExceptionMapper<FaultException> {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<FaultExceptionMapper>())
@@ -68,16 +62,12 @@ Provider class UnrecognizedPropertyExceptionMapper : ExceptionMapper<Unrecognize
     }
 }
 
-// KotlinNullPointerExceptionMapper -> internal server error
-
-// javax.ws.rs.NotFoundException
-//Provider class GeneralExceptionMapper : ExceptionMapper<Exception> {
-//    override fun toResponse(exception: Exception): Response {
-//        LOG.exception("Uncaught exception!", exception)
-//        return Response.status(Status.INTERNAL_SERVER_ERROR).entity(Fault("Unknown error occured!", FaultCode.INTERNAL_ERROR).toRto()).build()
-//    }
-//}
-
+/**
+ * User has provided some bad input data (resulting in a 400 BadRequest response).
+ */
 class UserException(message: String, fault: Fault) : FaultException(message, Response.Status.BAD_REQUEST, fault)
 
+/**
+ * User requested a non-existing resource (resulting in a 404 FileNotFound response).
+ */
 class NotFoundException(message: String, fault: Fault) : FaultException(message, Response.Status.NOT_FOUND, fault)

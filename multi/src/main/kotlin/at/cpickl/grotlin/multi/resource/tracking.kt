@@ -1,3 +1,5 @@
+// Google Analytics stuff
+
 package at.cpickl.grotlin.multi.resource
 
 import javax.ws.rs.ext.Provider

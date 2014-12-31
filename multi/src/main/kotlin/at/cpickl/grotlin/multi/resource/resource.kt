@@ -1,3 +1,5 @@
+// main rest resource file
+
 package at.cpickl.grotlin.multi.resource
 
 import com.google.inject.AbstractModule
@@ -9,11 +11,6 @@ import at.cpickl.grotlin.multi.service.Role
 import javax.ws.rs.core.Response
 import at.cpickl.grotlin.multi.isDebugApp
 import org.slf4j.LoggerFactory
-import javax.ws.rs.NameBinding
-import java.lang.annotation.Target
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
-import java.lang.annotation.ElementType
 
 //import javax.inject.Inject
 
@@ -63,14 +60,6 @@ class ResourceModule : AbstractModule() {
     }
 }
 
-Retention(RetentionPolicy.RUNTIME)
-Target(ElementType.METHOD)
-NameBinding
-annotation public class Secured(public val role: Role = Role.USER)
-
-Retention(RetentionPolicy.RUNTIME)
-Target(ElementType.PARAMETER)
-annotation public class InjectPage
 
 Path("/test")
 Produces(MediaType.APPLICATION_JSON)

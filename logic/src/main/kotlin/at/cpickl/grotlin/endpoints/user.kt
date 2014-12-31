@@ -10,7 +10,6 @@ import at.cpickl.grotlin.restclient.Status
 import javax.inject.Inject
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
-import javax.validation.Valid
 
 class UserClient [Inject] (ServerUrl private val baseUrl: String) {
 
@@ -72,7 +71,7 @@ XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class LoginResponseR
     override fun toString() = "LoginResultRto[accessToken='${accessToken}']"
 }
 
-// TODO rename to UserPrivateProfileResponseRto
+// TODO rename to UserPrivateProfileResponseRto, or is it for public use?
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class UserResponseRto(var name: String? = null, var role: String? = null) {
     class object {
         fun build(name: String, role: String): UserResponseRto = UserResponseRto(name, role)

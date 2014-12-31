@@ -1,25 +1,21 @@
+// google app engine Channel API endpoints
+
 package at.cpickl.grotlin.multi.resource
 
 import javax.ws.rs.Path
 import javax.ws.rs.POST
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
-import com.google.appengine.api.channel.ChannelService
-import com.google.appengine.api.channel.ChannelServiceFactory
-import com.google.appengine.api.channel.ChannelMessage
 import javax.ws.rs.core.Response
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 import at.cpickl.grotlin.multi.service.ChannelApiService
 import javax.ws.rs.GET
-import com.google.appengine.api.channel.ChannelPresence
 import javax.ws.rs.core.Context
 import javax.servlet.http.HttpServletRequest
 import at.cpickl.grotlin.multi.service.Role
 import at.cpickl.grotlin.multi.service.User
 import at.cpickl.grotlin.channel.GameStartsNotification
-import at.cpickl.grotlin.channel.GameStartsNotificationRto
 import javax.ws.rs.Consumes
 import com.google.common.io.CharStreams
 import java.io.InputStreamReader

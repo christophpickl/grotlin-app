@@ -12,7 +12,6 @@ import java.io.InputStream
 import com.googlecode.objectify.cmd.LoadType
 import com.googlecode.objectify.cmd.Query
 import at.cpickl.grotlin.multi.toIntOrThrow
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.Fault
 import at.cpickl.grotlin.endpoints.FaultCode
@@ -24,9 +23,15 @@ import at.cpickl.grotlin.endpoints.FaultCode
 //    }
 //}
 
+//Retention(RetentionPolicy.RUNTIME)
+//Target(ElementType.PARAMETER)
+//annotation public class InjectPage
+
 Provider Consumes(MediaType.WILDCARD) class PaginationReader : MessageBodyReader<Pagination> {
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<PaginationReader>())
+        private val QUERY_PARAM_PAGE = "page"
+        private val QUERY_PARAM_SIZE = "size"
     }
     Context private var request: HttpServletRequest? = null
 
@@ -37,8 +42,8 @@ Provider Consumes(MediaType.WILDCARD) class PaginationReader : MessageBodyReader
                           httpHeaders: MultivaluedMap<String, String>?,
                           entityStream: InputStream?): Pagination? {
         LOG.debug("readFrom(type=${type}) ... request=${request}")
-        var pageNumberString = request!!.getParameter("page")
-        var pageSizeString = request!!.getParameter("size")
+        var pageNumberString = request!!.getParameter(QUERY_PARAM_PAGE)
+        var pageSizeString = request!!.getParameter(QUERY_PARAM_SIZE)
         if (pageNumberString == null && pageSizeString == null) {
             return Pagination.ALL
         }

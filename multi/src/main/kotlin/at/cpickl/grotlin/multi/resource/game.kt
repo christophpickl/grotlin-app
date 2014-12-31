@@ -46,7 +46,7 @@ class GameResource [Inject](
     }
 
     Secured GET Path("/runningGames/{gameId}")
-    fun getRunningGames(PathParam("gameId") gameId: String, user: User): RunningGameRto {
+    fun getRunningGame(PathParam("gameId") gameId: String, user: User): RunningGameRto {
         return RunningGameRto.transform(runningGameService.gameByIdForUser(gameId, user))
     }
 

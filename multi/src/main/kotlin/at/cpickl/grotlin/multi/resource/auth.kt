@@ -19,7 +19,17 @@ import at.cpickl.grotlin.multi.service.AuthUserService
 import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.FaultRto
 import at.cpickl.grotlin.restclient.ACCESS_TOKEN_HEADER_NAME
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
+import java.lang.annotation.ElementType
+import javax.ws.rs.NameBinding
+import at.cpickl.grotlin.multi.service.Role
 
+Retention(RetentionPolicy.RUNTIME)
+Target(ElementType.METHOD)
+NameBinding
+annotation public class Secured(public val role: Role = Role.USER)
 
 Provider Consumes(MediaType.WILDCARD) class UserReader [Inject] (
         private val authUserService: AuthUserService
@@ -32,11 +42,11 @@ Provider Consumes(MediaType.WILDCARD) class UserReader [Inject] (
     }
 
     override fun readFrom(type: Class<User>?, genericType: Type?, annotations: Array<out Annotation>?, mediaType: MediaType?, httpHeaders: MultivaluedMap<String, String>?, entityStream: InputStream?): User? {
-        var token: String? = httpHeaders!!.getFirst(ACCESS_TOKEN_HEADER_NAME)
+        var token = httpHeaders!!.getFirst(ACCESS_TOKEN_HEADER_NAME)
         if (token == null) {
             return null
         }
-        return authUserService.authUser(token!!)
+        return authUserService.authUser(token)
     }
 }
 
