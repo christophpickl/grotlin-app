@@ -2,6 +2,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 import java.text.SimpleDateFormat
 
+// good tutorial: http://rominirani.com/2014/08/15/gradle-tutorial-part-5-gradle-app-engine-plugin/
+
 def versionAppEngine = "1.9.17"
 def versionKotlin = "0.9.976"
 def buildDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())
@@ -43,15 +45,11 @@ processResources {
 configurations {
     provided
 }
+
 sourceSets {
     main { compileClasspath += configurations.provided }
     main.java.srcDirs += 'src/main/kotlin'
 }
-//android {
-//    sourceSets {
-//        main.java.srcDirs += 'src/main/kotlin'
-//    }
-//}
 
 dependencies {
     compile project(':logic')
@@ -107,6 +105,8 @@ dependencies {
 
     testCompile "com.google.appengine:appengine-testing:${versionAppEngine}"
     testCompile "com.google.appengine:appengine-api-stubs:${versionAppEngine}"
+
+    // functionalTestCompile "foo.bar"
 }
 
 //configurations.testCompile.each {

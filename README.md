@@ -14,7 +14,8 @@ TODOs
 # @multi: resetDb on startup (when running locally)
 # @app: use mockito: http://www.vogella.com/tutorials/Mockito/article.html#mockito_verify
 # @js-client: channel JS load via javascript (instead hardcoded in HTML)
-
+# rename Map to Board
+# --- investigate eclipse plugin for google app engine => https://cloud.google.com/appengine/docs/java/tools/eclipse?csw=1#Installing_the_Google_Plugin_for_Eclipse
 
 
 resource filtering

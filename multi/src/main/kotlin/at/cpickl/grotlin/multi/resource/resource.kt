@@ -24,25 +24,8 @@ class ResourceModule : AbstractModule() {
     override fun configure() {
         installResources()
         installExceptionMappers()
-        bind(javaClass<PaginationReader>())
-        bind(javaClass<UserReader>())
-
+        installReaders()
         installFilters()
-    }
-
-    private fun installExceptionMappers() {
-        bind(javaClass<ResteasyViolationExceptionMapper>())
-        bind(javaClass<FaultExceptionMapper>())
-        bind(javaClass<UnrecognizedPropertyExceptionMapper>())
-        bind(javaClass<GeneralExceptionMapper>()) // has to be last
-    }
-
-    private fun installFilters() {
-        // TODO tracking disabled, as i seem to be too dumb for google analytics report UI :-/
-        //        if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
-        //            bind(javaClass<TrackingFilter>()) // first track, then secure ;)
-        //        }
-        bind(javaClass<SecuredFilter>())
     }
 
     private fun installResources() {
@@ -58,6 +41,27 @@ class ResourceModule : AbstractModule() {
             bind(javaClass<TestResource>())
         }
     }
+
+    private fun installExceptionMappers() {
+        bind(javaClass<ResteasyViolationExceptionMapper>())
+        bind(javaClass<FaultExceptionMapper>())
+        bind(javaClass<UnrecognizedPropertyExceptionMapper>())
+        bind(javaClass<GeneralExceptionMapper>()) // has to be last
+    }
+
+    private fun installReaders() {
+        bind(javaClass<PaginationReader>())
+        bind(javaClass<UserReader>())
+    }
+
+    private fun installFilters() {
+        // TODO tracking disabled, as i seem to be too dumb for google analytics report UI :-/
+        //        if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+        //            bind(javaClass<TrackingFilter>()) // first track, then secure ;)
+        //        }
+        bind(javaClass<SecuredFilter>())
+    }
+
 }
 
 
