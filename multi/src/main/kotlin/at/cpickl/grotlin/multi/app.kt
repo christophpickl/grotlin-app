@@ -9,7 +9,6 @@ import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
 import javax.ws.rs.ext.Provider;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterContext
 import at.cpickl.grotlin.endpoints.Fault
-import org.slf4j.bridge.SLF4JBridgeHandler
 import com.google.appengine.api.utils.SystemProperty
 
 
@@ -26,9 +25,9 @@ class AppModule : AbstractModule() {
     class object {
         {
             if (AppEngineUtil.isDevelopmentMode()) {
-                println("Bridging java.util.logging to slf4j")
-                SLF4JBridgeHandler.removeHandlersForRootLogger()
-                SLF4JBridgeHandler.install()
+                println("NOOOO, outcommented. see build script and JUL bug! ... Bridging java.util.logging to slf4j")
+                //                SLF4JBridgeHandler.removeHandlersForRootLogger()
+                //                SLF4JBridgeHandler.install()
             }
         }
     }
