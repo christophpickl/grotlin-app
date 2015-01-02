@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.LoginRequestRto
 import at.cpickl.grotlin.endpoints.UserResponseRto
 import at.cpickl.grotlin.endpoints.LoginResponseRto
-import javax.validation.Valid
 
 Path("/users")
 class UserResource [Inject] (private val userService: UserService) {
@@ -41,7 +40,7 @@ class UserResource [Inject] (private val userService: UserService) {
     // on invalid login: returns FORBIDDEN(403), FaultCode.INVALID_CREDENTIALS
     POST Path("/login")
     Consumes(MediaType.APPLICATION_JSON) Produces(MediaType.APPLICATION_JSON)
-    fun login(Valid loginRequest: LoginRequestRto): LoginResponseRto {
+    fun login(/*Valid*/loginRequest: LoginRequestRto): LoginResponseRto {
         LOG.info("login(loginRequest=${loginRequest})")
         val user = userService.login(loginRequest.username!!, loginRequest.password!!)
         return LoginResponseRto.build(user.accessToken!!)

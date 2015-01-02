@@ -25,7 +25,7 @@ buildscript {
 apply plugin: 'war'
 apply plugin: 'kotlin'
 // NO!!! apply plugin: 'kotlin-android'
-apply plugin: 'appengine'
+apply plugin: 'appengine' // https://github.com/GoogleCloudPlatform/gradle-appengine-plugin
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -80,7 +80,8 @@ dependencies {
 
     // http://howtodoinjava.com/2013/05/30/resteasy-bean-validation-using-hibernate-validator-provider/
     // use provider-11 ... https://issues.jboss.org/browse/RESTEASY-1056
-    compile "org.jboss.resteasy:resteasy-validator-provider-11:$versionRestEasy"
+// TODO removed it again as of a GAE bug :(    compile "org.jboss.resteasy:resteasy-validator-provider-11:$versionRestEasy"
+
 //    compile "org.jboss.resteasy:resteasy-hibernatevalidator-provider:$versionRestEasy"
 
     // LOGGING
