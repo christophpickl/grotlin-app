@@ -30,7 +30,8 @@ class AppEngineMailSender : MailSender {
 
     class object {
         private val LOG = LoggerFactory.getLogger(javaClass<AppEngineMailSender>())
-        private val SENDER = MailAddress("foobar@swirl-engine.appspot.com", "swirl faker")
+        // xxx@APP-ID.appspotmail.com
+        private val SENDER = MailAddress("foobar@swirl-engine.appspotmail.com", "swirl faker")
     }
 
     override fun send(mail: Mail) {
