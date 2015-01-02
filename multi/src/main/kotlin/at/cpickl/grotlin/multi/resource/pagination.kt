@@ -15,6 +15,7 @@ import at.cpickl.grotlin.multi.toIntOrThrow
 import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.Fault
 import at.cpickl.grotlin.endpoints.FaultCode
+import at.cpickl.grotlin.multi.UserException
 
 //Provider Produces(MediaType.WILDCARD) class InjectPaginationInterceptor : ContextResolver<Pagination> {
 //    Context private var request: HttpServletRequest? = null

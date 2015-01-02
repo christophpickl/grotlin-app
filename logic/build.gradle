@@ -27,7 +27,7 @@ dependencies {
     // 'org.jetbrains.kotlin:kotlin-jdk-annotations:0.1-SNAPSHOT'
 
     // we need validation annotations here, because RTOs reside in this module
-    compile 'javax.validation:validation-api:1.1.0.Final'
+    // because of GAE bug compile 'javax.validation:validation-api:1.1.0.Final'
 
     // MISC
     // =============================================

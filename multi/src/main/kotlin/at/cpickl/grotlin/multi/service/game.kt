@@ -3,10 +3,8 @@ package at.cpickl.grotlin.multi.service
 import org.slf4j.LoggerFactory
 import com.google.common.base.MoreObjects
 import javax.inject.Inject
-import at.cpickl.grotlin.multi.resource.NotFoundException
 import at.cpickl.grotlin.endpoints.Fault
 import at.cpickl.grotlin.endpoints.FaultCode
-import at.cpickl.grotlin.multi.resource.UserException
 import at.cpickl.grotlin.channel.GameStartsNotification
 import at.cpickl.grotlin.channel.WaitingGameNotification
 import at.cpickl.grotlin.Simple4RegionsMap
@@ -17,6 +15,8 @@ import at.cpickl.grotlin.Player
 import at.cpickl.grotlin.Dice
 import at.cpickl.grotlin.RealDice
 import at.cpickl.grotlin.channel.AttackNotification
+import at.cpickl.grotlin.multi.NotFoundException
+import at.cpickl.grotlin.multi.UserException
 
 class WaitingRandomGameService [Inject] (
         private val runningGameService: RunningGameService,
@@ -126,11 +126,14 @@ class InMemoryRunningGameService [Inject] (private val channelApiService: Channe
     override fun endTurn(game: UserGame, user: User) {
         LOG.debug("endTurn(game={}, user={})", game, user)
         if (!game.isCurrentUser(user)) {
-            throw RuntimeException("Nope, you are not the current user!") // TODO proper error handling
+            // TODO throw UserException instead
+            throw RuntimeException("Nope, you are not the current user!")
         }
         // FIXME init distribution phase
-        game.nextPlayer()
+        // return game.biggestConnectedEmpireSize(game.asPlayer(user))
+        // game.nextPlayer()
     }
+
 
 }
 

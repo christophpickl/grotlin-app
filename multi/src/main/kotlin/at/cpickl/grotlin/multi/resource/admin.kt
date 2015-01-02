@@ -14,6 +14,7 @@ import at.cpickl.grotlin.multi.service.AdminService
 import at.cpickl.grotlin.multi.service.Mail
 import at.cpickl.grotlin.multi.service.MailAddress
 import at.cpickl.grotlin.multi.service.MailSender
+import at.cpickl.grotlin.multi.UserException
 
 Path("/admin")
 Produces(MediaType.APPLICATION_JSON)
