@@ -16,7 +16,10 @@ data class Fault(val message: String, val code: FaultCode) {
 
 enum class FaultCode(val label: String) {
     NOT_ALLOWED: FaultCode("NOT_ALLOWED")
+    // thrown by UnrecognizedPropertyExceptionMapper if JSON is not well formed
     INVALID_PAYLOAD: FaultCode("INVALID_PAYLOAD")
+    // very generic error; sent if user requested something impossible
+    INVALID_USER_REQUEST : FaultCode("INVALID_USER_REQUEST")
     INVALID_PAGE: FaultCode("INVALID_PAGE")
     INVALID_LOGOUT: FaultCode("INVALID_LOGOUT")
     INVALID_CREDENTIALS: FaultCode("INVALID_CREDENTIALS")

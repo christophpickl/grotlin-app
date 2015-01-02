@@ -17,6 +17,7 @@ import at.cpickl.grotlin.RealDice
 import at.cpickl.grotlin.channel.AttackNotification
 import at.cpickl.grotlin.multi.NotFoundException
 import at.cpickl.grotlin.multi.UserException
+import at.cpickl.grotlin.multi.resource.Distribution
 
 class WaitingRandomGameService [Inject] (
         private val runningGameService: RunningGameService,
@@ -82,6 +83,8 @@ public trait RunningGameService {
     public fun attackRegion(attack: AttackOrder): AttackNotification
 
     public fun endTurn(game: UserGame, user: User)
+
+    public fun distributeUnits(game: UserGame, user: User, distribution: Distribution)
 }
 
 class InMemoryRunningGameService [Inject] (private val channelApiService: ChannelApiService) : RunningGameService {
@@ -115,6 +118,7 @@ class InMemoryRunningGameService [Inject] (private val channelApiService: Channe
 
     override fun attackRegion(attack: AttackOrder): AttackNotification {
         LOG.debug("attackRegion(attack=${attack})")
+        checkCurrentUser(attack.game, attack.user)
         //        val player = attack.game.asPlayer(attack.user)
         // TODO verify is attackable
         val battleResult = attack.game.attack(attack.sourceRegion, attack.targetRegion)
@@ -125,17 +129,37 @@ class InMemoryRunningGameService [Inject] (private val channelApiService: Channe
 
     override fun endTurn(game: UserGame, user: User) {
         LOG.debug("endTurn(game={}, user={})", game, user)
+        checkCurrentUser(game, user)
+        // FIXME init distribution phase
+    }
+
+    private fun checkCurrentUser(game: UserGame, user: User) {
         if (!game.isCurrentUser(user)) {
             // TODO throw UserException instead
             throw RuntimeException("Nope, you are not the current user!")
         }
-        // FIXME init distribution phase
-        // return game.biggestConnectedEmpireSize(game.asPlayer(user))
-        // game.nextPlayer()
     }
 
+    override fun distributeUnits(game: UserGame, user: User, distribution: Distribution) {
+        LOG.debug("distributeUnits(game, user, distribution={})", distribution)
+        checkCurrentUser(game, user)
+        // FIXME check if endTurn already hit, and is in distribution phase
+        val totalArmiesRequest = distribution.regions.fold(0, {(count, region) -> count + region.amount })
+        val armiesToDistribute = game.biggestConnectedEmpireSize(game.asPlayer(user))
+        if (totalArmiesRequest != armiesToDistribute) {
+            throw UserException("Distribution failed (totalArmiesRequest=${totalArmiesRequest} NOT EQUAL armiesToDistribute=${armiesToDistribute})" +
+                    "for ${user} in ${game} with request: ${distribution}", Fault("You must distribute ${armiesToDistribute} units!", FaultCode.INVALID_USER_REQUEST))
+        }
+        // what if user sent invalid regionId? it will just crash with an illegal arg exception
+        val regionAndDistr = distribution.regions.map { Pair(game.regionById(it.regionId), it) }
+        // TODO validate if region owned by user
+        //      validate if region.armies + distr.armies <= MAX
+        regionAndDistr.forEach { it.first.armies += it.second.amount }
+        game.nextPlayer()
+    }
 
 }
+
 
 data class AttackOrder(val user: User, val game: UserGame, val sourceRegion: Region, val targetRegion: Region)
 

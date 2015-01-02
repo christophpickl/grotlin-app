@@ -64,14 +64,44 @@ class GameResource [Inject](
     }
 
     // TODO create own resource which has a field property $gameId
+
     Secured POST Path("/runningGames/{gameId}/endTurn")
     fun endTurn(PathParam("gameId") gameId: String, user: User): Response {
         runningGameService.endTurn(runningGameService.gameByIdForUser(gameId, user), user)
         return Response.ok().build()
     }
 
+    Secured POST Path("/runningGames/{gameId}/distributeUnits")
+    fun distributeUnits(PathParam("gameId") gameId: String, user: User, distribution: DistributionRto): Response {
+        runningGameService.distributeUnits(runningGameService.gameByIdForUser(gameId, user), user, distribution.toDomain())
+        return Response.ok().build()
+    }
 }
 
+data class Distribution(val regions: Collection<RegionDistribution>)
+data class RegionDistribution(val regionId: String, val amount: Int)
+
+fun DistributionRto.toDomain() = Distribution(this.regions!!.map { it.toDomain() })
+fun RegionDistributionRto.toDomain() = RegionDistribution(this.regionId!!, this.amount!!)
+
+
+XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class DistributionRto (
+        var regions: Collection<RegionDistributionRto>? = null
+) {
+    class object {
+        fun build(regions: Collection<RegionDistributionRto>): DistributionRto = DistributionRto(regions)
+    }
+}
+
+XmlAccessorType(XmlAccessType.PROPERTY) data class RegionDistributionRto(
+        var regionId: String? = null,
+        var amount: Int? = null
+) {
+    class object {
+        fun build(regionId: String, amount: Int): RegionDistributionRto = RegionDistributionRto(regionId, amount)
+    }
+
+}
 XmlAccessorType(XmlAccessType.PROPERTY) XmlRootElement data class AttackOrderRto (
         var sourceRegionId: String? = null,
         var targetRegionId: String? = null

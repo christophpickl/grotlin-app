@@ -37,6 +37,7 @@ open class Game(val id: String, val map: Map, val players: List<Player>, val dic
         if (found != null) {
             return found
         }
+        // TODO is it really wise to throw this exception?
         throw IllegalArgumentException("Not found region by ID '${id}' with regions: ${map.regions}!")
     }
 
