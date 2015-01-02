@@ -15,11 +15,17 @@ import com.google.appengine.api.utils.SystemProperty
 
 fun isDebugApp(): Boolean = System.getProperty("appDebug", "false").equals("true")
 
+object AppEngineUtil {
+    {
+        println("SystemProperty.environment.value() = " + SystemProperty.environment.value())
+    }
+    fun isDevelopmentMode() = SystemProperty.environment.value() == SystemProperty.Environment.Value.Development
+}
+
 class AppModule : AbstractModule() {
     class object {
         {
-            println("SystemProperty.environment.value() = " + SystemProperty.environment.value())
-            if (SystemProperty.environment.value() != SystemProperty.Environment.Value.Production) {
+            if (AppEngineUtil.isDevelopmentMode()) {
                 println("Bridging java.util.logging to slf4j")
                 SLF4JBridgeHandler.removeHandlersForRootLogger()
                 SLF4JBridgeHandler.install()

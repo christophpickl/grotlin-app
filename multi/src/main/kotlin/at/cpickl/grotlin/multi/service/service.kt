@@ -8,9 +8,13 @@ import javax.ws.rs.core.Response.Status
 import com.google.inject.Scopes
 import java.util.UUID
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory
+import at.cpickl.grotlin.multi.AppEngineUtil
+import org.slf4j.LoggerFactory
 
 class ServiceModule : AbstractModule() {
-
+    class object {
+        private val LOG = LoggerFactory.getLogger(javaClass<ServiceModule>())
+    }
     private val trackingId: String = "UA-58057234-2"
 
     override fun configure() {
@@ -22,6 +26,13 @@ class ServiceModule : AbstractModule() {
         bind(javaClass<RunningGameService>()).to(javaClass<InMemoryRunningGameService>()).`in`(Scopes.SINGLETON)
         bind(javaClass<AdminService>())
         bind(javaClass<ChannelApiService>()).to(javaClass<ChannelApiServiceImpl>()).`in`(Scopes.SINGLETON)
+
+        if (AppEngineUtil.isDevelopmentMode()) {
+            LOG.debug("Not registering real mail sender impl but: LocalDummyMailSender")
+            bind(javaClass<MailSender>()).to(javaClass<LocalDummyMailSender>())
+        } else {
+            bind(javaClass<MailSender>()).to(javaClass<AppEngineMailSender>())
+        }
 
         bind(javaClass<IdGenerator>()).to(javaClass<UuidGenerator>()).`in`(Scopes.SINGLETON)
 

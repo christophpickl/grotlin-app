@@ -4,6 +4,7 @@ grotlin-app
 [![Travis CI Status](https://travis-ci.org/christophpickl/grotlin-app.svg?branch=master)](https://travis-ci.org/christophpickl/grotlin-app)
 
 See [Wiki](https://github.com/christophpickl/grotlin-app/wiki) for more info.
+See [Google App Engine Consle](https://console.developers.google.com/project/swirl-engine).
 
 FIXMEs
 -------
