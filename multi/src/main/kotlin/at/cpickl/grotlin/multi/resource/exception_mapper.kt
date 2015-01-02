@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.Fault
 import at.cpickl.grotlin.endpoints.FaultCode
 import at.cpickl.grotlin.multi.isDebugApp
-import org.jboss.resteasy.api.validation.ResteasyViolationException
 
 Provider class GeneralExceptionMapper : ExceptionMapper<Exception> {
     class object {
@@ -27,6 +26,7 @@ Provider class GeneralExceptionMapper : ExceptionMapper<Exception> {
     }
 }
 
+/*
 // TODO how to hook into the default violation exception mapper?!
 //Provider class ConstraintViolationExceptionMapper : ExceptionMapper<ConstraintViolationException> {
 Provider class ResteasyViolationExceptionMapper : ExceptionMapper<ResteasyViolationException> {
@@ -41,6 +41,7 @@ Provider class ResteasyViolationExceptionMapper : ExceptionMapper<ResteasyViolat
                 .entity(Fault("Validation failed", FaultCode.INVALID_PAYLOAD).toRto()).build()
     }
 }
+*/
 
 Provider class FaultExceptionMapper : ExceptionMapper<FaultException> {
     class object {
@@ -61,13 +62,3 @@ Provider class UnrecognizedPropertyExceptionMapper : ExceptionMapper<Unrecognize
         return Response.status(Status.BAD_REQUEST).entity(Fault(exception.getMessage(), FaultCode.INVALID_PAYLOAD).toRto()).build()
     }
 }
-
-/**
- * User has provided some bad input data (resulting in a 400 BadRequest response).
- */
-class UserException(message: String, fault: Fault) : FaultException(message, Response.Status.BAD_REQUEST, fault)
-
-/**
- * User requested a non-existing resource (resulting in a 404 FileNotFound response).
- */
-class NotFoundException(message: String, fault: Fault) : FaultException(message, Response.Status.NOT_FOUND, fault)
