@@ -6,7 +6,13 @@ grotlin-app
 See [Wiki](https://github.com/christophpickl/grotlin-app/wiki) for more info.
 See [Google App Engine Consle](https://console.developers.google.com/project/swirl-engine).
 
-concerning ".coveragerc" file, see https://github.com/codecov/example-python/wiki/Coverage-Config
+MISC
+-----
+# concerning ".coveragerc" file, see https://github.com/codecov/example-python/wiki/Coverage-Config
+# some app engine config commands:
+## appcfg.sh --host==0.0.0.0 --oauth2 start_module_version src/main/webapp
+## appcfg.sh --oauth2 request_logs src/main/webapp mylogs.txt
+
 FIXMEs
 -------
 # org.jboss.resteasy.spi.UnhandledException: org.jboss.resteasy.core.NoMessageBodyWriterFoundFailure: Could not find MessageBodyWriter for response object of type: at.cpickl.grotlin.endpoints.FaultRto of media type: application/octet-stream
