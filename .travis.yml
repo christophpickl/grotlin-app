@@ -1,8 +1,17 @@
 language: java
+
+# nope, caching wont work unless you use a container based infra (which disallows sudo, but needed for coverage :-/)
+# see: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
 cache:
   directories:
-  - ~/.gradle
-  # $HOME/.gradle/caches/
+  - $HOME/.gradle/caches/
+  # ~/.gradle
 
 #script:
 #- ./gradlew build
+
+before_install:
+  sudo pip install codecov
+
+after_success:
+  codecov
