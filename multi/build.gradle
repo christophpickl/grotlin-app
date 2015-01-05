@@ -95,8 +95,9 @@ dependencies {
 
     // TEST
     // =============================================
-    testCompile project(path: ':logic', configuration: 'testOutput')
-    testCompile fileTree(dir: '../logic/build/libs', include: ['*.jar'])  // HACK IT!
+    // test dependency doesnt work on travis-ci :( see logic build.gradle
+//    testCompile project(path: ':logic', configuration: 'testOutput')
+//    testCompile fileTree(dir: '../logic/build/libs', include: ['*.jar'])  // HACK IT!
 
     // testng, hamcrest, mockito... already via :logic ... or, maybe its not the case...
     testCompile 'org.testng:testng:6.8.8'

@@ -7,9 +7,6 @@ ext {
     versionLogback = '1.1.2'
 }
 
-configurations {
-    testOutput.extendsFrom(testCompile)
-}
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -42,15 +39,19 @@ dependencies {
 //    testCompile 'org.mockito:mockito-all:1.10.8'
 }
 
+/* TODO doesnt work on travis-ci! :(
+configurations {
+    testOutput.extendsFrom(testCompile)
+}
 task testJar(type: Jar, dependsOn: testClasses) {
 //    baseName = "test-${project.archivesBaseName}"
     from sourceSets.test.output
     classifier = 'test'
 }
-
 artifacts {
     testOutput testJar
 }
+*/
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7

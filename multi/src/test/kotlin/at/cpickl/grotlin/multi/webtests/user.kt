@@ -8,7 +8,7 @@ import org.hamcrest.Matchers.*
 import at.cpickl.grotlin.restclient.RestClient
 import at.cpickl.grotlin.restclient.Status
 import at.cpickl.grotlin.restclient.RestResponse
-import at.cpickl.grotlin.restclient.assertStatusCode
+import at.cpickl.grotlin.multi.assertStatusCode
 import at.cpickl.grotlin.endpoints.UserClient
 import at.cpickl.grotlin.endpoints.LoginRequestRto
 import at.cpickl.grotlin.multi.TestData

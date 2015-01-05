@@ -10,9 +10,9 @@ import org.hamcrest.Description
 import org.testng.annotations.BeforeSuite
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import at.cpickl.grotlin.multi.assertStatusCode
 import at.cpickl.grotlin.multi.TestData
 import at.cpickl.grotlin.restclient.RestClient
-import at.cpickl.grotlin.restclient.assertStatusCode
 import at.cpickl.grotlin.restclient.Status
 import at.cpickl.grotlin.restclient.RestResponse
 

@@ -1,10 +1,8 @@
 package at.cpickl.grotlin.multi;
 
-
 import at.cpickl.grotlin.Player;
 import at.cpickl.grotlin.Region;
 import at.cpickl.grotlin.Simple4RegionsMap;
-import at.cpickl.grotlin.TestDice;
 import at.cpickl.grotlin.channel.AttackNotificationRto;
 import at.cpickl.grotlin.channel.GameStartsNotification;
 import at.cpickl.grotlin.channel.WaitingGameNotification;
