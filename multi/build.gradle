@@ -157,6 +157,16 @@ task testWeb(type: Test) {
     reports.html.destination = file("${reporting.baseDir}/webtest")
 }
 
+
+apply plugin: "jacoco"
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+}
+task testReport(dependsOn: ["test", "jacocoTestReport"]) {}
+
 //appengineFunctionalTest {
 //    systemProperty "myFunctionalTestProperty", "yipiiiii"
 //}

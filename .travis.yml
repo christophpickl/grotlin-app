@@ -11,11 +11,16 @@ cache:
   # $GRADLE_USER_HOME
 
 
-#script:
-#- ./gradlew build
-
 before_install:
-  sudo pip install codecov
+  - sudo pip install codecov
+
+
+script:
+- ./gradlew assemble
+- ./gradlew check
+- "./gradlew multi:testReport"
+
 
 after_success:
-  codecov
+  - "cp multi/build/reports/jacoco/test/*.xml jacoco.xml"
+  - codecov
