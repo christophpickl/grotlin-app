@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:a="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="at.cpickl.agrotlin" >
 
-    <uses-permission a:name="android.permission.INTERNET" />
-    <uses-permission a:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <!-- in order to check if network is turned on -->
-    <uses-permission a:name="android.permission.ACCESS_NETWORK_STATE" />
-    <application a:name=".SwirlApplication"
-                 a:allowBackup="true"
-                 a:icon="@drawable/ic_launcher"
-                 a:label="@string/app_name"
-                 a:theme="@style/AppTheme" >
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application android:name=".SwirlApplication"
+                 android:allowBackup="true"
+                 android:icon="@drawable/ic_launcher"
+                 android:label="@string/app_name"
+                 android:theme="@style/AppTheme" >
 
         <!-- TODO assign custom activity style globally rather than for each activity definition -->
-        <meta-data a:name="roboguice.modules"
-                   a:value="at.cpickl.agrotlin.SwirlModule" />
+        <meta-data android:name="roboguice.modules"
+                   android:value="at.cpickl.agrotlin.SwirlModule" />
 
-        <activity a:name=".activity.MainActivity"
-                  a:label="Swirl"
-                  a:theme="@style/MyActivity">
+        <activity android:name=".activity.MainActivity"
+                  android:label="Swirl"
+                  android:theme="@style/MyActivity">
             <intent-filter>
-                <action a:name="android.intent.action.MAIN" />
-                <category a:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity a:name=".activity.LoginActivity"
-                  a:label="Login"
-                  a:parentActivityName=".activity.MainActivity"
-                  a:theme="@style/MyActivity">
-            <meta-data a:name="android.support.PARENT_ACTIVITY"
-                       a:value="at.cpickl.agrotlin.MainActivity" />
+        <activity android:name=".activity.LoginActivity"
+                  android:label="Login"
+                  android:parentActivityName=".activity.MainActivity"
+                  android:theme="@style/MyActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value="at.cpickl.agrotlin.MainActivity" />
         </activity>
 
-        <activity a:name=".activity.PlayGameActivity"
-                  a:label="Game"
-                  a:parentActivityName=".activity.MainActivity"
-                  a:screenOrientation="landscape"
-                  a:theme="@style/MyActivity">
-            <meta-data a:name="android.support.PARENT_ACTIVITY"
-                       a:value="at.cpickl.agrotlin.MainActivity" />
+        <activity android:name=".activity.PlayGameActivity"
+                  android:label="Game"
+                  android:parentActivityName=".activity.MainActivity"
+                  android:screenOrientation="landscape"
+                  android:theme="@style/MyActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value="at.cpickl.agrotlin.MainActivity" />
         </activity>
 
-        <activity a:name=".activity.DebugActivity"
-                  a:label="Debug"
-                  a:parentActivityName=".activity.MainActivity"
-                  a:theme="@style/MyActivity">
-            <meta-data a:name="android.support.PARENT_ACTIVITY"
-                       a:value="at.cpickl.agrotlin.MainActivity" />
+        <activity android:name=".activity.DebugActivity"
+                  android:label="Debug"
+                  android:parentActivityName=".activity.MainActivity"
+                  android:theme="@style/MyActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value="at.cpickl.agrotlin.MainActivity" />
         </activity>
 
-        <activity a:name=".activity.SettingsActivity"
-                  a:label="Settings"
-                  a:parentActivityName=".activity.MainActivity"
-                  a:theme="@style/MyActivity">
-            <meta-data a:name="android.support.PARENT_ACTIVITY"
-                       a:value="at.cpickl.agrotlin.MainActivity" />
+        <activity android:name=".activity.SettingsActivity"
+                  android:label="Settings"
+                  android:parentActivityName=".activity.MainActivity"
+                  android:theme="@style/MyActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value="at.cpickl.agrotlin.MainActivity" />
         </activity>
 
     </application>
