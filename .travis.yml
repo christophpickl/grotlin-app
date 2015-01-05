@@ -2,10 +2,14 @@ language: java
 
 # nope, caching wont work unless you use a container based infra (which disallows sudo, but needed for coverage :-/)
 # see: http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+# and: http://stackoverflow.com/questions/26723369/cache-gradle-dependencies-travis-ci
 cache:
   directories:
   - $HOME/.gradle/caches/
+  # ~/.gradle/wrapper
   # ~/.gradle
+  # $GRADLE_USER_HOME
+
 
 #script:
 #- ./gradlew build
