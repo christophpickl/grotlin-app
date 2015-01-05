@@ -4,7 +4,7 @@ import org.junit.Test;
 
 // TODO can not find import kotlin.*; in tests... kotlin lib needs to be in test scope for java
 
-public class AlertDialogTest {
+public class SrcTestJavaTest {
 
     @Test
     public void foo() {

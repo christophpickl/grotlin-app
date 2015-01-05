@@ -3,9 +3,8 @@ package at.cpickl.agrotlin.app
 import org.junit.Test
 import org.hamcrest.Matchers.*
 import org.hamcrest.MatcherAssert.*
-import at.cpickl.agrotlin.view.showAlertDialog
 
-class KotlinUnitTest {
+class SrcTestKotlinTest {
 
     Test fun myTest() {
         // TODO does not get runned... :(
@@ -13,3 +12,18 @@ class KotlinUnitTest {
     }
 
 }
+
+/*
+
+RunWith(javaClass<RobolectricTestRunner>())
+class MyActivityTest {
+    Test fun clickSomeButton() {
+        val activity = Robolectric.buildActivity(javaClass<MainActivity>()).create().get()
+        val btnDebug = activity.findViewById(R.id.btnDebug)
+        btnDebug.performClickl()
+        // assert that
+    }
+}
+
+
+ */
