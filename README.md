@@ -3,6 +3,8 @@ grotlin-app
 
 [![Travis CI Status](https://travis-ci.org/christophpickl/grotlin-app.svg?branch=master)](https://travis-ci.org/christophpickl/grotlin-app)
 
+[![Coverage](https://codecov.io/github/christophpickl/grotlin-app/branch.svg?branch=master&token=1DC88LrgDb)](https://codecov.io/github/christophpickl/grotlin-app/commits)
+
 See [Wiki](https://github.com/christophpickl/grotlin-app/wiki) for more info.
 See [Google App Engine Consle](https://console.developers.google.com/project/swirl-engine).
 
