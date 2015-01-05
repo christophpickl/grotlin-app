@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory
 import at.cpickl.grotlin.endpoints.Fault
 import at.cpickl.grotlin.endpoints.FaultCode
 import at.cpickl.grotlin.multi.UserException
+import kotlin.platform.platformStatic
 
 //Provider Produces(MediaType.WILDCARD) class InjectPaginationInterceptor : ContextResolver<Pagination> {
 //    Context private var request: HttpServletRequest? = null
@@ -33,6 +34,10 @@ Provider Consumes(MediaType.WILDCARD) class PaginationReader : MessageBodyReader
         private val LOG = LoggerFactory.getLogger(javaClass<PaginationReader>())
         private val QUERY_PARAM_PAGE = "page"
         private val QUERY_PARAM_SIZE = "size"
+
+        platformStatic fun main(args: Array<String>) {
+            println("Hello PaginationReader")
+        }
     }
     Context private var request: HttpServletRequest? = null
 
