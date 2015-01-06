@@ -12,8 +12,8 @@ MISC
 -----
 * concerning ".coveragerc" file, see https://github.com/codecov/example-python/wiki/Coverage-Config
 * some app engine config commands:
-** appcfg.sh --host==0.0.0.0 --oauth2 start_module_version src/main/webapp
-** appcfg.sh --oauth2 request_logs src/main/webapp mylogs.txt
+    * appcfg.sh --host==0.0.0.0 --oauth2 start_module_version src/main/webapp
+    * appcfg.sh --oauth2 request_logs src/main/webapp mylogs.txt
 
 FIXMEs
 -------
